@@ -1,6 +1,4 @@
-import asyncio
 import re
-from crawl4ai import AsyncWebCrawler
 
 # We define a set of titles we want to exclude from the final output
 EXCLUDED_TITLES = {
@@ -89,26 +87,3 @@ def filter_semiconductor_news(text: str):
     return filtered
 
 
-async def main():
-    async with AsyncWebCrawler() as crawler:
-        result = await crawler.arun(
-            url="https://news.google.com/search?q=japan%20semiconductor%20when%3A7d&hl=en-US&gl=US&ceid=US%3Aen"
-        )
-
-        # Parse and filter out excluded articles
-        articles = filter_semiconductor_news(result.markdown)
-
-        # Display the extracted articles (that are NOT excluded)
-        for idx, item in enumerate(articles, start=1):
-            title = item.get('title', '(No Title)')
-            link = item.get('link', '')
-            date = item.get('date', '')
-            print(f"--- Article #{idx} ---")
-            print(f"Title:     {title}")
-            print(f"Link:      {link}")
-            print(f"Date:      {date}")
-            print()
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
