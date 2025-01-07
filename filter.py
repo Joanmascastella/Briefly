@@ -1,6 +1,4 @@
-import asyncio
 import re
-from crawl4ai import AsyncWebCrawler
 
 # We define a set of titles we want to exclude from the final output
 EXCLUDED_TITLES = {
@@ -20,7 +18,7 @@ EXCLUDED_TITLES = {
 }
 
 
-def filter_semiconductor_news(text: str):
+def filter_news(text: str):
     """
     Extracts the article title, link, date, and publisher from the given text.
     Returns a list of dicts, each with keys: title, link, date, publisher.
@@ -30,7 +28,7 @@ def filter_semiconductor_news(text: str):
     pattern_article = re.compile(r'^\[(.+)\]\((.+)\)')  # e.g. [Article Title](link)
     pattern_img = re.compile(r'^!\[.*\]\(.*\)')
     pattern_date = re.compile(
-        r'^\b((?:\d{1,2}\s\w+\s\d{4})|(?:\d+\s+days\s+ago)|(?:Yesterday)|(?:Today)|(?:\w+\s\d{1,2},\s\d{4}))\b',
+        r'^\b((?:\d{1,2}\s\w+\s\d{4})|(?:\d+\s+days\s+ago)|(?:Yesterday)|(?:Today)|(?:\w+\s\d{1,2},\s\d{4})|(?:\d+\s+minutes\s+ago)|(?:\d+\s+hours\s+ago))\b',
         re.IGNORECASE
     )
 
@@ -49,26 +47,42 @@ def filter_semiconductor_news(text: str):
                 articles.append(current_item)
             current_item = {}
             current_item['title'] = match_article.group(1)
-            current_item['link'] = match_article.group(2)
+
+            # Clean the URL:
+            # - Remove <./ at any position
+            # - Remove > at the end
+            url = match_article.group(2)
+            url = url.replace("<./", "")  # Remove <./ wherever it occurs
+            url = url.rstrip(">")         # Remove trailing >
+            current_item['link'] = url
+
+            # Look for the date exactly two lines below the title
+            if i + 2 < len(lines):
+                potential_date = lines[i + 2].strip()
+                if pattern_date.match(potential_date):
+                    current_item['date'] = potential_date
 
             i += 1
             continue
 
-        # 2) Match date lines: "Yesterday", "3 days ago", "Sep 3, 2024", etc.
-        match_date = pattern_date.match(line)
-        if match_date:
-            current_item['date'] = match_date.group(1)
+        # 2) Check for the publisher above "More"
+        if line == "More":
+            # The publisher should be in the previous non-empty line
+            j = i - 1
+            while j >= 0 and not lines[j].strip():
+                j -= 1
+            if j >= 0:
+                current_item['publisher'] = lines[j].strip()
+
             i += 1
             continue
 
-        # 3) Potential publisher line:
-        #    If line is non-empty, not an image, not bracketed, and we already have a date,
-        #    treat it as publisher.
+        # 3) Catch any additional publisher lines
         if (line
                 and not pattern_img.match(line)
                 and not pattern_article.match(line)
                 and 'date' in current_item
-        ):
+                and 'publisher' not in current_item):
             current_item['publisher'] = line
             i += 1
             continue
@@ -87,30 +101,3 @@ def filter_semiconductor_news(text: str):
             filtered.append(art)
 
     return filtered
-
-
-async def main():
-    async with AsyncWebCrawler() as crawler:
-        result = await crawler.arun(
-            url="https://news.google.com/search?q=japan&hl=en-US&gl=US&ceid=US%3Aen"
-        )
-
-        # # Parse and filter out excluded articles
-        # articles = filter_semiconductor_news(result.markdown)
-        #
-        # # Display the extracted articles (that are NOT excluded)
-        # for idx, item in enumerate(articles, start=1):
-        #     title = item.get('title', '(No Title)')
-        #     link = item.get('link', '')
-        #     date = item.get('date', '')
-        #     print(f"--- Article #{idx} ---")
-        #     print(f"Title:     {title}")
-        #     print(f"Link:      {link}")
-        #     print(f"Date:      {date}")
-        #     print()
-
-        print(result.markdown)
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

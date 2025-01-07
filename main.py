@@ -1,6 +1,6 @@
 import asyncio
 from crawl4ai import AsyncWebCrawler
-from test import filter_semiconductor_news
+from filter import filter_news
 
 # Get user input for keywords
 def input_keywords():
@@ -48,17 +48,19 @@ async def search_news(keywords, period_param):
         result = await crawler.arun(url=url)
 
         # Parse and filter articles
-        articles = filter_semiconductor_news(result.markdown)
+        articles = filter_news(result.markdown)
 
         # Display the extracted articles
         for idx, item in enumerate(articles, start=1):
             title = item.get('title', '(No Title)')
             link = item.get('link', '')
             date = item.get('date', '')
+            publisher = item.get('publisher', '(No Publisher)')
             print(f"--- Article #{idx} ---")
             print(f"Title:     {title}")
             print(f"Link:      {link}")
             print(f"Date:      {date}")
+            print(f"Publisher: {publisher}")
             print()
 
 # Main function to orchestrate the search
