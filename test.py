@@ -92,7 +92,7 @@ def filter_semiconductor_news(text: str):
 async def main():
     async with AsyncWebCrawler() as crawler:
         result = await crawler.arun(
-            url="https://news.google.com/search?q=japan&hl=en-US&gl=US&ceid=US%3Aen"
+            url="https://barcanewsnetwork.com/barcelona-will-ask-csd-for-a-precautionary-measure-to-register-their-two-players-today/"
         )
 
         # # Parse and filter out excluded articles
