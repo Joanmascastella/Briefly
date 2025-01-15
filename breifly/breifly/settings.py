@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'breiflyplatform',
 ]
 
 MIDDLEWARE = [
@@ -72,11 +73,14 @@ WSGI_APPLICATION = "breifly.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',  # dbname
+        'USER': 'postgres.ssdifijjtgxigykokxyp',  # user
+        'PASSWORD': '5UBi82hDUSk4NPW5',  # password
+        'HOST': 'aws-0-us-west-1.pooler.supabase.com',  # host
+        'PORT': '6543',  # port
     }
 }
 
