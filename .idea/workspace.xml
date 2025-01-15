@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +55,7 @@
     "Python.test.executor": "Run",
     "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
     "node.js.detected.package.eslint": "true",
@@ -111,7 +111,7 @@
       <workItem from="1736232119110" duration="9252000" />
       <workItem from="1736328905792" duration="52000" />
       <workItem from="1736836941562" duration="1737000" />
-      <workItem from="1736905338983" duration="3230000" />
+      <workItem from="1736905338983" duration="6606000" />
     </task>
     <servers />
   </component>
