@@ -1,7 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.template import loader
-
 
 def landing_page(request):
-    return render(request, 'header.html')
+    context = {
+        'title': 'Briefly - Home',
+        'user_authenticated': request.user.is_authenticated,
+
+    }
+    return render(request, 'header.html', context)
