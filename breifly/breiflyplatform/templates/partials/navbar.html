@@ -1,25 +1,43 @@
-<nav class="navbar">
-  <ul class="navbar__menu">
-    <li class="navbar__item">
-      <a href="#" class="navbar__link"><i data-feather="home"></i><span>Home</span></a>
-    </li>
-    <li class="navbar__item">
-      <a href="#" class="navbar__link"><i data-feather="message-square"></i><span>Messages</span></a>
-    </li>
-    <li class="navbar__item">
-      <a href="#" class="navbar__link"><i data-feather="users"></i><span>Customers</span></a>
-    </li>
-    <li class="navbar__item">
-      <a href="#" class="navbar__link"><i data-feather="folder"></i><span>Projects</span></a>
-    </li>
-    <li class="navbar__item">
-      <a href="#" class="navbar__link"><i data-feather="archive"></i><span>Resources</span></a>
-    </li>
-    <li class="navbar__item">
-      <a href="#" class="navbar__link"><i data-feather="help-circle"></i><span>Help</span></a>
-    </li>
-    <li class="navbar__item">
-      <a href="#" class="navbar__link"><i data-feather="settings"></i><span>Settings</span></a>
-    </li>
-  </ul>
-</nav>
+<div class="navbar-custom d-flex align-items-center justify-content-between">
+  <!-- Left-aligned Menu Button -->
+  <div>
+    <button class="btn btn-primary menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar">
+      ☰ Menu
+    </button>
+  </div>
+
+  <!-- Logo and Heading -->
+  <div class="d-flex align-items-center flex-grow-1 justify-content-center text-center">
+    <img src="../../static/assets/images/logo.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+    <h1 class="mb-0" style="font-size: 1.5rem;">Briefly</h1>
+  </div>
+
+  <!-- Placeholder for Right Content (if any) -->
+  <div>
+    <!-- You can add a search bar, user profile, or other right-aligned content here -->
+  </div>
+</div>
+
+<!-- Sidebar Offcanvas -->
+<div class="offcanvas offcanvas-start bg-light" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel" style="width: 250px;">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="sidebarLabel">Navigation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="#"><i class="fas fa-home"></i> Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-cog"></i> Settings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><i class="fas fa-envelope"></i> Contact</a>
+      </li>
+    </ul>
+  </div>
+</div>
