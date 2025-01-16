@@ -33,7 +33,11 @@
 </head>
 <body style="margin-top: 56px;">
     <header>
-        {% include 'partials/navbar.html' %}
+     {% if user.is_authenticated %}
+            {% include 'partials/authenticated_navbar.html' %}
+        {% else %}
+            {% include 'partials/not_authenticated_navbar.html' %}
+        {% endif %}
     </header>
     <div class="container mt-4">
         <h1>Welcome</h1>
