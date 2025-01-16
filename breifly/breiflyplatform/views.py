@@ -1,3 +1,5 @@
+from lib2to3.fixes.fix_input import context
+
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .supabase_client import supabase
@@ -41,19 +43,42 @@ def login_view(request):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
-    return render(request, 'header.html')
+    context = {
+        'title': 'Briefly - Login',
+    }
+
+    return render(request, 'header.html', context)
 
 
 def logout_view(request):
     if request.method == 'GET':
         request.session.flush()
 
-    return render(request, 'header.html')
+    context = {
+        'title': 'Briefly - Login',
+    }
+
+    return render(request, 'header.html', context)
 
 def settings_view(request):
     user_authenticated, user_data = get_access_token(request)
 
     context = {
+        'title': 'Briefly - Settings',
+        'user_authenticated': user_authenticated,
+        'user_data': user_data
+    }
+
+    return render(request, 'settings.html', context)
+
+def settings_changed(request):
+    user_authenticated, user_data = get_access_token(request)
+
+    if request == "POST":
+        return
+
+    context = {
+        'title': 'Briefly - Settings',
         'user_authenticated': user_authenticated,
         'user_data': user_data
     }
