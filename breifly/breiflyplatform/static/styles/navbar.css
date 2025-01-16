@@ -1,0 +1,23 @@
+/* Styles for the custom navbar */
+.navbar-custom {
+  position: fixed; /* Fixes the navbar at the top */
+  top: 0;
+  left: 0;
+  width: 100%; /* Full width */
+  display: flex; /* Flexbox for alignment */
+  align-items: center; /* Vertically centers the content */
+  padding: 0.5rem 1rem; /* Adds spacing inside the navbar */
+  z-index: 1030; /* Ensures it appears above other content */
+  background-color: white; /* Sets the background color */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+}
+
+/* Styles for the menu button in the navbar */
+.navbar-custom .menu-btn {
+  margin-right: auto; /* Aligns the button to the left */
+}
+
+/* Styles for centering the logo in the navbar */
+.navbar-custom .logo {
+  margin: 0 auto; /* Centers the logo within the navbar */
+}
