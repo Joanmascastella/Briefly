@@ -16,13 +16,13 @@
     <header>
         {% if user_authenticated %}
             {% include 'partials/authenticated_navbar.html' %}
-            <div class="container mt-4">
+            <div class="container-fluid mt-4">
                 <h1>Welcome, {{ user.email }}</h1>
                 <p>This is the main content area. You are logged in.</p>
             </div>
         {% else %}
             {% include 'partials/not_authenticated_navbar.html' %}
-            <div class="container">
+            <div class="container-fluid">
                 {% include 'loginForm.html' %}
             </div>
         {% endif %}
