@@ -84,6 +84,8 @@ DATABASES = {
     }
 }
 
+SUPABASE_URL = "https://ssdifijjtgxigykokxyp.supabase.co" 
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzZGlmaWpqdGd4aWd5a29reHlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY4MzYwMjMsImV4cCI6MjA1MjQxMjAyM30.t4P34Fwh_sn_6w905dZUx5wTxFE-mPVCPOkL-YRpuhQ"
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

@@ -5,9 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/loginForm.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/supabase_client.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breifly/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breifly/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breifly/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breifly/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/loginForm.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/loginForm.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -18,8 +21,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -73,6 +76,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/breifly/breiflyplatform" />
       <recent name="$PROJECT_DIR$/breifly/breiflyplatform/static" />
       <recent name="$PROJECT_DIR$/breifly/breiflyplatform/templates" />
       <recent name="$PROJECT_DIR$/breifly/breiflyplatform/assets/images" />
@@ -124,7 +128,7 @@
       <workItem from="1736328905792" duration="52000" />
       <workItem from="1736836941562" duration="1737000" />
       <workItem from="1736905338983" duration="6606000" />
-      <workItem from="1736922913981" duration="8077000" />
+      <workItem from="1736922913981" duration="10783000" />
     </task>
     <servers />
   </component>

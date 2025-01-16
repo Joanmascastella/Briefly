@@ -21,4 +21,5 @@ from breiflyplatform.views import *
 urlpatterns = [
     path("", landing_page),
     path("admin/", admin.site.urls),
+    path('login/', login_view, name='login'),
 ]
