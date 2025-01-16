@@ -1,3 +1,88 @@
 {% include 'header.html' %}
 
-<h1>lakdjl;ksdalsfkjas</h1>
+<style>
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  .content-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+<div class="container">
+    <div class="content-box">
+        <h1 class="text-center mb-4">
+            {% if error %}Create Settings{% else %}General Settings{% endif %}
+        </h1>
+        <form method="POST" action="/settings/modify/">
+            {% csrf_token %}
+
+            <!-- Date Range -->
+            <div class="mb-3">
+                <label for="date_range" class="form-label">Frequency of Reports</label>
+                <select class="form-control" id="date_range" name="date_range" required>
+                    <option value="daily" {% if not error and user_data.settings.date_range == "daily" %}selected{% endif %}>Daily</option>
+                    <option value="weekly" {% if not error and user_data.settings.date_range == "weekly" %}selected{% endif %}>Weekly</option>
+                    <option value="monthly" {% if not error and user_data.settings.date_range == "monthly" %}selected{% endif %}>Monthly</option>
+                </select>
+            </div>
+
+            <!-- Email Reports -->
+            <div class="mb-3">
+                <label for="email_reports" class="form-label">Email Reports</label>
+                <select class="form-control" id="email_reports" name="email_reports" required>
+                    <option value="True" {% if not error and user_data.settings.email_reports %}selected{% endif %}>Yes</option>
+                    <option value="False" {% if not error and not user_data.settings.email_reports %}selected{% endif %}>No</option>
+                </select>
+            </div>
+
+            <!-- Report Time -->
+            <div class="mb-3">
+                <label for="report_time" class="form-label">Report Time</label>
+                <input type="text" class="form-control" id="report_time" name="report_time"
+                       placeholder="HH:MM:SS"
+                       value="{% if not error %}{{ user_data.settings.report_time|time:'H:i:s' }}{% endif %}" required>
+                <small class="form-text text-muted">Enter time in 24-hour format (HH:MM:SS).</small>
+            </div>
+
+            <!-- Timezone -->
+            <div class="mb-3">
+                <label for="timezone" class="form-label">Timezone</label>
+                <select class="form-control" id="timezone" name="timezone">
+                    {% for tz in timezones %}
+                    <option value="{{ tz }}" {% if not error and user_data.settings.timezone == tz %}selected{% endif %}>
+                        {{ tz }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Language -->
+            <div class="mb-3">
+                <label for="language" class="form-label">Report Language</label>
+                <select class="form-control" id="language" name="language" required>
+                    <option value="English" {% if not error and user_data.settings.language == "English" %}selected{% endif %}>English</option>
+                    <option value="Spanish" {% if not error and user_data.settings.language == "Spanish" %}selected{% endif %}>Spanish</option>
+                    <option value="German" {% if not error and user_data.settings.language == "German" %}selected{% endif %}>German</option>
+                    <option value="French" {% if not error and user_data.settings.language == "French" %}selected{% endif %}>French</option>
+                </select>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">
+                    {% if error %}Create Settings{% else %}Save Changes{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

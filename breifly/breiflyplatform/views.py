@@ -1,9 +1,13 @@
-from lib2to3.fixes.fix_input import context
-
+from datetime import time
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .supabase_client import supabase
 from .helper_functions import get_access_token
+from django.contrib.auth.decorators import login_required
+from .models import Setting, SearchSetting, PreviousSearch, Summary
+from django.views.decorators.csrf import csrf_exempt
+import pytz
+
 
 # Landing page of the website
 def landing_page(request):
@@ -50,6 +54,7 @@ def login_view(request):
     return render(request, 'header.html', context)
 
 
+# Logout User
 def logout_view(request):
     if request.method == 'GET':
         request.session.flush()
@@ -60,27 +65,90 @@ def logout_view(request):
 
     return render(request, 'header.html', context)
 
+
+# Retrieve User Settings
 def settings_view(request):
+    # Retrieve the access token and user data
     user_authenticated, user_data = get_access_token(request)
 
-    context = {
-        'title': 'Briefly - Settings',
-        'user_authenticated': user_authenticated,
-        'user_data': user_data
-    }
+    if not user_authenticated or not user_data:
+        return redirect('/login/')
+
+    try:
+        # Fetch the user settings
+        user_id = user_data.id
+        user_settings = Setting.objects.get(user_id=user_id)
+
+        context = {
+            'title': 'Briefly - Settings',
+            'user_authenticated': True,
+            'user_data': {
+                'id': user_data.id,
+                'email': user_data.email,
+                'settings': {
+                    'date_range': user_settings.date_range,
+                    'email_reports': user_settings.email_reports,
+                    'report_time': user_settings.report_time,
+                    'timezone': user_settings.timezone,
+                    'language': user_settings.language,
+                },
+            },
+            'timezones': pytz.all_timezones,  # Pass the list of all time zones
+            'error': None,
+        }
+    except Setting.DoesNotExist:
+        # If no settings exist, allow the user to create them
+        context = {
+            'title': 'Briefly - Create Settings',
+            'user_authenticated': True,
+            'user_data': {
+                'id': user_data.id,
+                'email': user_data.email,
+            },
+            'timezones': pytz.all_timezones,  # Pass the list of all time zones
+            'error': 'User settings not found.',
+        }
 
     return render(request, 'settings.html', context)
 
+
+
+@csrf_exempt
 def settings_changed(request):
     user_authenticated, user_data = get_access_token(request)
 
-    if request == "POST":
-        return
+    if not user_authenticated or not user_data:
+        return redirect('/login/')
 
-    context = {
-        'title': 'Briefly - Settings',
-        'user_authenticated': user_authenticated,
-        'user_data': user_data
-    }
+    if request.method == "POST":
+        # Retrieve the form data
+        date_range = request.POST.get('date_range')
+        email_reports = request.POST.get('email_reports') == 'True'
+        report_time = request.POST.get('report_time')
+        timezone = request.POST.get('timezone')
+        language = request.POST.get('language')
 
-    return render(request, 'settings.html', context)
+        # Validate and parse report_time
+        try:
+            if report_time:
+                hours, minutes, seconds = map(int, report_time.split(":"))
+                report_time = time(hour=hours, minute=minutes, second=seconds)
+        except ValueError:
+            return JsonResponse({'error': 'Invalid time format. Use HH:MM:SS.'}, status=400)
+
+        # Get or create the user's settings
+        user_id = user_data.id
+        setting, created = Setting.objects.update_or_create(
+            user_id=user_id,
+            defaults={
+                'date_range': date_range,
+                'email_reports': email_reports,
+                'report_time': report_time,
+                'timezone': timezone,
+                'language': language,
+            }
+        )
+
+        return redirect('/settings/')
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
