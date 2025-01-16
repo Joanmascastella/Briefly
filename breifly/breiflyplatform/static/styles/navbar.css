@@ -1,23 +1,47 @@
-/* Styles for the custom navbar */
-.navbar-custom {
-  position: fixed; /* Fixes the navbar at the top */
-  top: 0;
-  left: 0;
-  width: 100%; /* Full width */
-  display: flex; /* Flexbox for alignment */
-  align-items: center; /* Vertically centers the content */
-  padding: 0.5rem 1rem; /* Adds spacing inside the navbar */
-  z-index: 1030; /* Ensures it appears above other content */
-  background-color: white; /* Sets the background color */
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+/* Styles for centering items in the offcanvas sidebar */
+.offcanvas-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Ensure the sidebar takes full height */
+  padding: 0; /* Reset padding */
 }
 
-/* Styles for the menu button in the navbar */
-.navbar-custom .menu-btn {
-  margin-right: auto; /* Aligns the button to the left */
+.offcanvas-header {
+  align-items: flex-start; /* Keep "Briefly" aligned to the top */
 }
 
-/* Styles for centering the logo in the navbar */
-.navbar-custom .logo {
-  margin: 0 auto; /* Centers the logo within the navbar */
+.offcanvas-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.nav {
+  width: 100%; /* Make sure links span the full width */
+  list-style: none; /* Remove bullet points */
+  padding: 0; /* Reset padding */
+  margin: 0; /* Reset margin */
+}
+
+.nav-item {
+  margin: 0.5rem 0; /* Add spacing between items */
+  text-align: center; /* Center text */
+}
+
+.nav-link {
+  font-size: 1rem;
+  color: #007bff; /* Bootstrap blue */
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.btn-danger {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  width: 80%; /* Button spans most of the sidebar width */
 }
