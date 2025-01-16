@@ -5,12 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/header.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/navbar.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/assets/images/Breifly Logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breifly/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breifly/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breifly/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breifly/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/navbar.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +71,12 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/breifly/breiflyplatform/templates" />
+      <recent name="$PROJECT_DIR$/breifly/breiflyplatform/assets/images" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Briefly" type="Python.DjangoServer" factoryName="Django server">
       <module name="Briefly" />
@@ -119,7 +123,7 @@
       <workItem from="1736328905792" duration="52000" />
       <workItem from="1736836941562" duration="1737000" />
       <workItem from="1736905338983" duration="6606000" />
-      <workItem from="1736922913981" duration="1673000" />
+      <workItem from="1736922913981" duration="3788000" />
     </task>
     <servers />
   </component>
