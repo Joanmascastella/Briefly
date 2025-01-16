@@ -16,14 +16,18 @@
     <header>
      {% if user.is_authenticated %}
             {% include 'partials/authenticated_navbar.html' %}
+         <div class="container mt-4">
+             <h1>Welcome</h1>
+            <p>This is the main content area. The navigation bar sticks to the left and is collapsible.</p>
+        </div>
         {% else %}
             {% include 'partials/not_authenticated_navbar.html' %}
+         <div class="container">
+             {% include 'loginForm.html' %}
+         </div>
         {% endif %}
     </header>
-    <div class="container mt-4">
-        <h1>Welcome</h1>
-        <p>This is the main content area. The navigation bar sticks to the left and is collapsible.</p>
-    </div>
+
 
 
     <!-- Bootstrap Bundle with Popper -->
