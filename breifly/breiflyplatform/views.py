@@ -29,7 +29,7 @@ def landing_page(request):
     context = {
         'title': 'Briefly - Home',
         'user_authenticated': user_authenticated,
-        'user': user_data,  # Pass user data to the template
+        'user': user_data,
     }
 
     return render(request, 'header.html', context)
