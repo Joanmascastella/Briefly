@@ -1,17 +1,20 @@
 from django.db import models
 
-# User Model
+# Supabase Users Table Model
 class User(models.Model):
-    name = models.CharField(max_length=255)
+    id = models.UUIDField(primary_key=True)  # Supabase's user ID
+    display_name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(unique=True)
-    company = models.CharField(max_length=255, null=True, blank=True)
-    password = models.CharField(max_length=255)
-    provider = models.CharField(max_length=50)
-    last_logged_in = models.DateTimeField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    provider = models.CharField(max_length=50, null=True, blank=True)
+    phone = models.CharField(max_length=20, null=True, blank=True)
+    provider_type = models.CharField(max_length=50, null=True, blank=True)
+    created_at = models.DateTimeField()
+    last_sign_in_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        db_table = 'users'
+        db_table = 'auth.users'  # Exact table name in Supabase
+        managed = False  # Prevent Django from managing this table
+
 
 # Settings Model
 class Setting(models.Model):
@@ -25,6 +28,7 @@ class Setting(models.Model):
     class Meta:
         db_table = 'settings'
 
+
 # Search Settings Model
 class SearchSetting(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='search_settings')
@@ -33,6 +37,7 @@ class SearchSetting(models.Model):
 
     class Meta:
         db_table = 'search_settings'
+
 
 # Previous Searches Model
 class PreviousSearch(models.Model):
@@ -44,8 +49,12 @@ class PreviousSearch(models.Model):
     class Meta:
         db_table = 'previous_searches'
 
+
 # Summaries Model
 class Summary(models.Model):
+    user = models.ForeignKey(
+        'User', on_delete=models.CASCADE, related_name='summaries', null=True, blank=True
+    )
     csv_file_path = models.CharField(max_length=255)
     article_title = models.CharField(max_length=255)
     publisher = models.CharField(max_length=255)
@@ -53,11 +62,3 @@ class Summary(models.Model):
 
     class Meta:
         db_table = 'summaries'
-
-# User Auth Map Model
-class UserAuthMap(models.Model):
-    auth_uid = models.CharField(max_length=255, unique=True)
-    user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='auth_map')
-
-    class Meta:
-        db_table = 'user_auth_map'

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .supabase_client import supabase
-from helper_functions import get_access_token
+from .helper_functions import get_access_token
 
 # Landing page of the website
 def landing_page(request):
