@@ -60,3 +60,10 @@ def login_view(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return render(request, 'header.html')
+
+
+def logout_view(request):
+    if request.method == 'GET':
+        request.session.flush()
+
+    return render(request, 'header.html')
