@@ -149,6 +149,11 @@ def settings_changed(request):
             }
         )
 
-        return redirect('/settings/')
+        context = {
+            'updated_settings': setting,
+            'created': created
+        }
+
+        return redirect('/settings/', context)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
