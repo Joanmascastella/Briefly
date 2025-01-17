@@ -1,2 +1,72 @@
 {% include 'header.html' %}
-<h1>acount</h1>
+
+<style>
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  .content-box {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+<div class="container">
+    <div class="content-box">
+        <h2 class="text-center mb-4">
+            {% if error %}Add Account Information{% else %}Account Information{% endif %}
+        </h2>
+        <form method="POST" action="/account/modify/">
+            {% csrf_token %}
+
+            <!-- Full Name -->
+            <div class="mb-3">
+                <label for="full_name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="full_name" name="full_name"
+                       value="{% if not error %}{{ user_data.account.full_name }}{% endif %}" required>
+            </div>
+
+            <!-- Position -->
+            <div class="mb-3">
+                <label for="position" class="form-label">Position</label>
+                <input type="text" class="form-control" id="position" name="position"
+                       value="{% if not error %}{{ user_data.account.position }}{% endif %}" required>
+            </div>
+
+            <!-- Company -->
+            <div class="mb-3">
+                <label for="company" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company" name="company"
+                       value="{% if not error %}{{ user_data.account.company }}{% endif %}" required>
+            </div>
+
+            <!-- Report Email -->
+            <div class="mb-3">
+                <label for="report_email" class="form-label">Report Email</label>
+                <input type="email" class="form-control" id="report_email" name="report_email"
+                       value="{% if not error %}{{ user_data.account.report_email }}{% endif %}" required>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="mb-3">
+                <label for="phonenr" class="form-label">Phone Number</label>
+                <input type="text" class="form-control" id="phonenr" name="phonenr"
+                       value="{% if not error %}{{ user_data.account.phonenr }}{% endif %}" required>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">
+                    {% if error %}Add Account Information{% else %}Save Changes{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
