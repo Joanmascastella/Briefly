@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 # Supabase Users Table Model
 class User(models.Model):
@@ -68,7 +69,7 @@ class AccountInformation(models.Model):
     user = models.ForeignKey(
         'User', on_delete=models.CASCADE, related_name='account_information'
     )
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=now)
     full_name = models.CharField(max_length=255)
     position = models.CharField(max_length=255)
     company = models.CharField(max_length=255)
