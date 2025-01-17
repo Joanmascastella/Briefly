@@ -200,5 +200,39 @@ def account_view(request):
 
     return render(request, 'account.html', context)
 
+@csrf_exempt
 def account_changed(request):
-    return
+    user_authenticated, user_data = get_access_token(request)
+
+    if not user_authenticated or not user_data:
+        return redirect('/login/')
+
+    if request.method == "POST":
+        # Retrieve the form data
+        full_name = request.POST.get('full_name')
+        position = request.POST.get('position')
+        company = request.POST.get('company')
+        report_email = request.POST.get('report_email')
+        phonenr = request.POST.get('phonenr')
+
+        # Get or create the user's account settings
+        user_id = user_data.id
+        account_information, created = AccountInformation.objects.update_or_create(
+            user_id=user_id,
+            defaults={
+                'full_name': full_name,
+                'position': position,
+                'company': company,
+                'report_email': report_email,
+                'phonenr': phonenr
+            }
+        )
+
+        context = {
+            'updated_account_information': account_information,
+            'created': created
+        }
+
+        return redirect('/account/', context)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
