@@ -12,13 +12,27 @@ import pytz
 def landing_page(request):
     # Get the access token from the session
     user_authenticated, user_data = get_access_token(request)
+    user_id = user_data.id
 
+    # Check if Settings and Account Information exist
+    settings_exist = Setting.objects.filter(user_id=user_id).exists()
+    account_info_exist = AccountInformation.objects.filter(user_id=user_id).exists()
+
+    if not settings_exist or not account_info_exist:
+        context = {
+            'title': 'Briefly - Home',
+            'user_authenticated': user_authenticated,
+            'user': user_data,
+            'error': 'Please make sure you have filled in Settings and Account Information to proceed.',
+        }
+        return render(request, 'main_page.html', context)
+
+    # Render the main page if everything exists
     context = {
         'title': 'Briefly - Home',
         'user_authenticated': user_authenticated,
         'user': user_data,
     }
-
     return render(request, 'main_page.html', context)
 
 
