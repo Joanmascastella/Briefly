@@ -1,3 +1,4 @@
+import json
 from datetime import time
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -6,7 +7,7 @@ from .helper_functions import get_access_token
 from .models import Setting, SearchSetting, PreviousSearch, Summary, AccountInformation
 from django.views.decorators.csrf import csrf_exempt
 import pytz
-from .get_news import search_news
+from .get_news import search_news, get_period_param
 
 
 # Landing page of the website
@@ -337,14 +338,27 @@ def modify_search_settings(request):
     return render(request, 'main_page.html', context)
 
 
-def get_news(request):
+# Django view
+async def get_news(request):
     if request.method == "GET":
-        keywords = request.get('keywords')
-        period_param = request.get('period_param')
-        publishers = request.get('publishers')
+        print("Request GET parameters:", request.GET)  # Debugging
+        keywords = request.GET.get('keywords', '').strip()  # Ensure whitespace is trimmed
+        period = request.GET.get('period', '1')  # Default to "Anytime"
+        publishers = request.GET.getlist('publishers', [])
 
-        articles = search_news(keywords, period_param, publishers)
-    
-        return articles
+        print(f"Extracted keywords: {keywords}, period: {period}, publishers: {publishers}")  # Debugging
+
+        if not keywords:
+            return JsonResponse({'error': 'Keywords are required'}, status=400)
+
+        if period not in ["1", "2", "3", "4", "5"]:
+            return JsonResponse({'error': 'Invalid time period selected'}, status=400)
+
+        try:
+            # Await the result of the async function
+            articles = await search_news(keywords, get_period_param(period), publishers)
+            return JsonResponse({'articles': articles}, safe=False)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
