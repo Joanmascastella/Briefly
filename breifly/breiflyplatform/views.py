@@ -157,3 +157,49 @@ def settings_changed(request):
         return redirect('/settings/', context)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+def account_view(request):
+    # Retrieve the access token and user data
+    user_authenticated, user_data = get_access_token(request)
+
+    if not user_authenticated or not user_data:
+        return redirect('/login/')
+
+    try:
+        # Fetch the user settings
+        user_id = user_data.id
+        account_information = AccountInformation.objects.get(user_id=user_id)
+
+        context = {
+            'title': 'Briefly - Account',
+            'user_authenticated': True,
+            'user_data': {
+                'id': user_data.id,
+                'email': user_data.email,
+                'account': {
+                    'full_name': account_information.full_name,
+                    'position': account_information.position,
+                    'company': account_information.company,
+                    'report_email': account_information.report_email,
+                    'phonenr': account_information.phonenr
+                },
+            },
+            'error': None,
+        }
+
+    except AccountInformation.DoesNotExist:
+        # If no account_information exist, allow the user to create them
+        context = {
+            'title': 'Briefly - Add Account Information',
+            'user_authenticated': True,
+            'user_data': {
+                'id': user_data.id,
+                'email': user_data.email,
+            },
+            'error': 'Account information for user not found.',
+        }
+
+    return render(request, 'account.html', context)
+
+def account_changed(request):
+    return
