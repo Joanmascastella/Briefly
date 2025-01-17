@@ -86,11 +86,11 @@
             {% csrf_token %}
             <div class="mb-3">
                 <label for="keywords" class="form-label">Keywords to search by:</label>
-                <input type="text" class="form-control" id="keywords" name="keywords" placeholder="{{ placeholders.keywords }}">
+                <input type="text" class="form-control" id="keywords" name="keywords" value="{{ placeholders.keywords }}">
             </div>
             <div class="mb-3">
                 <label for="publishers" class="form-label">Specific Publishers to filter by:</label>
-                <input type="text" class="form-control" id="publishers" name="publishers" placeholder="{{ placeholders.publishers }}">
+                <input type="text" class="form-control" id="publishers" name="publishers" value="{{ placeholders.publishers }}">
             </div>
             <div class="mb-3">
                 <label for="date-range" class="form-label">Date range of news:</label>
@@ -104,7 +104,7 @@
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description of your next marketing campaign:</label>
-                <textarea class="form-control" id="description" name="description" rows="4" placeholder="{{ placeholders.description }}">{{ placeholders.description }}</textarea>
+                <textarea class="form-control" id="description" name="description" rows="4">{{ placeholders.description }}</textarea>
             </div>
             {% if error %}
                 <p style="color: red">{{ error }}</p>
