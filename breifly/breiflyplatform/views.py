@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from .supabase_client import supabase
 from .helper_functions import get_access_token
 from django.contrib.auth.decorators import login_required
-from .models import Setting, SearchSetting, PreviousSearch, Summary
+from .models import Setting, SearchSetting, PreviousSearch, Summary, AccountInformation
 from django.views.decorators.csrf import csrf_exempt
 import pytz
 
