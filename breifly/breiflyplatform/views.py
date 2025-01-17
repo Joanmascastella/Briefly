@@ -340,6 +340,10 @@ def modify_search_settings(request):
 
 # Django view
 async def get_news(request):
+
+    # ADD Authentication
+
+
     if request.method == "GET":
         print("Request GET parameters:", request.GET)  # Debugging
         keywords = request.GET.get('keywords', '').strip()  # Ensure whitespace is trimmed
