@@ -1,0 +1,13 @@
+{% include 'header.html' %}
+
+<header>
+    {% if user_authenticated %}
+        {% include 'partials/authenticated_navbar.html' %}
+        <h1>lajslkdjalskjd</h1>
+    {% else %}
+        {% include 'partials/not_authenticated_navbar.html' %}
+        <div class="container-fluid">
+            {% include 'loginForm.html' %}
+        </div>
+    {% endif %}
+</header>

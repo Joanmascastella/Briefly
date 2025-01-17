@@ -19,7 +19,7 @@ def landing_page(request):
         'user': user_data,
     }
 
-    return render(request, 'header.html', context)
+    return render(request, 'main_page.html', context)
 
 
 # Login page logic
@@ -50,7 +50,7 @@ def login_view(request):
         'title': 'Briefly - Login',
     }
 
-    return render(request, 'header.html', context)
+    return render(request, 'main_page.html', context)
 
 
 # Logout User
@@ -62,7 +62,7 @@ def logout_view(request):
         'title': 'Briefly - Login',
     }
 
-    return render(request, 'header.html', context)
+    return render(request, 'main_page.html', context)
 
 
 # Retrieve User Settings
