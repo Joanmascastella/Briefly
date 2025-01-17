@@ -6,6 +6,7 @@ from .helper_functions import get_access_token
 from .models import Setting, SearchSetting, PreviousSearch, Summary, AccountInformation
 from django.views.decorators.csrf import csrf_exempt
 import pytz
+from .get_news import search_news
 
 
 # Landing page of the website
@@ -334,3 +335,16 @@ def modify_search_settings(request):
     }
 
     return render(request, 'main_page.html', context)
+
+
+def get_news(request):
+    if request.method == "GET":
+        keywords = request.get('keywords')
+        period_param = request.get('period_param')
+        publishers = request.get('publishers')
+
+        articles = search_news(keywords, period_param, publishers)
+    
+        return articles
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)

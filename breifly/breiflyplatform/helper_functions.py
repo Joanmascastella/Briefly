@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-
-
 from .supabase_client import supabase
-from .get_news import search_news
+
 
 def get_access_token(request):
     access_token = request.session.get('access_token')
@@ -28,13 +26,5 @@ def get_access_token(request):
 
     return user_authenticated, user_data
 
-def get_news(request):
-    keywords = request.get('keywords')
-    period_param = request.get('perioad_param')
-    publishers = request.get('publishers')
 
-    articles = search_news(keywords, period_param, publishers)
-
-    return articles
-    
 
