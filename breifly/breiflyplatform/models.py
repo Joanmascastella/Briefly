@@ -33,8 +33,10 @@ class Setting(models.Model):
 # Search Settings Model
 class SearchSetting(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='search_settings')
+    keywords = models.TextField()
     publishers = models.TextField()
     frequency = models.CharField(max_length=50)
+    search_description = models.TextField()
 
     class Meta:
         db_table = 'search_settings'
