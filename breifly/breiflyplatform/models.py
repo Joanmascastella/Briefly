@@ -62,3 +62,18 @@ class Summary(models.Model):
 
     class Meta:
         db_table = 'summaries'
+
+# Account Information Model
+class AccountInformation(models.Model):
+    user = models.ForeignKey(
+        'User', on_delete=models.CASCADE, related_name='account_information'
+    )
+    created_at = models.DateTimeField()
+    full_name = models.CharField(max_length=255)
+    position = models.CharField(max_length=255)
+    company = models.CharField(max_length=255)
+    report_email = models.CharField(max_length=255)
+    phonenr = models.CharField(max_length=20, null=True, blank=True)
+
+    class Meta:
+        db_table = 'account_information'

@@ -21,9 +21,9 @@
 
 <div class="container">
     <div class="content-box">
-        <h1 class="text-center mb-4">
+        <h2 class="text-center mb-4">
             {% if error %}Create Settings{% else %}General Settings{% endif %}
-        </h1>
+        </h2>
         <form method="POST" action="/settings/modify/">
             {% csrf_token %}
 
