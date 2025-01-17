@@ -82,22 +82,29 @@
             <li>Generate content for newsletters and social media posts.</li>
             <li>Customize the time and frequency of reports in the settings.</li>
         </ul>
-        <form>
+        <form method="POST" action="{% url 'search' %}">
+            {% csrf_token %}
             <div class="mb-3">
                 <label for="keywords" class="form-label">Keywords to search by:</label>
-                <input type="text" class="form-control" id="keywords" placeholder="Enter keywords">
+                <input type="text" class="form-control" id="keywords" name="keywords" placeholder="{{ placeholders.keywords }}">
             </div>
             <div class="mb-3">
                 <label for="publishers" class="form-label">Specific Publishers to filter by:</label>
-                <input type="text" class="form-control" id="publishers" placeholder="Enter publishers">
+                <input type="text" class="form-control" id="publishers" name="publishers" placeholder="{{ placeholders.publishers }}">
             </div>
             <div class="mb-3">
                 <label for="date-range" class="form-label">Date range of news:</label>
-                <input type="text" class="form-control" id="date-range" placeholder="e.g., past 24 hours, past week, past month">
+                <select class="form-control" id="date-range" name="date-range">
+                    <option value="anytime" {% if placeholders.date_range == 'anytime' %}selected{% endif %}>Anytime</option>
+                    <option value="past_hour" {% if placeholders.date_range == 'past_hour' %}selected{% endif %}>Past Hour</option>
+                    <option value="past_twenty_four_hours" {% if placeholders.date_range == 'past_twenty_four_hours' %}selected{% endif %}>Past 24 Hours</option>
+                    <option value="past_week" {% if placeholders.date_range == 'past_week' %}selected{% endif %}>Past Week</option>
+                    <option value="past_year" {% if placeholders.date_range == 'past_year' %}selected{% endif %}>Past Year</option>
+                </select>
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description of your next marketing campaign:</label>
-                <textarea class="form-control" id="description" rows="4" placeholder="Provide a brief description"></textarea>
+                <textarea class="form-control" id="description" name="description" rows="4" placeholder="{{ placeholders.description }}">{{ placeholders.description }}</textarea>
             </div>
             {% if error %}
                 <p style="color: red">{{ error }}</p>

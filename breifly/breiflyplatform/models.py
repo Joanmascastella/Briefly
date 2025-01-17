@@ -44,13 +44,27 @@ class SearchSetting(models.Model):
 
 # Previous Searches Model
 class PreviousSearch(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='previous_searches')
+    user = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='previous_searches'
+    )
+    search_setting = models.ForeignKey(
+        'SearchSetting',
+        on_delete=models.CASCADE,
+        related_name='previous_searches',
+        null=True,
+        blank=True,
+        db_column='search_settings_id'
+    )
     keyword = models.CharField(max_length=255)
+    search_description = models.CharField(max_length=255, default="a")
     created_at = models.DateTimeField(auto_now_add=True)
     csv_file_path = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'previous_searches'
+
 
 
 # Summaries Model

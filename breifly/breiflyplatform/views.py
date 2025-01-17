@@ -18,6 +18,26 @@ def landing_page(request):
     settings_exist = Setting.objects.filter(user_id=user_id).exists()
     account_info_exist = AccountInformation.objects.filter(user_id=user_id).exists()
 
+    # Retrieve Search Settings for Placeholders
+    placeholders = {
+        'keywords': '',
+        'publishers': '',
+        'date_range': 'anytime',
+        'description': '',
+    }
+
+    try:
+        search_settings = SearchSetting.objects.get(user_id=user_id)
+        placeholders.update({
+            'keywords': search_settings.keywords or '',
+            'publishers': search_settings.publishers or '',
+            'date_range': search_settings.frequency or 'anytime',
+            'description': search_settings.search_description or '',
+        })
+    except SearchSetting.DoesNotExist:
+        # If no settings exist, use defaults
+        pass
+
     if not settings_exist or not account_info_exist:
         context = {
             'title': 'Briefly - Home',
@@ -32,6 +52,7 @@ def landing_page(request):
         'title': 'Briefly - Home',
         'user_authenticated': user_authenticated,
         'user': user_data,
+        'placeholders': placeholders,
     }
     return render(request, 'main_page.html', context)
 
@@ -250,3 +271,66 @@ def account_changed(request):
         return redirect('/account/', context)
 
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+@csrf_exempt
+def modify_search_settings(request):
+    user_authenticated, user_data = get_access_token(request)
+
+    if not user_authenticated or not user_data:
+        return redirect('/login/')
+
+    user_id = user_data.id
+
+    # Initialize placeholders with defaults
+    placeholders = {
+        'keywords': '',
+        'publishers': '',
+        'date_range': 'anytime',
+        'description': '',
+    }
+
+    try:
+        # Retrieve existing search settings
+        search_settings = SearchSetting.objects.get(user_id=user_id)
+        placeholders.update({
+            'keywords': search_settings.keywords or '',
+            'publishers': search_settings.publishers or '',
+            'date_range': search_settings.frequency or 'anytime',
+            'description': search_settings.search_description or '',
+        })
+    except SearchSetting.DoesNotExist:
+        search_settings = None
+
+    if request.method == 'POST':
+        # Retrieve Data from the form
+        keywords = request.POST.get('keywords')
+        publishers = request.POST.get('publishers')
+        date_range = request.POST.get('date-range')
+        description = request.POST.get('description')
+
+        # Update or create the user's search settings
+        search_settings, created = SearchSetting.objects.update_or_create(
+            user_id=user_id,
+            defaults={
+                'keywords': keywords,
+                'publishers': publishers,
+                'frequency': date_range,
+                'search_description': description
+            }
+        )
+
+        # Create a new previous search referencing the updated search setting
+        PreviousSearch.objects.create(
+            user_id=user_id,
+            search_setting=search_settings,
+            keyword=keywords,
+            search_description=description,
+        )
+
+        return redirect('/')
+
+    context = {
+        'placeholders': placeholders,
+    }
+
+    return render(request, 'main_page.html', context)

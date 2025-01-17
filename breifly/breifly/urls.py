@@ -29,4 +29,5 @@ urlpatterns = [
     path('settings/modify/', settings_changed, name='settings'),
     path('account/', account_view, name='account'),
     path('account/modify/', account_changed, name='account'),
+    path('search/settings/modify/', modify_search_settings, name="search")
 ]
