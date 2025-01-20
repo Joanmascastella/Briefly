@@ -1,0 +1,285 @@
+{% include 'header.html' %}
+<style>
+    body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    padding: 40px;
+}
+
+.form-container {
+    width: 100%;
+    padding: 20px;
+}
+
+.multi-step-form {
+    max-width: 500px;
+    width: 100%;
+}
+
+.form-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.form-description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.form-label {
+    font-weight: bold;
+    color: #333;
+    margin-top: 15px;
+}
+
+.form-control {
+    width: 100%;
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+}
+
+.form-control::placeholder {
+    color: #999;
+}
+
+.form-control:focus {
+    background-color: #fff;
+    border-color: #0d6efd;
+    box-shadow: 0 0 5px rgba(13, 110, 253, 0.3);
+}
+
+.btn-primary, .btn-secondary, .btn-success {
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    box-shadow: 0 4px 10px rgba(0, 75, 189, 0.5);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+.btn-success {
+    background-color: #28a745;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 10px rgba(33, 136, 56, 0.5);
+}
+.progress-bar-container {
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: 6px;
+    height: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #0d6efd;
+    width: 0%;
+    transition: width 0.3s ease-in-out;
+}
+</style>
+<div class="main-container">
+    <div class="form-container">
+        <div class="multi-step-form">
+            <h2 class="form-title">Complete Your Account Information & Define Settings</h2>
+            <p class="form-description">Please fill in the details below to complete your account setup.</p>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar-container">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+
+            <form id="multiStepForm" method="POST">
+                {% csrf_token %}
+
+                <!-- Step 1 -->
+                <div class="step" id="step1">
+                    <h4>Step 1: Basic Information</h4>
+                    <label for="full_name" class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter your full name" required>
+
+                    <label for="position" class="form-label">Position</label>
+                    <input type="text" class="form-control" id="position" name="position" placeholder="Enter your position" required>
+
+                    <button type="button" class="btn-primary next-btn">Next</button>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="step d-none" id="step2">
+                    <h4>Step 2: Contact Information</h4>
+                    <label for="report_email" class="form-label">Report Email</label>
+                    <input type="email" class="form-control" id="report_email" name="report_email" placeholder="Enter your report email" required>
+
+                    <label for="phonenr" class="form-label">Phone Number</label>
+                    <input type="text" class="form-control" id="phonenr" name="phonenr" placeholder="Enter your phone number" required>
+
+                    <div class="button-container">
+                        <button type="button" class="btn-secondary prev-btn">Previous</button>
+                        <button type="button" class="btn-primary next-btn">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="step d-none" id="step3">
+                    <h4>Step 3: Content Details</h4>
+                    <label for="target_audience" class="form-label">Target Audience</label>
+                    <input type="text" class="form-control" id="target_audience" name="target_audience" placeholder="Describe your target audience" required>
+
+                    <label for="content_sentiment" class="form-label">Content Sentiment</label>
+                    <input type="text" class="form-control" id="content_sentiment" name="content_sentiment" placeholder="What voice & feel do you want the content to have" required>
+
+                    <div class="button-container">
+                        <button type="button" class="btn-secondary prev-btn">Previous</button>
+                        <button type="button" class="btn-primary next-btn">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="step d-none" id="step4">
+                    <h4>Step 4: Company Details</h4>
+                    <label for="company" class="form-label">Company</label>
+                    <input type="text" class="form-control" id="company" name="company" placeholder="Enter your company" required>
+
+                    <label for="industry" class="form-label">Industry</label>
+                    <input type="text" class="form-control" id="industry" name="industry" placeholder="Enter the company's industry" required>
+
+                    <label for="company_brief" class="form-label">Company Brief</label>
+                    <textarea class="form-control" id="company_brief" name="company_brief" rows="3" placeholder="Write a brief about your company" required></textarea>
+
+                    <label for="recent_ventures" class="form-label">Recent Ventures</label>
+                    <textarea class="form-control" id="recent_ventures" name="recent_ventures" rows="3" placeholder="Write a brief about recent ventures" required></textarea>
+
+                    <div class="button-container">
+                        <button type="button" class="btn-secondary prev-btn">Previous</button>
+                        <button type="submit" class="btn-primary next-btn">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div class="step d-none" id="step4">
+                    <h4>Step 5: Settings</h4>
+                    <!-- Email Reports -->
+                    <div class="mb-3">
+                        <label for="email_reports" class="form-label">Email Reports</label>
+                        <select class="form-control" id="email_reports" name="email_reports" required>
+                            <option value="True" {% if not error and user_data.settings.email_reports %}selected{% endif %}>Yes</option>
+                            <option value="False" {% if not error and not user_data.settings.email_reports %}selected{% endif %}>No</option>
+                        </select>
+                    </div>
+
+                    <!-- Timezone -->
+                    <div class="mb-3">
+                        <label for="timezone" class="form-label">Timezone</label>
+                        <select class="form-control" id="timezone" name="timezone">
+                            {% for tz in timezones %}
+                            <option value="{{ tz }}" {% if not error and user_data.settings.timezone == tz %}selected{% endif %}>
+                                {{ tz }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="button" class="btn-secondary prev-btn">Previous</button>
+                        <button type="submit" class="btn-success">Submit</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const steps = document.querySelectorAll('.step');
+    const progressBar = document.getElementById('progressBar');
+    const nextBtns = document.querySelectorAll('.next-btn');
+    const prevBtns = document.querySelectorAll('.prev-btn');
+    let currentStep = 0;
+
+    function updateProgressBar() {
+        const progress = ((currentStep + 1) / steps.length) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function showStep(index) {
+        steps.forEach((step, i) => {
+            step.classList.toggle('d-none', i !== index);
+        });
+        updateProgressBar();
+    }
+
+    nextBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+    });
+
+    prevBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+    });
+
+    // Initialize the first step
+    showStep(currentStep);
+});
+</script>

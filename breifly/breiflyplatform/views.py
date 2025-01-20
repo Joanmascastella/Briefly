@@ -29,44 +29,49 @@ def landing_page(request):
     user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
     roles = [user_role.role.name for user_role in user_roles]
 
-    # Retrieve Search Settings for Placeholders
-    placeholders = {
-        'keywords': '',
-        'publishers': '',
-        'date_range': 'anytime',
-        'description': '',
-    }
+    if 'user' in roles:
+        # Retrieve Search Settings for Placeholders
+        placeholders = {
+            'keywords': '',
+            'publishers': '',
+            'date_range': 'anytime',
+            'description': '',
+        }
 
-    try:
-        search_settings = SearchSetting.objects.get(user_id=user_id)
-        placeholders.update({
-            'keywords': search_settings.keywords or '',
-            'publishers': search_settings.publishers or '',
-            'date_range': search_settings.frequency or 'anytime',
-            'description': search_settings.search_description or '',
-        })
-    except SearchSetting.DoesNotExist:
-        # If no settings exist, use defaults
-        pass
+        try:
+            search_settings = SearchSetting.objects.get(user_id=user_id)
+            placeholders.update({
+                'keywords': search_settings.keywords or '',
+                'publishers': search_settings.publishers or '',
+                'date_range': search_settings.frequency or 'anytime',
+                'description': search_settings.search_description or '',
+            })
+        except SearchSetting.DoesNotExist:
+            # If no settings exist, use defaults
+            pass
 
-    if not settings_exist or not account_info_exist:
+        if not settings_exist or not account_info_exist:
+            context = {
+                'title': 'Briefly - Home',
+                'user_authenticated': user_authenticated,
+                'user': user_data,
+                'timezones': pytz.all_timezones,
+
+            }
+            return render(request, 'main_page_new_user.html', context)
+
+        # Render the main page if everything exists
         context = {
             'title': 'Briefly - Home',
             'user_authenticated': user_authenticated,
             'user': user_data,
-            'error': 'Please make sure you have filled in Settings and Account Information to proceed.',
+            'placeholders': placeholders,
+            'roles': roles
         }
         return render(request, 'main_page.html', context)
-
-    # Render the main page if everything exists
-    context = {
-        'title': 'Briefly - Home',
-        'user_authenticated': user_authenticated,
-        'user': user_data,
-        'placeholders': placeholders,
-    }
-    return render(request, 'main_page.html', context)
-
+    else:
+        # Redirect to logout or an appropriate error page
+        return redirect('/logout/')
 
 # Login page logic
 def login_view(request):
