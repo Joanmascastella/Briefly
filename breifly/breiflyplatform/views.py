@@ -191,47 +191,55 @@ def logout_view(request):
 def settings_view(request):
     # Retrieve the access token and user data
     user_authenticated, user_data = get_access_token(request)
+    user_id = user_data.id
 
     if not user_authenticated or not user_data:
         return redirect('/login/')
 
-    try:
-        # Fetch the user settings
-        user_id = user_data.id
-        user_settings = Setting.objects.get(user_id=user_id)
+    # Fetch the user's roles
+    user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+    roles = [user_role.role.name for user_role in user_roles]
 
-        context = {
-            'title': 'Briefly - Settings',
-            'user_authenticated': True,
-            'user_data': {
-                'id': user_data.id,
-                'email': user_data.email,
-                'settings': {
-                    'date_range': user_settings.date_range,
-                    'email_reports': user_settings.email_reports,
-                    'report_time': user_settings.report_time,
-                    'timezone': user_settings.timezone,
-                    'language': user_settings.language,
+    if 'user' in roles:
+        try:
+            # Fetch the user settings
+            user_id = user_data.id
+            user_settings = Setting.objects.get(user_id=user_id)
+
+            context = {
+                'title': 'Briefly - Settings',
+                'user_authenticated': True,
+                'user_data': {
+                    'id': user_data.id,
+                    'email': user_data.email,
+                    'settings': {
+                        'date_range': user_settings.date_range,
+                        'email_reports': user_settings.email_reports,
+                        'report_time': user_settings.report_time,
+                        'timezone': user_settings.timezone,
+                        'language': user_settings.language,
+                    },
                 },
-            },
-            'timezones': pytz.all_timezones,  # Pass the list of all time zones
-            'error': None,
-        }
-    except Setting.DoesNotExist:
-        # If no settings exist, allow the user to create them
-        context = {
-            'title': 'Briefly - Create Settings',
-            'user_authenticated': True,
-            'user_data': {
-                'id': user_data.id,
-                'email': user_data.email,
-            },
-            'timezones': pytz.all_timezones,  # Pass the list of all time zones
-            'error': 'User settings not found.',
-        }
+                'timezones': pytz.all_timezones,  # Pass the list of all time zones
+                'error': None,
+            }
+        except Setting.DoesNotExist:
+            # If no settings exist, allow the user to create them
+            context = {
+                'title': 'Briefly - Create Settings',
+                'user_authenticated': True,
+                'user_data': {
+                    'id': user_data.id,
+                    'email': user_data.email,
+                },
+                'timezones': pytz.all_timezones,  # Pass the list of all time zones
+                'error': 'User settings not found.',
+            }
 
-    return render(request, 'settings.html', context)
-
+        return render(request, 'settings.html', context)
+    else:
+        # Redirect to logout or an appropriate error page
+        return redirect('/error/page/')
 
 
 @csrf_exempt
@@ -241,43 +249,54 @@ def settings_changed(request):
     if not user_authenticated or not user_data:
         return redirect('/login/')
 
-    if request.method == "POST":
-        # Retrieve the form data
-        date_range = request.POST.get('date_range')
-        email_reports = request.POST.get('email_reports') == 'True'
-        report_time = request.POST.get('report_time')
-        timezone = request.POST.get('timezone')
-        language = request.POST.get('language')
+    user_id = user_data.id
+    # Fetch the user's roles
+    user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+    roles = [user_role.role.name for user_role in user_roles]
 
-        # Validate and parse report_time
-        try:
-            if report_time:
-                hours, minutes, seconds = map(int, report_time.split(":"))
-                report_time = time(hour=hours, minute=minutes, second=seconds)
-        except ValueError:
-            return JsonResponse({'error': 'Invalid time format. Use HH:MM:SS.'}, status=400)
+    if 'user' in roles:
+        if request.method == "POST":
+            # Retrieve the form data
+            date_range = request.POST.get('date_range')
+            email_reports = request.POST.get('email_reports') == 'True'
+            report_time = request.POST.get('report_time')
+            timezone = request.POST.get('timezone')
+            language = request.POST.get('language')
 
-        # Get or create the user's settings
-        user_id = user_data.id
-        setting, created = Setting.objects.update_or_create(
-            user_id=user_id,
-            defaults={
-                'date_range': date_range,
-                'email_reports': email_reports,
-                'report_time': report_time,
-                'timezone': timezone,
-                'language': language,
+            # Validate and parse report_time
+            try:
+                if report_time:
+                    hours, minutes, seconds = map(int, report_time.split(":"))
+                    report_time = time(hour=hours, minute=minutes, second=seconds)
+            except ValueError:
+                return JsonResponse({'error': 'Invalid time format. Use HH:MM:SS.'}, status=400)
+
+            # Get or create the user's settings
+            user_id = user_data.id
+            setting, created = Setting.objects.update_or_create(
+                user_id=user_id,
+                defaults={
+                    'date_range': date_range,
+                    'email_reports': email_reports,
+                    'report_time': report_time,
+                    'timezone': timezone,
+                    'language': language,
+                }
+            )
+
+            context = {
+                'updated_settings': setting,
+                'created': created
             }
-        )
 
-        context = {
-            'updated_settings': setting,
-            'created': created
-        }
+            return redirect('/settings/', context)
 
-        return redirect('/settings/', context)
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    else:
+        # Redirect to logout or an appropriate error page
+        return redirect('/error/page/')
 
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 
 def account_view(request):
     # Retrieve the access token and user data
@@ -286,41 +305,51 @@ def account_view(request):
     if not user_authenticated or not user_data:
         return redirect('/login/')
 
-    try:
-        # Fetch the user settings
-        user_id = user_data.id
-        account_information = AccountInformation.objects.get(user_id=user_id)
 
-        context = {
-            'title': 'Briefly - Account',
-            'user_authenticated': True,
-            'user_data': {
-                'id': user_data.id,
-                'email': user_data.email,
-                'account': {
-                    'full_name': account_information.full_name,
-                    'position': account_information.position,
-                    'company': account_information.company,
-                    'report_email': account_information.report_email,
-                    'phonenr': account_information.phonenr
+    user_id = user_data.id
+    # Fetch the user's roles
+    user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+    roles = [user_role.role.name for user_role in user_roles]
+
+    if 'user' in roles:
+        try:
+            # Fetch the user settings
+            user_id = user_data.id
+            account_information = AccountInformation.objects.get(user_id=user_id)
+
+            context = {
+                'title': 'Briefly - Account',
+                'user_authenticated': True,
+                'user_data': {
+                    'id': user_data.id,
+                    'email': user_data.email,
+                    'account': {
+                        'full_name': account_information.full_name,
+                        'position': account_information.position,
+                        'company': account_information.company,
+                        'report_email': account_information.report_email,
+                        'phonenr': account_information.phonenr
+                    },
                 },
-            },
-            'error': None,
-        }
+                'error': None,
+            }
 
-    except AccountInformation.DoesNotExist:
-        # If no account_information exist, allow the user to create them
-        context = {
-            'title': 'Briefly - Add Account Information',
-            'user_authenticated': True,
-            'user_data': {
-                'id': user_data.id,
-                'email': user_data.email,
-            },
-            'error': 'Account information for user not found.',
-        }
+        except AccountInformation.DoesNotExist:
+            # If no account_information exist, allow the user to create them
+            context = {
+                'title': 'Briefly - Add Account Information',
+                'user_authenticated': True,
+                'user_data': {
+                    'id': user_data.id,
+                    'email': user_data.email,
+                },
+                'error': 'Account information for user not found.',
+            }
 
-    return render(request, 'account.html', context)
+        return render(request, 'account.html', context)
+    else:
+        # Redirect to logout or an appropriate error page
+        return redirect('/error/page/')
 
 @csrf_exempt
 def account_changed(request):
@@ -329,35 +358,45 @@ def account_changed(request):
     if not user_authenticated or not user_data:
         return redirect('/login/')
 
-    if request.method == "POST":
-        # Retrieve the form data
-        full_name = request.POST.get('full_name')
-        position = request.POST.get('position')
-        company = request.POST.get('company')
-        report_email = request.POST.get('report_email')
-        phonenr = request.POST.get('phonenr')
 
-        # Get or create the user's account settings
-        user_id = user_data.id
-        account_information, created = AccountInformation.objects.update_or_create(
-            user_id=user_id,
-            defaults={
-                'full_name': full_name,
-                'position': position,
-                'company': company,
-                'report_email': report_email,
-                'phonenr': phonenr
+    user_id = user_data.id
+    # Fetch the user's roles
+    user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+    roles = [user_role.role.name for user_role in user_roles]
+
+    if 'user' in roles:
+        if request.method == "POST":
+            # Retrieve the form data
+            full_name = request.POST.get('full_name')
+            position = request.POST.get('position')
+            company = request.POST.get('company')
+            report_email = request.POST.get('report_email')
+            phonenr = request.POST.get('phonenr')
+
+            # Get or create the user's account settings
+            user_id = user_data.id
+            account_information, created = AccountInformation.objects.update_or_create(
+                user_id=user_id,
+                defaults={
+                    'full_name': full_name,
+                    'position': position,
+                    'company': company,
+                    'report_email': report_email,
+                    'phonenr': phonenr
+                }
+            )
+
+            context = {
+                'updated_account_information': account_information,
+                'created': created
             }
-        )
 
-        context = {
-            'updated_account_information': account_information,
-            'created': created
-        }
+            return redirect('/account/', context)
 
-        return redirect('/account/', context)
-
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    else:
+        # Redirect to logout or an appropriate error page
+        return redirect('/error/page/')
 
 @csrf_exempt
 def modify_search_settings(request):
@@ -376,78 +415,87 @@ def modify_search_settings(request):
         'description': '',
     }
 
-    try:
-        # Retrieve existing search settings
-        search_settings = SearchSetting.objects.get(user_id=user_id)
-        placeholders.update({
-            'keywords': search_settings.keywords or '',
-            'publishers': search_settings.publishers or '',
-            'date_range': search_settings.frequency or 'anytime',
-            'description': search_settings.search_description or '',
-        })
-    except SearchSetting.DoesNotExist:
-        search_settings = None
+    user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+    roles = [user_role.role.name for user_role in user_roles]
 
-    if request.method == 'POST':
-        # Retrieve Data from the form
-        keywords = request.POST.get('keywords')
-        publishers = request.POST.get('publishers')
-        date_range = request.POST.get('date-range')
-        description = request.POST.get('description')
-
-        # Update or create the user's search settings
-        search_settings, created = SearchSetting.objects.update_or_create(
-            user_id=user_id,
-            defaults={
-                'keywords': keywords,
-                'publishers': publishers,
-                'frequency': date_range,
-                'search_description': description
-            }
-        )
-
-        # Create a new previous search referencing the updated search setting
-        PreviousSearch.objects.create(
-            user_id=user_id,
-            search_setting=search_settings,
-            keyword=keywords,
-            search_description=description,
-        )
-
-        return redirect('/')
-
-    context = {
-        'placeholders': placeholders,
-    }
-
-    return render(request, 'main_page.html', context)
-
-
-# Django view
-async def get_news(request):
-
-    # ADD Authentication
-
-
-    if request.method == "GET":
-        print("Request GET parameters:", request.GET)  # Debugging
-        keywords = request.GET.get('keywords', '').strip()  # Ensure whitespace is trimmed
-        period = request.GET.get('period', '1')  # Default to "Anytime"
-        publishers = request.GET.getlist('publishers', [])
-
-        print(f"Extracted keywords: {keywords}, period: {period}, publishers: {publishers}")  # Debugging
-
-        if not keywords:
-            return JsonResponse({'error': 'Keywords are required'}, status=400)
-
-        if period not in ["1", "2", "3", "4", "5"]:
-            return JsonResponse({'error': 'Invalid time period selected'}, status=400)
-
+    if 'user' in roles:
         try:
-            # Await the result of the async function
-            articles = await search_news(keywords, get_period_param(period), publishers)
-            return JsonResponse({'articles': articles}, safe=False)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            # Retrieve existing search settings
+            search_settings = SearchSetting.objects.get(user_id=user_id)
+            placeholders.update({
+                'keywords': search_settings.keywords or '',
+                'publishers': search_settings.publishers or '',
+                'date_range': search_settings.frequency or 'anytime',
+                'description': search_settings.search_description or '',
+            })
+        except SearchSetting.DoesNotExist:
+            search_settings = None
 
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
+        if request.method == 'POST':
+            # Retrieve Data from the form
+            keywords = request.POST.get('keywords')
+            publishers = request.POST.get('publishers')
+            date_range = request.POST.get('date-range')
+            description = request.POST.get('description')
+
+            # Update or create the user's search settings
+            search_settings, created = SearchSetting.objects.update_or_create(
+                user_id=user_id,
+                defaults={
+                    'keywords': keywords,
+                    'publishers': publishers,
+                    'frequency': date_range,
+                    'search_description': description
+                }
+            )
+
+            # Create a new previous search referencing the updated search setting
+            PreviousSearch.objects.create(
+                user_id=user_id,
+                search_setting=search_settings,
+                keyword=keywords,
+                search_description=description,
+            )
+
+            return redirect('/')
+
+        context = {
+            'placeholders': placeholders,
+        }
+
+        return render(request, 'main_page.html', context)
+    else:
+        # Redirect to logout or an appropriate error page
+        return redirect('/error/page/')
+
+
+# Custom API for news access
+async def get_news(request):
+    user_data = get_access_token(request)
+    user_id = user_data.id
+    user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+    roles = [user_role.role.name for user_role in user_roles]
+
+    if 'api' in roles:
+        if request.method == "GET":
+            print("Request GET parameters:", request.GET)  # Debugging
+            keywords = request.GET.get('keywords', '').strip()  # Ensure whitespace is trimmed
+            period = request.GET.get('period', '1')  # Default to "Anytime"
+            publishers = request.GET.getlist('publishers', [])
+
+            print(f"Extracted keywords: {keywords}, period: {period}, publishers: {publishers}")  # Debugging
+
+            if not keywords:
+                return JsonResponse({'error': 'Keywords are required'}, status=400)
+
+            if period not in ["1", "2", "3", "4", "5"]:
+                return JsonResponse({'error': 'Invalid time period selected'}, status=400)
+
+            try:
+                # Await the result of the async function
+                articles = await search_news(keywords, get_period_param(period), publishers)
+                return JsonResponse({'articles': articles}, safe=False)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
+
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
