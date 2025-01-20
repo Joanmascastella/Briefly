@@ -71,7 +71,14 @@ def landing_page(request):
         return render(request, 'main_page.html', context)
     else:
         # Redirect to logout or an appropriate error page
-        return redirect('/logout/')
+        return redirect('/error/page/')
+
+
+
+
+def  error_page(request):
+    return render(request, '404.html')
+
 
 # Login page logic
 def login_view(request):
