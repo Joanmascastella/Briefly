@@ -73,6 +73,68 @@ def landing_page(request):
         # Redirect to logout or an appropriate error page
         return redirect('/error/page/')
 
+@csrf_exempt
+def finalise_new_user(request):
+    # Retrieve the access token and user data
+    user_authenticated, user_data = get_access_token(request)
+    user_id = user_data.id
+
+    if not user_authenticated or not user_data:
+        return redirect('/login/')
+
+    # Fetch the user's roles
+    user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+    roles = [user_role.role.name for user_role in user_roles]
+
+
+    if 'user' in roles:
+        if request.method == 'POST':
+            full_name = request.POST.get('full_name')
+            position = request.POST.get('position')
+            report_email = request.POST.get('report_email')
+            phonenr = request.POST.get('phonenr')
+            target_audience = request.POST.get('target_audience')
+            content_sentiment = request.POST.get('content_sentiment')
+            company = request.POST.get('company')
+            industry = request.POST.get('industry')
+            company_brief = request.POST.get('company_brief')
+            recent_ventures = request.POST.get('recent_ventures')
+            account_version = "standard"
+
+            # Settings
+            email_reports = request.POST.get('email_reports')
+            timezone = request.POST.get('timezone')
+
+            # Create the user's settings
+            Setting.objects.update_or_create(
+                user_id=user_id,
+                defaults={
+                    'email_reports': email_reports,
+                    'timezone': timezone,
+                }
+            )
+
+            # Create account information
+            AccountInformation.objects.update_or_create(
+                user_id=user_id,
+                defaults={
+                    "full_name": full_name,
+                    "position": position,
+                    "phonenr": phonenr,
+                    "target_audience": target_audience,
+                    "content_sentiment": content_sentiment,
+                    "company": company,
+                    "report_email": report_email,
+                    "industry": industry,
+                    "company_brief": company_brief,
+                    "recent_ventures": recent_ventures,
+                    "account_version": account_version,
+                }
+            )
+
+        return redirect('/')
+
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
 
