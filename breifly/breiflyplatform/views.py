@@ -56,7 +56,7 @@ def landing_page(request):
                 'user_authenticated': user_authenticated,
                 'user': user_data,
                 'timezones': pytz.all_timezones,
-
+                'new_user': 'true'
             }
             return render(request, 'main_page_new_user.html', context)
 
