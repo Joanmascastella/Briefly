@@ -14,6 +14,11 @@ from .get_news import search_news, get_period_param
 def landing_page(request):
     # Get the access token from the session
     user_authenticated, user_data = get_access_token(request)
+
+    # Redirect to login if the user is not authenticated
+    if not user_authenticated:
+        return redirect('/login')
+
     user_id = user_data.id
 
     # Check if Settings and Account Information exist
