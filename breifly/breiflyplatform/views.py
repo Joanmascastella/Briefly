@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .supabase_client import supabase
 from .helper_functions import get_access_token
-from .models import Setting, SearchSetting, PreviousSearch, Summary, AccountInformation
+from .models import Setting, SearchSetting, PreviousSearch, Summary, UserRole, AccountInformation, ScheduledSearch
 from django.views.decorators.csrf import csrf_exempt
 import pytz
 from .get_news import search_news, get_period_param
@@ -24,6 +24,10 @@ def landing_page(request):
     # Check if Settings and Account Information exist
     settings_exist = Setting.objects.filter(user_id=user_id).exists()
     account_info_exist = AccountInformation.objects.filter(user_id=user_id).exists()
+
+    # Fetch the user's roles
+    user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+    roles = [user_role.role.name for user_role in user_roles]
 
     # Retrieve Search Settings for Placeholders
     placeholders = {
@@ -66,6 +70,11 @@ def landing_page(request):
 
 # Login page logic
 def login_view(request):
+    context = {
+        'title': 'Briefly - Login',
+        'error': None,
+    }
+
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -84,13 +93,10 @@ def login_view(request):
                 return redirect('/')
             else:
                 # Handle login errors
-                return JsonResponse({'error': 'Invalid email or password'}, status=400)
+                context['error'] = 'Invalid email or password'
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-
-    context = {
-        'title': 'Briefly - Login',
-    }
+            # Add the error message to context for frontend
+            context['error'] = str(e)
 
     return render(request, 'main_page.html', context)
 

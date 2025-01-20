@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/static/assets/images/campaign-creators-yktK2qaiVHI-unsplash.jpg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/loginForm.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/loginForm.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" afterDir="false" />
     </list>
@@ -136,7 +136,7 @@
       <workItem from="1737029945194" duration="17000" />
       <workItem from="1737034746406" duration="2040000" />
       <workItem from="1737075284980" duration="13206000" />
-      <workItem from="1737335755618" duration="1317000" />
+      <workItem from="1737335755618" duration="6836000" />
     </task>
     <servers />
   </component>

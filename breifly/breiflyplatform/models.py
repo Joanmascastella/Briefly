@@ -17,14 +17,37 @@ class User(models.Model):
         managed = False  # Prevent Django from managing this table
 
 
+# Roles Model
+class Role(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50, unique=True)
+
+    class Meta:
+        db_table = 'roles'
+        managed = False
+
+
+# User Roles Model
+class UserRole(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, db_column='user_id', related_name='user_roles'
+    )
+    role = models.ForeignKey(
+        Role, on_delete=models.CASCADE, db_column='role_id', related_name='user_roles'
+    )
+    assigned_at = models.DateTimeField(default=now)
+
+    class Meta:
+        db_table = 'user_roles'
+        managed = False
+
+
 # Settings Model
 class Setting(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE, related_name='settings')
-    date_range = models.CharField(max_length=50)
     email_reports = models.BooleanField(default=False)
-    report_time = models.TimeField(null=True, blank=True)
     timezone = models.CharField(max_length=50, null=True, blank=True)
-    language = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
         db_table = 'settings'
@@ -37,9 +60,30 @@ class SearchSetting(models.Model):
     publishers = models.TextField()
     frequency = models.CharField(max_length=50)
     search_description = models.TextField()
+    type_of_search = models.TextField(default='')
 
     class Meta:
         db_table = 'search_settings'
+
+# Schedulded Search Model
+class ScheduledSearch(models.Model):
+    user = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='scheduled_searches'
+    )
+    search_settings = models.ForeignKey(
+        'SearchSetting',
+        on_delete=models.CASCADE,
+        related_name='scheduled_searches',
+        db_column='search_settings_id'
+    )
+    date_of_execution = models.DateField()
+    time_of_execution = models.TimeField()
+    created_at = models.DateTimeField(default=now)
+
+    class Meta:
+        db_table = 'scheduled_search'
 
 
 # Previous Searches Model
@@ -91,6 +135,12 @@ class AccountInformation(models.Model):
     company = models.CharField(max_length=255)
     report_email = models.CharField(max_length=255)
     phonenr = models.CharField(max_length=20, null=True, blank=True)
+    target_audience = models.CharField(max_length=255, default='')
+    industry = models.CharField(max_length=255, default='')
+    content_sentiment = models.CharField(max_length=255, default='')
+    company_brief = models.CharField(max_length=255, default='')
+    recent_ventures = models.CharField(max_length=255, default='')
+    account_version = models.CharField(max_length=35, default='')
 
     class Meta:
         db_table = 'account_information'
