@@ -19,6 +19,7 @@ from .models import (
     User
 )
 from .get_news import search_news, get_period_param
+from django.core.paginator import Paginator
 
 
 # --------------------------------
@@ -284,6 +285,7 @@ def admin_dashboard(request):
 
     if not user_authenticated or not user_data:
         return redirect('/login/')
+
     if request.method == 'GET':
         if 'admin' in roles:
             # Step 1: Fetch all users from `auth.users`
@@ -320,6 +322,11 @@ def admin_dashboard(request):
                         'account_version': account_info.account_version,
                     })
 
+            # -- PAGINATION LOGIC --
+            paginator = Paginator(users_with_account_info, 5)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+
             context = {
                 'title': 'Briefly - Admin Dashboard',
                 'user_authenticated': True,
@@ -328,13 +335,30 @@ def admin_dashboard(request):
                     'email': user_data.email,
                 },
                 'roles': roles,
-                'users_with_account_info': users_with_account_info,
+                'page_obj': page_obj,
+                'is_paginated': page_obj.has_other_pages(),
+                'paginator': paginator,
                 'navbar_partial': navbar_partial,
             }
 
             return render(request, 'admin_dashboard.html', context)
         else:
             return redirect('/error/page/')
+
+    # When an admin updates account_version via POST
+    if request.method == 'POST':
+        if 'admin' in roles:
+            user_id_to_update = request.POST.get('user_id')
+            new_account_version = request.POST.get('account_version')
+
+            # Update that user's 'account_version' field in AccountInformation
+            account_information_obj = AccountInformation.objects.get(user_id=user_id_to_update)
+            account_information_obj.account_version = new_account_version
+            account_information_obj.save()
+
+            return redirect('/custom-admin/dashboard/')
+        else:
+            return JsonResponse({'error': 'Not authorized'}, status=403)
 
 
 # --------------------------------
