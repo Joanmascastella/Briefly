@@ -125,9 +125,11 @@ def error_page(request):
 # Authentication Views
 # --------------------------------
 
+@csrf_exempt
 def login_view(request):
     """
     Handles user login using Supabase authentication.
+    Expects JSON data on POST (email, password) and returns JSON responses for errors or success.
     """
     try:
         user_authenticated, user_data = get_access_token(request)
@@ -143,41 +145,59 @@ def login_view(request):
 
         context = {
             'title': 'Briefly - Login',
-            'error': '',
             'navbar_partial': navbar_partial,
         }
-
+        # If GET, just render the login form (no error context).
         if request.method == 'GET':
             return render(request, 'loginForm.html', context)
 
+        # If POST, parse JSON from request.body instead of request.POST
         if request.method == 'POST':
-            email = sanitize(request.POST.get('email'))
-            password = sanitize(request.POST.get('password'))
+            try:
+                data = json.loads(request.body)
+            except json.JSONDecodeError:
+                # If the body isn't valid JSON
+                return JsonResponse({'error': 'Invalid JSON body'}, status=400)
 
+            email = sanitize(data.get('email'))
+            password = sanitize(data.get('password'))
+
+            if not email or not password:
+                return JsonResponse({'error': 'Email and password are required'}, status=400)
+
+            # Attempt Supabase authentication
             try:
                 response = supabase.auth.sign_in_with_password({"email": email, "password": password})
+
                 if response.user:
-                    # Save session
+                    # If successful, store session info
                     request.session['access_token'] = response.session.access_token
                     request.session['user'] = {
                         "id": response.user.id,
                         "email": response.user.email
                     }
-                    # Check roles
+
+                    # Check roles to know where to redirect
                     user_id = response.user.id
                     user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
                     roles = [user_role.role.name for user_role in user_roles]
 
-                    if 'user' in roles:
-                        return redirect('/')
-                    elif 'admin' in roles:
-                        return redirect('/custom-admin/dashboard/')
-                else:
-                    context['error'] = 'Invalid email or password'
-            except Exception as e:
-                context['error'] = str(e)
+                    # Return JSON success, plus a recommended redirect
+                    if 'admin' in roles:
+                        return JsonResponse({'success': True, 'redirect_url': '/custom-admin/dashboard/'}, status=200)
+                    else:
+                        return JsonResponse({'success': True, 'redirect_url': '/'}, status=200)
 
-        return render(request, 'main_page.html', context)
+                else:
+                    # Invalid credentials
+                    return JsonResponse({'error': 'Invalid email or password'}, status=400)
+
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
+
+        # If neither GET nor POST, return an error
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 

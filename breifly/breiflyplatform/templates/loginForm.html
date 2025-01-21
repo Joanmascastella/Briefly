@@ -140,25 +140,21 @@
         <div class="login-form">
             <h2>Welcome back</h2>
             <p>Please enter your details.</p>
-            <form method="POST" action="/login/">
-                {% csrf_token %}
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+            
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+            
+            <button class="btn-primary" type="button" onclick="loginViaJSON()">Sign In</button>
+            
+            <!-- Reusable stylized message box (Bootstrap Alert) -->
+            <div id="messageBox" class="alert d-none" role="alert"></div>
 
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
-
-                <button type="submit" class="btn-primary">Sign In</button>
-                <div class="form-footer">
-                    <p style="color: red">{{ error }}</p>
-                </div>
-
-                <div class="form-footer">
-                    <a href="#">Forgot Password?</a>
-                    <a href="#">Register here</a>
-                </div>
-                  
-            </form>
+            <div class="form-footer">
+                <a href="#">Forgot Password?</a>
+                <a href="#">Register here</a>
+            </div>
         </div>
     </div>
 
