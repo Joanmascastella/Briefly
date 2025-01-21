@@ -8,7 +8,7 @@ import pytz
 from django.core.paginator import Paginator
 
 from .supabase_client import supabase
-from .helper_functions import get_access_token, get_navbar_partial, sanitize
+from .helper_functions import get_access_token, get_navbar_partial, sanitize, wants_json_response
 from .models import (
     Setting,
     SearchSetting,
@@ -21,7 +21,6 @@ from .models import (
 )
 from .get_news import search_news, get_period_param
 
-
 # --------------------------------
 # Public / Landing Views
 # --------------------------------
@@ -30,30 +29,24 @@ def landing_page(request):
     """
     Displays the landing/home page for authenticated users or redirects to login if not authenticated.
     """
-    # Get the access token from the session
     user_authenticated, user_data = get_access_token(request)
 
-    # Redirect to login if the user is not authenticated
+    # Redirect or JSON error if user not authenticated
     if not user_authenticated:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
         return redirect('/login')
 
     user_id = user_data.id
-
-    # Check if Settings and Account Information exist
     settings_exist = Setting.objects.filter(user_id=user_id).exists()
     account_info_exist = AccountInformation.objects.filter(user_id=user_id).exists()
 
-    # Fetch the user's roles
     user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
     roles = [user_role.role.name for user_role in user_roles]
 
-    # Determine if user is "new_user"
     new_user_status = 'true' if (not settings_exist or not account_info_exist) else 'false'
-
-    # Decide which navbar to use
     navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
 
-    # If user is "new", you redirect to `main_page_new_user.html`
     if 'user' in roles:
         if not settings_exist or not account_info_exist:
             context = {
@@ -66,7 +59,6 @@ def landing_page(request):
             }
             return render(request, 'main_page_new_user.html', context)
 
-        # Otherwise, render the main page
         placeholders = {
             'keywords': '',
             'publishers': '',
@@ -97,6 +89,8 @@ def landing_page(request):
     elif 'admin' in roles:
         return redirect('/custom-admin/dashboard/')
     else:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Role not allowed'}, status=403)
         return redirect('/error/page/')
 
 
@@ -104,7 +98,6 @@ def error_page(request):
     """
     Renders a generic error (404) page.
     """
-    # Even on the error page, we can decide to show a navbar if the user is logged in
     user_authenticated, user_data = get_access_token(request)
     new_user_status = 'false'
     roles = []
@@ -115,7 +108,6 @@ def error_page(request):
         roles = [user_role.role.name for user_role in user_roles]
 
     navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
-
     return render(request, '404.html', {'navbar_partial': navbar_partial})
 
 
@@ -127,7 +119,6 @@ def login_view(request):
     """
     Handles user login using Supabase authentication.
     """
-    # Compute navbar partial even on the login screen
     user_authenticated, user_data = get_access_token(request)
     new_user_status = 'false'
     roles = []
@@ -149,23 +140,20 @@ def login_view(request):
         return render(request, 'loginForm.html', context)
 
     if request.method == 'POST':
-        # -- Sanitized --
         email = sanitize(request.POST.get('email'))
         password = sanitize(request.POST.get('password'))
 
         try:
-            # Sign in the user with email and password
             response = supabase.auth.sign_in_with_password({"email": email, "password": password})
 
             if response.user:
-                # Save the access token and user data in the session
+                # Save session
                 request.session['access_token'] = response.session.access_token
                 request.session['user'] = {
                     "id": response.user.id,
                     "email": response.user.email
                 }
-
-                # Fetch the user's roles
+                # Check roles
                 user_id = response.user.id
                 user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
                 roles = [user_role.role.name for user_role in user_roles]
@@ -175,10 +163,8 @@ def login_view(request):
                 elif 'admin' in roles:
                     return redirect('/custom-admin/dashboard/')
             else:
-                # Handle login errors
                 context['error'] = 'Invalid email or password'
         except Exception as e:
-            # Add the error message to context for frontend
             context['error'] = str(e)
 
     return render(request, 'main_page.html', context)
@@ -198,20 +184,18 @@ def finalise_new_user(request):
     """
     Finalizes registration details for a new user (e.g., personal and account info).
     """
-    # This view redirects or returns JSON, so no need for navbar context
     user_authenticated, user_data = get_access_token(request)
-    user_id = user_data.id
-
     if not user_authenticated or not user_data:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
         return redirect('/login/')
 
-    # Fetch the user's roles
+    user_id = user_data.id
     user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
     roles = [user_role.role.name for user_role in user_roles]
 
     if 'user' in roles:
         if request.method == 'POST':
-            # -- Sanitized --
             full_name = sanitize(request.POST.get('full_name'))
             position = sanitize(request.POST.get('position'))
             report_email = sanitize(request.POST.get('report_email'))
@@ -224,11 +208,9 @@ def finalise_new_user(request):
             recent_ventures = sanitize(request.POST.get('recent_ventures'))
             account_version = "standard"
 
-            # Settings
             email_reports = sanitize(request.POST.get('email_reports'))
             timezone = sanitize(request.POST.get('timezone'))
 
-            # Create the user's settings
             Setting.objects.update_or_create(
                 user_id=user_id,
                 defaults={
@@ -237,7 +219,6 @@ def finalise_new_user(request):
                 }
             )
 
-            # Create account information
             AccountInformation.objects.update_or_create(
                 user_id=user_id,
                 defaults={
@@ -256,7 +237,6 @@ def finalise_new_user(request):
             )
 
         return redirect('/')
-
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 
@@ -270,9 +250,13 @@ def admin_dashboard(request):
     Displays the admin dashboard with a list of users and their account information.
     """
     user_authenticated, user_data = get_access_token(request)
+    if not user_authenticated or not user_data:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
+        return redirect('/login/')
+
     new_user_status = 'false'
     roles = []
-
     if user_data:
         user_id = user_data.id
         user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
@@ -280,22 +264,13 @@ def admin_dashboard(request):
 
     navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
 
-    if not user_authenticated or not user_data:
-        return redirect('/login/')
-
     if request.method == 'GET':
         if 'admin' in roles:
-            # Step 1: Fetch all users
             users = User.objects.all()
-
-            # Step 2: Get user_role objects with role_id=2
             user_roles = UserRole.objects.filter(role_id=2)
-
-            # Step 3: Determine user IDs that have user role
-            user_ids_with_role_user = {user_role.user_id for user_role in user_roles}
+            user_ids_with_role_user = {ur.user_id for ur in user_roles}
             users_with_role_user = [u for u in users if u.id in user_ids_with_role_user]
 
-            # Step 4: Fetch account info for those users
             account_info_list = AccountInformation.objects.filter(user_id__in=user_ids_with_role_user)
 
             users_with_account_info = []
@@ -318,7 +293,6 @@ def admin_dashboard(request):
                         'account_version': account_info.account_version,
                     })
 
-            # PAGINATION
             paginator = Paginator(users_with_account_info, 5)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
@@ -338,18 +312,17 @@ def admin_dashboard(request):
             }
             return render(request, 'admin_dashboard.html', context)
         else:
+            if wants_json_response(request):
+                return JsonResponse({'error': 'Not authorized'}, status=403)
             return redirect('/error/page/')
 
-    # POST: Update account_version without CSRF
     if request.method == 'POST':
         if 'admin' in roles:
             try:
-                # Manually parse the JSON body
                 data = json.loads(request.body)
                 user_id_to_update = data.get('user_id')
                 new_account_version = sanitize(data.get('account_version'))
 
-                # Now 'user_id_to_update' should have a real value
                 account_information_obj = AccountInformation.objects.get(user_id=user_id_to_update)
                 account_information_obj.account_version = new_account_version
                 account_information_obj.save()
@@ -359,7 +332,6 @@ def admin_dashboard(request):
                     'account_version': new_account_version,
                     'user_id': user_id_to_update
                 }, status=200)
-
             except AccountInformation.DoesNotExist:
                 return JsonResponse({'error': 'Account not found'}, status=404)
             except Exception as e:
@@ -377,14 +349,14 @@ def settings_view(request):
     Fetches and displays the user's settings for editing.
     """
     user_authenticated, user_data = get_access_token(request)
-
     if not user_authenticated or not user_data:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
         return redirect('/login/')
 
     roles = []
     new_user_status = 'false'
     user_id = user_data.id
-
     user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
     roles = [user_role.role.name for user_role in user_roles]
 
@@ -426,6 +398,8 @@ def settings_view(request):
 
         return render(request, 'settings.html', context)
     else:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authorized'}, status=403)
         return redirect('/error/page/')
 
 
@@ -435,8 +409,9 @@ def settings_changed(request):
     Handles updating user settings (date range, email reports, report time, timezone, language).
     """
     user_authenticated, user_data = get_access_token(request)
-
     if not user_authenticated or not user_data:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
         return redirect('/login/')
 
     user_id = user_data.id
@@ -445,10 +420,9 @@ def settings_changed(request):
 
     if 'user' in roles:
         if request.method == "POST":
-            # -- Sanitized --
             date_range = sanitize(request.POST.get('date_range'))
             email_reports_str = sanitize(request.POST.get('email_reports'))
-            email_reports = True if email_reports_str == 'True' else False
+            email_reports = (email_reports_str == 'True')
 
             report_time_raw = sanitize(request.POST.get('report_time'))
             timezone_val = sanitize(request.POST.get('timezone'))
@@ -478,6 +452,8 @@ def settings_changed(request):
 
         return JsonResponse({'error': 'Invalid request method'}, status=400)
     else:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authorized'}, status=403)
         return redirect('/error/page/')
 
 
@@ -490,8 +466,9 @@ def account_view(request):
     Displays user's account information.
     """
     user_authenticated, user_data = get_access_token(request)
-
     if not user_authenticated or not user_data:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
         return redirect('/login/')
 
     user_id = user_data.id
@@ -504,7 +481,6 @@ def account_view(request):
     if 'user' in roles:
         try:
             account_information = AccountInformation.objects.get(user_id=user_id)
-
             context = {
                 'title': 'Briefly - Account',
                 'user_authenticated': True,
@@ -537,6 +513,8 @@ def account_view(request):
 
         return render(request, 'account.html', context)
     else:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authorized'}, status=403)
         return redirect('/error/page/')
 
 
@@ -545,10 +523,10 @@ def account_changed(request):
     """
     Handles updating user account information.
     """
-    # This view redirects, so no navbar needed
     user_authenticated, user_data = get_access_token(request)
-
     if not user_authenticated or not user_data:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
         return redirect('/login/')
 
     user_id = user_data.id
@@ -557,7 +535,6 @@ def account_changed(request):
 
     if 'user' in roles:
         if request.method == "POST":
-            # -- Sanitized --
             full_name = sanitize(request.POST.get('full_name'))
             position = sanitize(request.POST.get('position'))
             company = sanitize(request.POST.get('company'))
@@ -579,6 +556,8 @@ def account_changed(request):
 
         return JsonResponse({'error': 'Invalid request method'}, status=400)
     else:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authorized'}, status=403)
         return redirect('/error/page/')
 
 
@@ -592,14 +571,14 @@ def modify_search_settings(request):
     Handles creating or updating search settings and saving a PreviousSearch record.
     """
     user_authenticated, user_data = get_access_token(request)
-
     if not user_authenticated or not user_data:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
         return redirect('/login/')
 
     roles = []
     new_user_status = 'false'
     user_id = user_data.id
-
     user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
     roles = [user_role.role.name for user_role in user_roles]
     navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
@@ -623,7 +602,6 @@ def modify_search_settings(request):
             search_settings = None
 
         if request.method == 'POST':
-            # -- Sanitized --
             keywords = sanitize(request.POST.get('keywords'))
             publishers = sanitize(request.POST.get('publishers'))
             date_range = sanitize(request.POST.get('date-range'))
@@ -652,9 +630,10 @@ def modify_search_settings(request):
             'placeholders': placeholders,
             'navbar_partial': navbar_partial,
         }
-
         return render(request, 'main_page.html', context)
     else:
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Not authorized'}, status=403)
         return redirect('/error/page/')
 
 
@@ -671,7 +650,6 @@ async def get_news(request):
     if 'api' in roles:
         if request.method == "GET":
             print("Request GET parameters:", request.GET)  # Debugging
-            # -- Sanitized --
             keywords = sanitize(request.GET.get('keywords', '')).strip()
             period = sanitize(request.GET.get('period', '1'))
             publishers = [sanitize(pub) for pub in request.GET.getlist('publishers', [])]
@@ -692,5 +670,4 @@ async def get_news(request):
 
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-    # Fallback if the user doesn't have 'api' role
     return JsonResponse({'error': 'Not authorized'}, status=403)

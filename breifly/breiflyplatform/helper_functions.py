@@ -53,3 +53,12 @@ def sanitize(value):
         return ''
     return strip_tags(value).strip()
 
+# Helper function to check if the request is for JSON
+def wants_json_response(request):
+    """
+    Helper to check if the client prefers JSON (e.g., for AJAX calls).
+    We'll look for 'Accept: application/json' or a similar indicator.
+    """
+    accept_header = request.headers.get('Accept', '')
+    return 'application/json' in accept_header
+
