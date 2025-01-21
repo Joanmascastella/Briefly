@@ -264,6 +264,7 @@ def finalise_new_user(request):
 # Admin Views
 # --------------------------------
 
+@csrf_exempt
 def admin_dashboard(request):
     """
     Displays the admin dashboard with a list of users and their account information.
@@ -284,20 +285,19 @@ def admin_dashboard(request):
 
     if request.method == 'GET':
         if 'admin' in roles:
-            # Step 1: Fetch all users from `auth.users`
+            # Step 1: Fetch all users
             users = User.objects.all()
 
-            # Step 2: Fetch all UserRole objects with `role_id=2` (user role)
+            # Step 2: Get user_role objects with role_id=2
             user_roles = UserRole.objects.filter(role_id=2)
 
-            # Step 3: Match users with `user_id` from user_roles
+            # Step 3: Determine user IDs that have user role
             user_ids_with_role_user = {user_role.user_id for user_role in user_roles}
-            users_with_role_user = [user for user in users if user.id in user_ids_with_role_user]
+            users_with_role_user = [u for u in users if u.id in user_ids_with_role_user]
 
-            # Step 4: Fetch AccountInformation for matched user IDs
+            # Step 4: Fetch account info for those users
             account_info_list = AccountInformation.objects.filter(user_id__in=user_ids_with_role_user)
 
-            # Prepare the data for the template
             users_with_account_info = []
             for user in users_with_role_user:
                 account_info = account_info_list.filter(user_id=user.id).first()
@@ -318,7 +318,7 @@ def admin_dashboard(request):
                         'account_version': account_info.account_version,
                     })
 
-            # -- PAGINATION LOGIC --
+            # PAGINATION
             paginator = Paginator(users_with_account_info, 5)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
@@ -336,23 +336,34 @@ def admin_dashboard(request):
                 'paginator': paginator,
                 'navbar_partial': navbar_partial,
             }
-
             return render(request, 'admin_dashboard.html', context)
         else:
             return redirect('/error/page/')
 
-    # When an admin updates account_version via POST
+    # POST: Update account_version without CSRF
     if request.method == 'POST':
         if 'admin' in roles:
-            user_id_to_update = sanitize(request.POST.get('user_id'))
-            new_account_version = sanitize(request.POST.get('account_version'))
+            try:
+                # Manually parse the JSON body
+                data = json.loads(request.body)
+                user_id_to_update = data.get('user_id')
+                new_account_version = sanitize(data.get('account_version'))
 
-            # Update that user's 'account_version' field in AccountInformation
-            account_information_obj = AccountInformation.objects.get(user_id=user_id_to_update)
-            account_information_obj.account_version = new_account_version
-            account_information_obj.save()
+                # Now 'user_id_to_update' should have a real value
+                account_information_obj = AccountInformation.objects.get(user_id=user_id_to_update)
+                account_information_obj.account_version = new_account_version
+                account_information_obj.save()
 
-            return redirect('/custom-admin/dashboard/')
+                return JsonResponse({
+                    'message': 'Account version updated successfully',
+                    'account_version': new_account_version,
+                    'user_id': user_id_to_update
+                }, status=200)
+
+            except AccountInformation.DoesNotExist:
+                return JsonResponse({'error': 'Account not found'}, status=404)
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
         else:
             return JsonResponse({'error': 'Not authorized'}, status=403)
 

@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/helper_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/helper_functions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/boostrap_alert.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/messageBox.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/admin_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/admin_dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/header.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -21,6 +25,7 @@
       <list>
         <option value="Python Script" />
         <option value="HTML File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -134,7 +139,7 @@
       <workItem from="1737029945194" duration="17000" />
       <workItem from="1737034746406" duration="2040000" />
       <workItem from="1737075284980" duration="13206000" />
-      <workItem from="1737335755618" duration="26288000" />
+      <workItem from="1737335755618" duration="27774000" />
     </task>
     <servers />
   </component>
