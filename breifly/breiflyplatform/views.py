@@ -1,6 +1,8 @@
 import json
+import datetime
+import csv
 from datetime import time
-
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -361,6 +363,89 @@ def admin_dashboard(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
+# Convert all client data to CSV
+@csrf_exempt
+def admin_dashboard_csv(request):
+    """
+    Exports CSV of user account info for admin.
+    """
+    try:
+        user_authenticated, user_data = get_access_token(request)
+        if not user_authenticated or not user_data:
+            if wants_json_response(request):
+                return JsonResponse({'error': 'Not authenticated'}, status=401)
+            return redirect('/login/')
+
+        roles = []
+        if user_data:
+            user_id = user_data.id
+            user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+            roles = [user_role.role.name for user_role in user_roles]
+
+        # Only allow GET for CSV export (or POST if you prefer)
+        if request.method == 'GET':
+            if 'admin' in roles:
+                # Collect all relevant account info
+                users = User.objects.all()
+                user_roles = UserRole.objects.filter(role_id=2)
+                user_ids_with_role_user = {ur.user_id for ur in user_roles}
+                users_with_role_user = [u for u in users if u.id in user_ids_with_role_user]
+                account_info_list = AccountInformation.objects.filter(user_id__in=user_ids_with_role_user)
+
+                # Create a lookup dict from user_id -> account_info
+                account_info_dict = {info.user_id: info for info in account_info_list}
+
+                # Set up the HttpResponse with correct headers
+                date_str = datetime.datetime.now().strftime("%Y-%m-%d")
+                response = HttpResponse(content_type="text/csv")
+                response['Content-Disposition'] = f'attachment; filename="exported_client_data_{date_str}.csv"'
+
+                # Create a CSV writer object
+                writer = csv.writer(response)
+
+                # Write a header row
+                writer.writerow([
+                    "Full Name",
+                    "Position",
+                    "Company",
+                    "Report Email",
+                    "Phone Number",
+                    "Target Audience",
+                    "Industry",
+                    "Content Sentiment",
+                    "Company Brief",
+                    "Recent Ventures",
+                    "Account Version"
+                ])
+
+                # Write one row per user
+                for user in users_with_role_user:
+                    info = account_info_dict.get(user.id)
+                    if info:
+                        writer.writerow([
+                            info.full_name,
+                            info.position,
+                            info.company,
+                            info.report_email,
+                            info.phonenr,
+                            info.target_audience,
+                            info.industry,
+                            info.content_sentiment,
+                            info.company_brief,
+                            info.recent_ventures,
+                            info.account_version
+                        ])
+
+                return response
+            else:
+                if wants_json_response(request):
+                    return JsonResponse({'error': 'Not authorized'}, status=403)
+                return redirect('/error/page/')
+        else:
+            return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
 
 # --------------------------------
 # User Settings Views

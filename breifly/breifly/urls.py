@@ -34,5 +34,6 @@ urlpatterns = [
     path('api/search/news/', get_news, name="news"),
     path('error/page/', error_page, name="error"),
     path('custom-admin/dashboard/', admin_dashboard, name="custom-admin"),
-    path('custom-admin/dashboard/update', admin_dashboard, name="custom-admin-users"),
+    path('custom-admin/dashboard/update/', admin_dashboard, name="custom-admin-users"),
+    path('custom-admin/export/csv/', admin_dashboard_csv, name="custom-admin-csv"),
 ]
