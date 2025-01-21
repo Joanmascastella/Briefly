@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .supabase_client import supabase
+from django.utils.html import strip_tags
 
+# Helper functions
 
+# Helper function to get the access token from the session
 def get_access_token(request):
     access_token = request.session.get('access_token')
     user_authenticated = False
@@ -26,6 +29,7 @@ def get_access_token(request):
 
     return user_authenticated, user_data
 
+# Helper function to get the user roles from the session and set correct navbar
 def get_navbar_partial(user_authenticated, new_user, roles):
     """
     Return the path to the appropriate navbar partial
@@ -40,5 +44,12 @@ def get_navbar_partial(user_authenticated, new_user, roles):
     else:
         return 'partials/authenticated_navbar.html'
 
-
+# Helper function to sanitize user input
+def sanitize(value):
+    """
+    Removes any HTML tags and strips leading/trailing whitespace.
+    """
+    if value is None:
+        return ''
+    return strip_tags(value).strip()
 

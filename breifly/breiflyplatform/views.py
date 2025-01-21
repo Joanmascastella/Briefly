@@ -5,9 +5,10 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import pytz
+from django.core.paginator import Paginator
 
 from .supabase_client import supabase
-from .helper_functions import get_access_token, get_navbar_partial
+from .helper_functions import get_access_token, get_navbar_partial, sanitize
 from .models import (
     Setting,
     SearchSetting,
@@ -19,14 +20,12 @@ from .models import (
     User
 )
 from .get_news import search_news, get_period_param
-from django.core.paginator import Paginator
 
 
 # --------------------------------
 # Public / Landing Views
 # --------------------------------
 
-# Landing page of the website
 def landing_page(request):
     """
     Displays the landing/home page for authenticated users or redirects to login if not authenticated.
@@ -124,7 +123,6 @@ def error_page(request):
 # Authentication Views
 # --------------------------------
 
-# Login page logic
 def login_view(request):
     """
     Handles user login using Supabase authentication.
@@ -150,10 +148,10 @@ def login_view(request):
     if request.method == 'GET':
         return render(request, 'loginForm.html', context)
 
-
     if request.method == 'POST':
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        # -- Sanitized --
+        email = sanitize(request.POST.get('email'))
+        password = sanitize(request.POST.get('password'))
 
         try:
             # Sign in the user with email and password
@@ -186,15 +184,12 @@ def login_view(request):
     return render(request, 'main_page.html', context)
 
 
-# Logout User
 def logout_view(request):
     """
     Logs out the current user by clearing the session.
     """
     if request.method == 'GET':
         request.session.flush()
-
-    # We only redirect, so no template is rendered (no navbar_partial needed here)
     return redirect('/login/')
 
 
@@ -216,21 +211,22 @@ def finalise_new_user(request):
 
     if 'user' in roles:
         if request.method == 'POST':
-            full_name = request.POST.get('full_name')
-            position = request.POST.get('position')
-            report_email = request.POST.get('report_email')
-            phonenr = request.POST.get('phonenr')
-            target_audience = request.POST.get('target_audience')
-            content_sentiment = request.POST.get('content_sentiment')
-            company = request.POST.get('company')
-            industry = request.POST.get('industry')
-            company_brief = request.POST.get('company_brief')
-            recent_ventures = request.POST.get('recent_ventures')
+            # -- Sanitized --
+            full_name = sanitize(request.POST.get('full_name'))
+            position = sanitize(request.POST.get('position'))
+            report_email = sanitize(request.POST.get('report_email'))
+            phonenr = sanitize(request.POST.get('phonenr'))
+            target_audience = sanitize(request.POST.get('target_audience'))
+            content_sentiment = sanitize(request.POST.get('content_sentiment'))
+            company = sanitize(request.POST.get('company'))
+            industry = sanitize(request.POST.get('industry'))
+            company_brief = sanitize(request.POST.get('company_brief'))
+            recent_ventures = sanitize(request.POST.get('recent_ventures'))
             account_version = "standard"
 
             # Settings
-            email_reports = request.POST.get('email_reports')
-            timezone = request.POST.get('timezone')
+            email_reports = sanitize(request.POST.get('email_reports'))
+            timezone = sanitize(request.POST.get('timezone'))
 
             # Create the user's settings
             Setting.objects.update_or_create(
@@ -348,8 +344,8 @@ def admin_dashboard(request):
     # When an admin updates account_version via POST
     if request.method == 'POST':
         if 'admin' in roles:
-            user_id_to_update = request.POST.get('user_id')
-            new_account_version = request.POST.get('account_version')
+            user_id_to_update = sanitize(request.POST.get('user_id'))
+            new_account_version = sanitize(request.POST.get('account_version'))
 
             # Update that user's 'account_version' field in AccountInformation
             account_information_obj = AccountInformation.objects.get(user_id=user_id_to_update)
@@ -365,7 +361,6 @@ def admin_dashboard(request):
 # User Settings Views
 # --------------------------------
 
-# Retrieve User Settings
 def settings_view(request):
     """
     Fetches and displays the user's settings for editing.
@@ -428,7 +423,6 @@ def settings_changed(request):
     """
     Handles updating user settings (date range, email reports, report time, timezone, language).
     """
-    # This view redirects, so no navbar needed
     user_authenticated, user_data = get_access_token(request)
 
     if not user_authenticated or not user_data:
@@ -440,16 +434,21 @@ def settings_changed(request):
 
     if 'user' in roles:
         if request.method == "POST":
-            date_range = request.POST.get('date_range')
-            email_reports = request.POST.get('email_reports') == 'True'
-            report_time = request.POST.get('report_time')
-            timezone = request.POST.get('timezone')
-            language = request.POST.get('language')
+            # -- Sanitized --
+            date_range = sanitize(request.POST.get('date_range'))
+            email_reports_str = sanitize(request.POST.get('email_reports'))
+            email_reports = True if email_reports_str == 'True' else False
+
+            report_time_raw = sanitize(request.POST.get('report_time'))
+            timezone_val = sanitize(request.POST.get('timezone'))
+            language_val = sanitize(request.POST.get('language'))
 
             try:
-                if report_time:
-                    hours, minutes, seconds = map(int, report_time.split(":"))
-                    report_time = time(hour=hours, minute=minutes, second=seconds)
+                if report_time_raw:
+                    hours, minutes, seconds = map(int, report_time_raw.split(":"))
+                    report_time_obj = time(hour=hours, minute=minutes, second=seconds)
+                else:
+                    report_time_obj = None
             except ValueError:
                 return JsonResponse({'error': 'Invalid time format. Use HH:MM:SS.'}, status=400)
 
@@ -458,9 +457,9 @@ def settings_changed(request):
                 defaults={
                     'date_range': date_range,
                     'email_reports': email_reports,
-                    'report_time': report_time,
-                    'timezone': timezone,
-                    'language': language,
+                    'report_time': report_time_obj,
+                    'timezone': timezone_val,
+                    'language': language_val,
                 }
             )
 
@@ -547,11 +546,12 @@ def account_changed(request):
 
     if 'user' in roles:
         if request.method == "POST":
-            full_name = request.POST.get('full_name')
-            position = request.POST.get('position')
-            company = request.POST.get('company')
-            report_email = request.POST.get('report_email')
-            phonenr = request.POST.get('phonenr')
+            # -- Sanitized --
+            full_name = sanitize(request.POST.get('full_name'))
+            position = sanitize(request.POST.get('position'))
+            company = sanitize(request.POST.get('company'))
+            report_email = sanitize(request.POST.get('report_email'))
+            phonenr = sanitize(request.POST.get('phonenr'))
 
             AccountInformation.objects.update_or_create(
                 user_id=user_id,
@@ -612,10 +612,11 @@ def modify_search_settings(request):
             search_settings = None
 
         if request.method == 'POST':
-            keywords = request.POST.get('keywords')
-            publishers = request.POST.get('publishers')
-            date_range = request.POST.get('date-range')
-            description = request.POST.get('description')
+            # -- Sanitized --
+            keywords = sanitize(request.POST.get('keywords'))
+            publishers = sanitize(request.POST.get('publishers'))
+            date_range = sanitize(request.POST.get('date-range'))
+            description = sanitize(request.POST.get('description'))
 
             search_settings, created = SearchSetting.objects.update_or_create(
                 user_id=user_id,
@@ -646,7 +647,6 @@ def modify_search_settings(request):
         return redirect('/error/page/')
 
 
-# Custom API for news access
 async def get_news(request):
     """
     Asynchronously fetches news articles based on keywords, time period, and publishers.
@@ -660,9 +660,10 @@ async def get_news(request):
     if 'api' in roles:
         if request.method == "GET":
             print("Request GET parameters:", request.GET)  # Debugging
-            keywords = request.GET.get('keywords', '').strip()
-            period = request.GET.get('period', '1')
-            publishers = request.GET.getlist('publishers', [])
+            # -- Sanitized --
+            keywords = sanitize(request.GET.get('keywords', '')).strip()
+            period = sanitize(request.GET.get('period', '1'))
+            publishers = [sanitize(pub) for pub in request.GET.getlist('publishers', [])]
 
             print(f"Extracted keywords: {keywords}, period: {period}, publishers: {publishers}")
 
