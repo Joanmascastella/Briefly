@@ -69,6 +69,8 @@ def landing_page(request):
             'roles': roles
         }
         return render(request, 'main_page.html', context)
+    elif 'admin' in roles:
+        return redirect('/custom-admin/dashboard/')
     else:
         # Redirect to logout or an appropriate error page
         return redirect('/error/page/')
@@ -164,7 +166,16 @@ def login_view(request):
                     "id": response.user.id,
                     "email": response.user.email
                 }
-                return redirect('/')
+
+                # Fetch the user's roles
+                user_id = response.user.id
+                user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+                roles = [user_role.role.name for user_role in user_roles]
+
+                if 'user' in roles:
+                    return redirect('/')
+                elif 'admin' in roles:
+                    return redirect('/custom-admin/dashboard/')
             else:
                 # Handle login errors
                 context['error'] = 'Invalid email or password'
@@ -185,6 +196,39 @@ def logout_view(request):
     }
 
     return render(request, 'main_page.html', context)
+
+
+
+# Admin Dashboard
+def admin_dashboard(request):
+    # Retrieve the access token and user data
+    user_authenticated, user_data = get_access_token(request)
+    user_id = user_data.id
+
+    if not user_authenticated or not user_data:
+        return redirect('/login/')
+
+    # Fetch the user's roles
+    user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+    roles = [user_role.role.name for user_role in user_roles]
+
+    # Check if the user is an admin
+    if 'admin' in roles:
+        context = {
+            'title': 'Briefly - Admin Dashboard',
+            'user_authenticated': True,
+            'user_data': {
+                'id': user_data.id,
+                'email': user_data.email,
+            },
+            'roles': roles,
+        }
+
+        return render(request, 'admin_dashboard.html', context)
+    else:
+        # Redirect to logout or an appropriate error page
+        return redirect('/error/page/')
+
 
 
 # Retrieve User Settings

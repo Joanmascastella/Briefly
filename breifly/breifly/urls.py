@@ -32,5 +32,6 @@ urlpatterns = [
     path('search/settings/modify/', modify_search_settings, name="search"),
     path('account/new/user/', finalise_new_user, name="user"),
     path('api/search/news/', get_news, name="news"),
-    path('error/page/', error_page, name="error")
+    path('error/page/', error_page, name="error"),
+    path('custom-admin/dashboard/', admin_dashboard, name="custom-admin"),
 ]

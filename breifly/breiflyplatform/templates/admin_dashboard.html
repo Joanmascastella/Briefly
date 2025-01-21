@@ -1,0 +1,7 @@
+{% include 'header.html' %}
+
+<h1>admin</h1>
+
+{% if user_authenticated %}
+    <p>Roles: {{ roles }}</p>
+{% endif %}
