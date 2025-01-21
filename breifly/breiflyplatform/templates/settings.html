@@ -71,6 +71,7 @@
         <h2 class="text-center mb-4">
             {% if error %}Create Settings{% else %}General Settings{% endif %}
         </h2>
+       {% include './partials/messageBox.html' %}
         <form method="POST" action="/settings/modify/">
             {% csrf_token %}
 
