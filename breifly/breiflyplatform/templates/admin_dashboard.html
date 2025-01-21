@@ -4,4 +4,42 @@
 
 {% if user_authenticated %}
     <p>Roles: {{ roles }}</p>
+    <table>
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Email</th>
+            <th>Full Name</th>
+            <th>Position</th>
+            <th>Company</th>
+            <th>Report Email</th>
+            <th>Phone</th>
+            <th>Target Audience</th>
+            <th>Industry</th>
+            <th>Content Sentiment</th>
+            <th>Company Brief</th>
+            <th>Recent Ventures</th>
+            <th>Account Version</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users_with_account_info %}
+        <tr>
+            <td>{{ user.user_id }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.full_name }}</td>
+            <td>{{ user.position }}</td>
+            <td>{{ user.company }}</td>
+            <td>{{ user.report_email }}</td>
+            <td>{{ user.phonenr }}</td>
+            <td>{{ user.target_audience }}</td>
+            <td>{{ user.industry }}</td>
+            <td>{{ user.content_sentiment }}</td>
+            <td>{{ user.company_brief }}</td>
+            <td>{{ user.recent_ventures }}</td>
+            <td>{{ user.account_version }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endif %}

@@ -4,16 +4,10 @@ from django.utils.timezone import now
 # Supabase Users Table Model
 class User(models.Model):
     id = models.UUIDField(primary_key=True)  # Supabase's user ID
-    display_name = models.CharField(max_length=255, null=True, blank=True)
     email = models.EmailField(unique=True)
-    provider = models.CharField(max_length=50, null=True, blank=True)
-    phone = models.CharField(max_length=20, null=True, blank=True)
-    provider_type = models.CharField(max_length=50, null=True, blank=True)
-    created_at = models.DateTimeField()
-    last_sign_in_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        db_table = 'auth.users'  # Exact table name in Supabase
+        db_table = '"auth"."users"'
         managed = False  # Prevent Django from managing this table
 
 
