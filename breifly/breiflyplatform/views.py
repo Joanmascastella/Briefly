@@ -214,6 +214,7 @@ def logout_view(request):
         return JsonResponse({'error': str(e)}, status=500)
 
 
+
 @csrf_exempt
 def finalise_new_user(request):
     """
@@ -222,9 +223,7 @@ def finalise_new_user(request):
     try:
         user_authenticated, user_data = get_access_token(request)
         if not user_authenticated or not user_data:
-            if wants_json_response(request):
-                return JsonResponse({'error': 'Not authenticated'}, status=401)
-            return redirect('/login/')
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
 
         user_id = user_data.id
         user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
@@ -232,51 +231,62 @@ def finalise_new_user(request):
 
         if 'user' in roles:
             if request.method == 'POST':
-                full_name = sanitize(request.POST.get('full_name'))
-                position = sanitize(request.POST.get('position'))
-                report_email = sanitize(request.POST.get('report_email'))
-                phonenr = sanitize(request.POST.get('phonenr'))
-                target_audience = sanitize(request.POST.get('target_audience'))
-                content_sentiment = sanitize(request.POST.get('content_sentiment'))
-                company = sanitize(request.POST.get('company'))
-                industry = sanitize(request.POST.get('industry'))
-                company_brief = sanitize(request.POST.get('company_brief'))
-                recent_ventures = sanitize(request.POST.get('recent_ventures'))
-                account_version = "standard"
+                if request.content_type == 'application/json':
+                    try:
+                        payload = json.loads(request.body)
+                    except json.JSONDecodeError:
+                        return JsonResponse({'error': 'Invalid JSON payload'}, status=400)
 
-                email_reports = sanitize(request.POST.get('email_reports'))
-                timezone = sanitize(request.POST.get('timezone'))
+                    # Extract and sanitize JSON fields
+                    full_name = sanitize(payload.get('full_name'))
+                    position = sanitize(payload.get('position'))
+                    report_email = sanitize(payload.get('report_email'))
+                    phonenr = sanitize(payload.get('phonenr'))
+                    target_audience = sanitize(payload.get('target_audience'))
+                    content_sentiment = sanitize(payload.get('content_sentiment'))
+                    company = sanitize(payload.get('company'))
+                    industry = sanitize(payload.get('industry'))
+                    company_brief = sanitize(payload.get('company_brief'))
+                    recent_ventures = sanitize(payload.get('recent_ventures'))
+                    account_version = "standard"
+                    email_reports = sanitize(payload.get('email_reports'))
+                    timezone = sanitize(payload.get('timezone'))
 
-                try:
-                    Setting.objects.update_or_create(
-                        user_id=user_id,
-                        defaults={
-                            'email_reports': email_reports,
-                            'timezone': timezone,
-                        }
-                    )
+                    try:
+                        # Update or create user settings and account information
+                        Setting.objects.update_or_create(
+                            user_id=user_id,
+                            defaults={
+                                'email_reports': email_reports,
+                                'timezone': timezone,
+                            }
+                        )
 
-                    AccountInformation.objects.update_or_create(
-                        user_id=user_id,
-                        defaults={
-                            "full_name": full_name,
-                            "position": position,
-                            "phonenr": phonenr,
-                            "target_audience": target_audience,
-                            "content_sentiment": content_sentiment,
-                            "company": company,
-                            "report_email": report_email,
-                            "industry": industry,
-                            "company_brief": company_brief,
-                            "recent_ventures": recent_ventures,
-                            "account_version": account_version,
-                        }
-                    )
-                except Exception as e:
-                    return JsonResponse({'error': str(e)}, status=500)
+                        AccountInformation.objects.update_or_create(
+                            user_id=user_id,
+                            defaults={
+                                "full_name": full_name,
+                                "position": position,
+                                "phonenr": phonenr,
+                                "target_audience": target_audience,
+                                "content_sentiment": content_sentiment,
+                                "company": company,
+                                "report_email": report_email,
+                                "industry": industry,
+                                "company_brief": company_brief,
+                                "recent_ventures": recent_ventures,
+                                "account_version": account_version,
+                            }
+                        )
 
-            return redirect('/')
-        return JsonResponse({'error': 'Invalid request method'}, status=400)
+                        return JsonResponse({'message': 'Account setup successful'}, status=200)
+                    except Exception as e:
+                        return JsonResponse({'error': str(e)}, status=500)
+                else:
+                    return JsonResponse({'error': 'Unsupported content type'}, status=400)
+
+            return JsonResponse({'error': 'Invalid request method'}, status=405)
+        return JsonResponse({'error': 'Unauthorized role'}, status=403)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
