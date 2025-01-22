@@ -1,15 +1,25 @@
 {% include 'header.html' %}
 
 <style>
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     body {
         margin: 0;
         padding: 0;
         font-family: Arial, sans-serif;
-        background-color: #f8f9fa;
+        {#background-color: #f8f9fa;#}
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
+        background: linear-gradient(-45deg, #A8DADC, #457B9D, #1D3557, #6A4C93, #8E44AD);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
     }
 
     .main-container {
@@ -162,3 +172,17 @@
     <div class="image-container">
     </div>
 </div>
+
+
+<script>
+    particlesJS('background', {
+  particles: {
+    number: { value: 80 },
+    color: { value: '#ffffff' },
+    opacity: { value: 0.5 },
+    size: { value: 3 },
+    line_linked: { enable: true }
+  }
+});
+
+</script>
