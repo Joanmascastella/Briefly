@@ -314,9 +314,10 @@ def admin_dashboard(request):
                 users_with_role_user = [u for u in users if u.id in user_ids_with_role_user]
 
                 account_info_list = AccountInformation.objects.filter(user_id__in=user_ids_with_role_user)
-
+                total_users = 0
                 users_with_account_info = []
                 for user in users_with_role_user:
+
                     account_info = account_info_list.filter(user_id=user.id).first()
                     if account_info:
                         users_with_account_info.append({
@@ -334,7 +335,7 @@ def admin_dashboard(request):
                             'recent_ventures': account_info.recent_ventures,
                             'account_version': account_info.account_version,
                         })
-
+                        total_users += 1
                 paginator = Paginator(users_with_account_info, 5)
                 page_number = request.GET.get('page')
                 page_obj = paginator.get_page(page_number)
@@ -351,6 +352,7 @@ def admin_dashboard(request):
                     'is_paginated': page_obj.has_other_pages(),
                     'paginator': paginator,
                     'navbar_partial': navbar_partial,
+                    'total_users': total_users,
                 }
                 return render(request, 'admin_dashboard.html', context)
             else:
