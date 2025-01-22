@@ -33,69 +33,52 @@ def landing_page(request):
     Displays the landing/home page for authenticated users or redirects to login if not authenticated.
     """
     try:
-        user_authenticated, user_data = get_access_token(request)
+        if request.method == 'GET':
+            user_authenticated, user_data = get_access_token(request)
 
-        # Redirect or JSON error if user not authenticated
-        if not user_authenticated:
-            if wants_json_response(request):
-                return JsonResponse({'error': 'Not authenticated'}, status=401)
-            return redirect('/login')
+            # Redirect or JSON error if user not authenticated
+            if not user_authenticated:
+                if wants_json_response(request):
+                    return JsonResponse({'error': 'Not authenticated'}, status=401)
+                return redirect('/login')
 
-        user_id = user_data.id
-        settings_exist = Setting.objects.filter(user_id=user_id).exists()
-        account_info_exist = AccountInformation.objects.filter(user_id=user_id).exists()
+            user_id = user_data.id
+            settings_exist = Setting.objects.filter(user_id=user_id).exists()
+            account_info_exist = AccountInformation.objects.filter(user_id=user_id).exists()
 
-        user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
-        roles = [user_role.role.name for user_role in user_roles]
+            user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+            roles = [user_role.role.name for user_role in user_roles]
 
-        new_user_status = 'true' if (not settings_exist or not account_info_exist) else 'false'
-        navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
+            new_user_status = 'true' if (not settings_exist or not account_info_exist) else 'false'
+            navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
 
-        if 'user' in roles:
-            if not settings_exist or not account_info_exist:
+            if 'user' in roles:
+                if not settings_exist or not account_info_exist:
+                    context = {
+                        'title': 'Briefly - Home',
+                        'user_authenticated': user_authenticated,
+                        'user': user_data,
+                        'timezones': pytz.all_timezones,
+                        'new_user': 'true',
+                        'navbar_partial': navbar_partial,
+                    }
+                    return render(request, 'main_page_new_user.html', context)
+
                 context = {
                     'title': 'Briefly - Home',
                     'user_authenticated': user_authenticated,
                     'user': user_data,
-                    'timezones': pytz.all_timezones,
-                    'new_user': 'true',
+                    'roles': roles,
                     'navbar_partial': navbar_partial,
                 }
-                return render(request, 'main_page_new_user.html', context)
+                return render(request, 'main_page.html', context)
 
-            placeholders = {
-                'keywords': '',
-                'publishers': '',
-                'date_range': 'anytime',
-                'description': '',
-            }
-            try:
-                search_settings = SearchSetting.objects.get(user_id=user_id)
-                placeholders.update({
-                    'keywords': search_settings.keywords or '',
-                    'publishers': search_settings.publishers or '',
-                    'date_range': search_settings.frequency or 'anytime',
-                    'description': search_settings.search_description or '',
-                })
-            except SearchSetting.DoesNotExist:
-                pass
-
-            context = {
-                'title': 'Briefly - Home',
-                'user_authenticated': user_authenticated,
-                'user': user_data,
-                'placeholders': placeholders,
-                'roles': roles,
-                'navbar_partial': navbar_partial,
-            }
-            return render(request, 'main_page.html', context)
-
-        elif 'admin' in roles:
-            return redirect('/custom-admin/dashboard/')
-        else:
-            if wants_json_response(request):
-                return JsonResponse({'error': 'Role not allowed'}, status=403)
-            return redirect('/error/page/')
+            elif 'admin' in roles:
+                return redirect('/custom-admin/dashboard/')
+            else:
+                if wants_json_response(request):
+                    return JsonResponse({'error': 'Role not allowed'}, status=403)
+                return redirect('/error/page/')
     except Exception as e:
         # In case there's a higher-level error
         return JsonResponse({'error': str(e)}, status=500)
