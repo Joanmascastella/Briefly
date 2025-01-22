@@ -654,6 +654,7 @@ def account_modify_view(request):
     except Exception as e:
         return JsonResponse({'error': 'Internal server error', 'details': str(e)}, status=500)
 
+
 # --------------------------------
 # Search Settings / News Views
 # --------------------------------
