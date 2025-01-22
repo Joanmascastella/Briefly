@@ -465,240 +465,194 @@ def admin_dashboard_csv(request):
 # --------------------------------
 # User Settings Views
 # --------------------------------
-
-def settings_view(request):
-    """
-    Fetches and displays the user's settings for editing.
-    """
-    try:
-        user_authenticated, user_data = get_access_token(request)
-        if not user_authenticated or not user_data:
-            if wants_json_response(request):
-                return JsonResponse({'error': 'Not authenticated'}, status=401)
-            return redirect('/login/')
-
-        roles = []
-        new_user_status = 'false'
-        user_id = user_data.id
-        user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
-        roles = [user_role.role.name for user_role in user_roles]
-
-        navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
-
-        if 'user' in roles:
-            try:
-                user_settings = Setting.objects.get(user_id=user_id)
-                context = {
-                    'title': 'Briefly - Settings',
-                    'user_authenticated': True,
-                    'user_data': {
-                        'id': user_data.id,
-                        'email': user_data.email,
-                        'settings': {
-                            'date_range': user_settings.date_range,
-                            'email_reports': user_settings.email_reports,
-                            'report_time': user_settings.report_time,
-                            'timezone': user_settings.timezone,
-                            'language': user_settings.language,
-                        },
-                    },
-                    'timezones': pytz.all_timezones,
-                    'error': None,
-                    'navbar_partial': navbar_partial,
-                }
-            except Setting.DoesNotExist:
-                context = {
-                    'title': 'Briefly - Create Settings',
-                    'user_authenticated': True,
-                    'user_data': {
-                        'id': user_data.id,
-                        'email': user_data.email,
-                    },
-                    'timezones': pytz.all_timezones,
-                    'error': 'User settings not found.',
-                    'navbar_partial': navbar_partial,
-                }
-
-            return render(request, 'settings.html', context)
-        else:
-            if wants_json_response(request):
-                return JsonResponse({'error': 'Not authorized'}, status=403)
-            return redirect('/error/page/')
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-
-
 @csrf_exempt
-def settings_changed(request):
+def get_settings_view(request):
     """
-    Handles updating user settings (date range, email reports, report time, timezone, language).
+    GET: Fetch and display the user's settings + account info.
     """
     try:
+        # 1) Authenticate user
         user_authenticated, user_data = get_access_token(request)
         if not user_authenticated or not user_data:
             if wants_json_response(request):
                 return JsonResponse({'error': 'Not authenticated'}, status=401)
             return redirect('/login/')
 
-        user_id = user_data.id
-        user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
-        roles = [user_role.role.name for user_role in user_roles]
-
-        if 'user' in roles:
-            if request.method == "POST":
-                date_range = sanitize(request.POST.get('date_range'))
-                email_reports_str = sanitize(request.POST.get('email_reports'))
-                email_reports = (email_reports_str == 'True')
-
-                report_time_raw = sanitize(request.POST.get('report_time'))
-                timezone_val = sanitize(request.POST.get('timezone'))
-                language_val = sanitize(request.POST.get('language'))
-
-                try:
-                    if report_time_raw:
-                        hours, minutes, seconds = map(int, report_time_raw.split(":"))
-                        report_time_obj = time(hour=hours, minute=minutes, second=seconds)
-                    else:
-                        report_time_obj = None
-                except ValueError:
-                    return JsonResponse({'error': 'Invalid time format. Use HH:MM:SS.'}, status=400)
-
-                try:
-                    Setting.objects.update_or_create(
-                        user_id=user_id,
-                        defaults={
-                            'date_range': date_range,
-                            'email_reports': email_reports,
-                            'report_time': report_time_obj,
-                            'timezone': timezone_val,
-                            'language': language_val,
-                        }
-                    )
-                except Exception as e:
-                    return JsonResponse({'error': str(e)}, status=500)
-
-                return redirect('/settings/')
-
-            return JsonResponse({'error': 'Invalid request method'}, status=400)
-        else:
-            if wants_json_response(request):
-                return JsonResponse({'error': 'Not authorized'}, status=403)
-            return redirect('/error/page/')
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-
-
-# --------------------------------
-# Account Views
-# --------------------------------
-
-def account_view(request):
-    """
-    Displays user's account information.
-    """
-    try:
-        user_authenticated, user_data = get_access_token(request)
-        if not user_authenticated or not user_data:
-            if wants_json_response(request):
-                return JsonResponse({'error': 'Not authenticated'}, status=401)
-            return redirect('/login/')
-
+        # 2) Gather user roles
         user_id = user_data.id
         user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
         roles = [user_role.role.name for user_role in user_roles]
         new_user_status = 'false'
-
         navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
 
-        if 'user' in roles:
-            try:
-                account_information = AccountInformation.objects.get(user_id=user_id)
-                context = {
-                    'title': 'Briefly - Account',
-                    'user_authenticated': True,
-                    'user_data': {
-                        'id': user_data.id,
-                        'email': user_data.email,
-                        'account': {
-                            'full_name': account_information.full_name,
-                            'position': account_information.position,
-                            'company': account_information.company,
-                            'report_email': account_information.report_email,
-                            'phonenr': account_information.phonenr
+        # 3) Handle GET
+        if request.method == 'GET':
+            if 'user' in roles:
+                try:
+                    # Fetch user settings & account information
+                    user_settings = Setting.objects.get(user_id=user_id)
+                    account_information = AccountInformation.objects.get(user_id=user_id)
+
+                    context = {
+                        'title': 'Briefly - Settings',
+                        'user_authenticated': True,
+                        'user_data': {
+                            'id': user_data.id,
+                            'email': user_data.email,
+                            'settings': {
+                                'email_reports': user_settings.email_reports,
+                                'timezone': user_settings.timezone,
+                            },
+                            'account_info': {
+                                'full_name': account_information.full_name,
+                                'position': account_information.position,
+                                'report_email': account_information.report_email,
+                                'phonenr': account_information.phonenr,
+                                'target_audience': account_information.target_audience,
+                                'content_sentiment': account_information.content_sentiment,
+                                'company': account_information.company,
+                                'industry': account_information.industry,
+                                'company_brief': account_information.company_brief,
+                                'recent_ventures': account_information.recent_ventures,
+                            },
                         },
-                    },
-                    'error': None,
-                    'navbar_partial': navbar_partial,
-                }
+                        'timezones': pytz.all_timezones,
+                        'navbar_partial': navbar_partial,
+                        'error': None,
+                    }
+                    if wants_json_response(request):
+                        return JsonResponse(context, status=200)
+                    return render(request, 'settings.html', context)
 
-            except AccountInformation.DoesNotExist:
-                context = {
-                    'title': 'Briefly - Add Account Information',
-                    'user_authenticated': True,
-                    'user_data': {
-                        'id': user_data.id,
-                        'email': user_data.email,
-                    },
-                    'error': 'Account information for user not found.',
-                    'navbar_partial': navbar_partial,
-                }
-
-            return render(request, 'account.html', context)
+                except Setting.DoesNotExist:
+                    if wants_json_response(request):
+                        return JsonResponse({'error': 'User settings not found'}, status=404)
+                    return redirect('/error/page/')
+                except AccountInformation.DoesNotExist:
+                    if wants_json_response(request):
+                        return JsonResponse({'error': 'Account information not found'}, status=404)
+                    return redirect('/error/page/')
+            else:
+                # Not a "user" role => 403
+                if wants_json_response(request):
+                    return JsonResponse({'error': 'Not authorized'}, status=403)
+                return redirect('/error/page/')
         else:
+            # Any other method => 405
             if wants_json_response(request):
-                return JsonResponse({'error': 'Not authorized'}, status=403)
+                return JsonResponse({'error': 'Method not allowed'}, status=405)
             return redirect('/error/page/')
+
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        if wants_json_response(request):
+            return JsonResponse({'error': 'Internal server error', 'details': str(e)}, status=500)
+        return redirect('/error/page/')
 
 
 @csrf_exempt
-def account_changed(request):
+def settings_modify_view(request):
     """
-    Handles updating user account information.
+    POST: Update the user's settings (email reports, timezone).
     """
     try:
+        # 1) Authenticate user
         user_authenticated, user_data = get_access_token(request)
         if not user_authenticated or not user_data:
-            if wants_json_response(request):
-                return JsonResponse({'error': 'Not authenticated'}, status=401)
-            return redirect('/login/')
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
 
         user_id = user_data.id
         user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
         roles = [user_role.role.name for user_role in user_roles]
 
-        if 'user' in roles:
-            if request.method == "POST":
-                full_name = sanitize(request.POST.get('full_name'))
-                position = sanitize(request.POST.get('position'))
-                company = sanitize(request.POST.get('company'))
-                report_email = sanitize(request.POST.get('report_email'))
-                phonenr = sanitize(request.POST.get('phonenr'))
+        if request.method == 'POST':
+            if 'user' in roles:
+                data = json.loads(request.body)
 
+                email_reports = sanitize(data.get('emailReports'))
+                timezone_value = sanitize(data.get('timezone'))
+
+                # Update user settings
                 try:
-                    AccountInformation.objects.update_or_create(
-                        user_id=user_id,
-                        defaults={
-                            'full_name': full_name,
-                            'position': position,
-                            'company': company,
-                            'report_email': report_email,
-                            'phonenr': phonenr
-                        }
-                    )
+                    user_settings = Setting.objects.get(user_id=user_id)
+                    if email_reports is not None:
+                        user_settings.email_reports = email_reports
+                    if timezone_value is not None:
+                        user_settings.timezone = timezone_value
+                    user_settings.save()
+
+                    return JsonResponse({'message': 'Settings updated successfully'}, status=200)
+
+                except Setting.DoesNotExist:
+                    return JsonResponse({'error': 'User settings not found'}, status=404)
                 except Exception as e:
                     return JsonResponse({'error': str(e)}, status=500)
-
-                return redirect('/account/')
-            return JsonResponse({'error': 'Invalid request method'}, status=400)
-        else:
-            if wants_json_response(request):
+            else:
                 return JsonResponse({'error': 'Not authorized'}, status=403)
-            return redirect('/error/page/')
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        else:
+            return JsonResponse({'error': 'Method not allowed'}, status=405)
 
+    except Exception as e:
+        return JsonResponse({'error': 'Internal server error', 'details': str(e)}, status=500)
+
+
+@csrf_exempt
+def account_modify_view(request):
+    """
+    POST: Update the user's account information (full name, phone, etc.).
+    """
+    try:
+        # 1) Authenticate user
+        user_authenticated, user_data = get_access_token(request)
+        if not user_authenticated or not user_data:
+            return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+        user_id = user_data.id
+        user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+        roles = [user_role.role.name for user_role in user_roles]
+
+        if request.method == 'POST':
+            if 'user' in roles:
+                data = json.loads(request.body)
+
+                try:
+                    account_info = AccountInformation.objects.get(user_id=user_id)
+
+                    if 'fullName' in data:
+                        account_info.full_name = sanitize(data['fullName'])
+                    if 'position' in data:
+                        account_info.position = sanitize(data['position'])
+                    if 'reportEmail' in data:
+                        account_info.report_email = sanitize(data['reportEmail'])
+                    if 'phonenr' in data:
+                        account_info.phonenr = sanitize(data['phonenr'])
+                    if 'targetAudience' in data:
+                        account_info.target_audience = sanitize(data['targetAudience'])
+                    if 'contentSentiment' in data:
+                        account_info.content_sentiment = sanitize(data['contentSentiment'])
+                    if 'company' in data:
+                        account_info.company = sanitize(data['company'])
+                    if 'industry' in data:
+                        account_info.industry = sanitize(data['industry'])
+                    if 'companyBrief' in data:
+                        account_info.company_brief = sanitize(data['companyBrief'])
+                    if 'recentVentures' in data:
+                        account_info.recent_ventures = sanitize(data['recentVentures'])
+
+                    account_info.save()
+
+                    return JsonResponse({'message': 'Account information updated successfully'}, status=200)
+
+                except AccountInformation.DoesNotExist:
+                    return JsonResponse({'error': 'Account information not found'}, status=404)
+                except Exception as e:
+                    return JsonResponse({'error': str(e)}, status=500)
+            else:
+                return JsonResponse({'error': 'Not authorized'}, status=403)
+        else:
+            return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+    except Exception as e:
+        return JsonResponse({'error': 'Internal server error', 'details': str(e)}, status=500)
 
 # --------------------------------
 # Search Settings / News Views
