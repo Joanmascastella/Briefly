@@ -6,6 +6,21 @@
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breifly/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breifly/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/helper_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/helper_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/watermark.js" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/watermark.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/admin_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/admin_dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/main_page_new_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/main_page_new_user.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/authenticated_navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/authenticated_navbar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/authenticated_navbar_admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/authenticated_navbar_admin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/authenticated_navbar_new_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/authenticated_navbar_new_user.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/not_authenticated_navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/not_authenticated_navbar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/locale/de/LC_MESSAGES/django.po" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/de/LC_MESSAGES/django.po" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/locale/es/LC_MESSAGES/django.po" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/es/LC_MESSAGES/django.po" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/locale/fr/LC_MESSAGES/django.po" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/fr/LC_MESSAGES/django.po" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/locale/it/LC_MESSAGES/django.po" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/it/LC_MESSAGES/django.po" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +156,7 @@
       <workItem from="1737449849008" duration="3435000" />
       <workItem from="1737502951367" duration="5249000" />
       <workItem from="1737508262472" duration="1010000" />
-      <workItem from="1737536217514" duration="16316000" />
+      <workItem from="1737536217514" duration="20439000" />
     </task>
     <servers />
   </component>

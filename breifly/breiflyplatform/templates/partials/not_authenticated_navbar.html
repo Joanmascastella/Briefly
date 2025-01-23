@@ -1,3 +1,4 @@
+{% load i18n %}
 <div class="navbar-custom d-flex align-items-center justify-content-between">
 
   <!-- Logo and Heading -->
@@ -5,5 +6,23 @@
     <img src="../../static/assets/images/logo.png" alt="Logo" style="height: 40px; margin-right: 10px;">
     <h1 class="mb-0" style="font-size: 1.5rem; color: black">Briefly</h1>
   </div>
+    <div class="dropdown">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        Language
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% for lang_code, lang_name in LANGUAGES %}
+        <li>
+            <form action="{% url 'set_language' %}" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <input type="hidden" name="language" value="{{ lang_code }}">
+                <button type="submit" class="dropdown-item">{{ lang_name }}</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 
 </div>

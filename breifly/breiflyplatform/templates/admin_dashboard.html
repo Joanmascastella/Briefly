@@ -1,4 +1,5 @@
 {% include 'header.html' %}
+{% load i18n static %}
 
 <style>
   .card-hover:hover {
@@ -16,10 +17,10 @@
     <div class="col-md-6">
       <div class="card h-100 shadow-sm card-hover">
         <div class="card-body">
-          <h5 class="card-title mb-3">Trending searches</h5>
+          <h5 class="card-title mb-3">{% trans "Trending Searches" %}</h5>
           <p>
-            lorajsasijasljdlajs...<br>
-            asjdlkajsdlkajsd...
+            {% trans "Lorem ipsum dolor sit amet..." %}<br>
+            {% trans "Consectetur adipiscing elit..." %}
           </p>
         </div>
       </div>
@@ -29,11 +30,10 @@
     <div class="col-md-6">
       <div class="card h-100 shadow-sm card-hover">
         <div class="card-body d-flex flex-column justify-content-center align-items-center">
-          <h5 class="card-title mb-3">Total Registered Users</h5>
-            <div class="text-center text-black">
-              <i class="bi bi-people-fill fs-1"></i>
-                <div class="mt-2 fs-4">{{ total_users }}</div>
-            </div>
+          <h5 class="card-title mb-3">{% trans "Total Registered Users" %}</h5>
+          <div class="text-center text-black">
+            <i class="bi bi-people-fill fs-1"></i>
+            <div class="mt-2 fs-4">{{ total_users }}</div>
           </div>
         </div>
       </div>
@@ -52,19 +52,19 @@
             <!-- Left part: Download CSV + Search -->
             <div class="d-flex flex-wrap align-items-center">
               <a href="/custom-admin/export/csv" class="btn btn-primary me-2 mb-2 mb-sm-0">
-                Download CSV
+                {% trans "Download CSV" %}
               </a>
-                <input 
+              <input 
                 type="text"
                 id="searchInput"
                 class="form-control w-auto"
-                placeholder="Search user"
+                placeholder="{% trans 'Search user' %}"
                 onkeyup="filterTable()"
               />
             </div>
             <!-- Right part: heading -->
             <div class="mt-2 mt-sm-0">
-              <h5 class="mb-0">All Registered Users</h5>
+              <h5 class="mb-0">{% trans "All Registered Users" %}</h5>
             </div>
           </div>
 
@@ -73,17 +73,17 @@
             <table id="userTable" class="table table-striped table-hover table-bordered align-middle mb-0">
               <thead class="table-dark">
                 <tr>
-                  <th scope="col">Full Name</th>
-                  <th scope="col">Position</th>
-                  <th scope="col">Company</th>
-                  <th scope="col">Report Email</th>
-                  <th scope="col">Phone</th>
-                  <th scope="col">Target Audience</th>
-                  <th scope="col">Industry</th>
-                  <th scope="col">Content Sentiment</th>
-                  <th scope="col">Company Brief</th>
-                  <th scope="col">Recent Ventures</th>
-                  <th scope="col">Account Version</th>
+                  <th scope="col">{% trans "Full Name" %}</th>
+                  <th scope="col">{% trans "Position" %}</th>
+                  <th scope="col">{% trans "Company" %}</th>
+                  <th scope="col">{% trans "Report Email" %}</th>
+                  <th scope="col">{% trans "Phone" %}</th>
+                  <th scope="col">{% trans "Target Audience" %}</th>
+                  <th scope="col">{% trans "Industry" %}</th>
+                  <th scope="col">{% trans "Content Sentiment" %}</th>
+                  <th scope="col">{% trans "Company Brief" %}</th>
+                  <th scope="col">{% trans "Recent Ventures" %}</th>
+                  <th scope="col">{% trans "Account Version" %}</th>
                 </tr>
               </thead>
               <tbody>
@@ -104,11 +104,11 @@
                               onchange="updateAccountVersion('{{ user.user_id }}', this.value)">
                         <option value="standard"
                                 {% if user.account_version == 'standard' %}selected{% endif %}>
-                          Standard
+                          {% trans "Standard" %}
                         </option>
                         <option value="pro"
                                 {% if user.account_version == 'pro' %}selected{% endif %}>
-                          Pro
+                          {% trans "Pro" %}
                         </option>
                       </select>
                     </td>
@@ -124,7 +124,7 @@
               <ul class="pagination justify-content-center">
                 {% if page_obj.has_previous %}
                 <li class="page-item">
-                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="{% trans 'Previous' %}">
                     <span aria-hidden="true">&laquo;</span>
                   </a>
                 </li>
@@ -146,7 +146,7 @@
 
                 {% if page_obj.has_next %}
                 <li class="page-item">
-                  <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="{% trans 'Next' %}">
                     <span aria-hidden="true">&raquo;</span>
                   </a>
                 </li>
@@ -159,4 +159,3 @@
     </div>
   </div>
 </div>
-

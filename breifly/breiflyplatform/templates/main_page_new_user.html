@@ -1,4 +1,6 @@
 {% include 'header.html' %}
+{% load i18n static %}
+
 <style>
     @keyframes gradientBG {
       0% { background-position: 0% 50%; }
@@ -133,7 +135,7 @@
 
 <div class="main-container">
     <!-- Left Container: Image -->
-    <div class="image-container" style="background-image: url('../static/assets/images/diego-ph-fIq0tET6llw-unsplash.jpg'); background-size: cover; background-position: center;"></div>
+    <div class="image-container" style="background-image: url('{% static "assets/images/diego-ph-fIq0tET6llw-unsplash.jpg" %}'); background-size: cover; background-position: center;"></div>
 
     <!-- Right Container: Multi-Step Form -->
     <div class="form-container">
@@ -142,113 +144,98 @@
                 {% csrf_token %}
                 <!-- Step 1 -->
                 <div class="step" id="step1">
-                    <h2 class="form-title">Complete Your Account Information & Define Settings</h2>
-                    <p class="form-description">Please fill in the details below to complete your account setup.</p>
-                    <p>Welcome to Briefly! Before using this service, you need to complete setting up your account.</p>
-                    <p>The information you provide will help us create better content tailored to your company and target audience.</p>
-
-                    <button type="button" class="arrow-btn next-btn">→</button>
-                    <!-- Reusable stylized message box (Bootstrap Alert) -->
-                    <div id="messageBox" class="alert d-none" role="alert"></div>
+                    <h2 class="form-title">{% trans "Complete Your Account Information & Define Settings" %}</h2>
+                    <p class="form-description">{% trans "Please fill in the details below to complete your account setup." %}</p>
+                    <p>{% trans "Welcome to Briefly! Before using this service, you need to complete setting up your account." %}</p>
+                    <p>{% trans "The information you provide will help us create better content tailored to your company and target audience." %}</p>
+                    <button type="button" class="arrow-btn next-btn">{% trans "→" %}</button>
                 </div>
 
                 <!-- Step 2 -->
                 <div class="step d-none" id="step2">
-                    <h5>Step 1: Basic Information</h5>
-                    <label for="full_name" class="form-label">Full Name</label>
-                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter your full name" required>
+                    <h5>{% trans "Step 1: Basic Information" %}</h5>
+                    <label for="full_name" class="form-label">{% trans "Full Name" %}</label>
+                    <input type="text" class="form-control" id="full_name" name="full_name" placeholder="{% trans 'Enter your full name' %}" required>
 
-                    <label for="position" class="form-label">Position</label>
-                    <input type="text" class="form-control" id="position" name="position" placeholder="Enter your position" required>
+                    <label for="position" class="form-label">{% trans "Position" %}</label>
+                    <input type="text" class="form-control" id="position" name="position" placeholder="{% trans 'Enter your position' %}" required>
 
                     <div class="button-container">
-                        <button type="button" class="arrow-btn prev-btn">←</button>
-                        <button type="button" class="arrow-btn next-btn">→</button>
-                        <!-- Reusable stylized message box (Bootstrap Alert) -->
-                        <div id="messageBox" class="alert d-none" role="alert"></div>
+                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>
+                        <button type="button" class="arrow-btn next-btn">{% trans "→" %}</button>
                     </div>
                 </div>
 
                 <!-- Step 3 -->
                 <div class="step d-none" id="step3">
-                    <h5>Step 2: Contact Information</h5>
-                    <label for="report_email" class="form-label">Report Email</label>
-                    <input type="email" class="form-control" id="report_email" name="report_email" placeholder="Enter your report email" required>
+                    <h5>{% trans "Step 2: Contact Information" %}</h5>
+                    <label for="report_email" class="form-label">{% trans "Report Email" %}</label>
+                    <input type="email" class="form-control" id="report_email" name="report_email" placeholder="{% trans 'Enter your report email' %}" required>
 
-                    <label for="phonenr" class="form-label">Phone Number</label>
-                    <input type="text" class="form-control" id="phonenr" name="phonenr" placeholder="Enter your phone number" required>
+                    <label for="phonenr" class="form-label">{% trans "Phone Number" %}</label>
+                    <input type="text" class="form-control" id="phonenr" name="phonenr" placeholder="{% trans 'Enter your phone number' %}" required>
 
-                     <div class="button-container">
-                        <button type="button" class="arrow-btn prev-btn">←</button>
-                        <button type="button" class="arrow-btn next-btn">→</button>
-                         <!-- Reusable stylized message box (Bootstrap Alert) -->
-                        <div id="messageBox" class="alert d-none" role="alert"></div>
+                    <div class="button-container">
+                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>
+                        <button type="button" class="arrow-btn next-btn">{% trans "→" %}</button>
                     </div>
                 </div>
 
                 <!-- Step 4 -->
                 <div class="step d-none" id="step4">
-                    <h5>Step 3: Content Details</h5>
-                    <label for="target_audience" class="form-label">Target Audience</label>
-                    <input type="text" class="form-control" id="target_audience" name="target_audience" placeholder="Describe your target audience" required>
+                    <h5>{% trans "Step 3: Content Details" %}</h5>
+                    <label for="target_audience" class="form-label">{% trans "Target Audience" %}</label>
+                    <input type="text" class="form-control" id="target_audience" name="target_audience" placeholder="{% trans 'Describe your target audience' %}" required>
 
-                    <label for="content_sentiment" class="form-label">Content Sentiment</label>
-                    <input type="text" class="form-control" id="content_sentiment" name="content_sentiment" placeholder="What voice & feel do you want the content to have" required>
+                    <label for="content_sentiment" class="form-label">{% trans "Content Sentiment" %}</label>
+                    <input type="text" class="form-control" id="content_sentiment" name="content_sentiment" placeholder="{% trans 'What voice & feel do you want the content to have' %}" required>
 
                     <div class="button-container">
-                        <button type="button" class="arrow-btn prev-btn">←</button>
-                        <button type="button" class="arrow-btn next-btn">→</button>
-                        <!-- Reusable stylized message box (Bootstrap Alert) -->
-                        <div id="messageBox" class="alert d-none" role="alert"></div>
+                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>
+                        <button type="button" class="arrow-btn next-btn">{% trans "→" %}</button>
                     </div>
                 </div>
 
                 <!-- Step 5 -->
                 <div class="step d-none" id="step5">
-                    <h5>Step 4: Company Details</h5>
-                    <label for="company" class="form-label">Company</label>
-                    <input type="text" class="form-control" id="company" name="company" placeholder="Enter your company" required>
+                    <h5>{% trans "Step 4: Company Details" %}</h5>
+                    <label for="company" class="form-label">{% trans "Company" %}</label>
+                    <input type="text" class="form-control" id="company" name="company" placeholder="{% trans 'Enter your company' %}" required>
 
-                    <label for="industry" class="form-label">Industry</label>
-                    <input type="text" class="form-control" id="industry" name="industry" placeholder="Enter the company's industry" required>
+                    <label for="industry" class="form-label">{% trans "Industry" %}</label>
+                    <input type="text" class="form-control" id="industry" name="industry" placeholder="{% trans 'Enter the company\'s industry' %}" required>
 
-                    <label for="company_brief" class="form-label">Company Brief</label>
-                    <textarea class="form-control" id="company_brief" name="company_brief" rows="3" placeholder="Write a brief about your company" required></textarea>
+                    <label for="company_brief" class="form-label">{% trans "Company Brief" %}</label>
+                    <textarea class="form-control" id="company_brief" name="company_brief" rows="3" placeholder="{% trans 'Write a brief about your company' %}" required></textarea>
 
-                    <label for="recent_ventures" class="form-label">Recent Ventures</label>
-                    <textarea class="form-control" id="recent_ventures" name="recent_ventures" rows="3" placeholder="Write a brief about recent ventures" required></textarea>
+                    <label for="recent_ventures" class="form-label">{% trans "Recent Ventures" %}</label>
+                    <textarea class="form-control" id="recent_ventures" name="recent_ventures" rows="3" placeholder="{% trans 'Write a brief about recent ventures' %}" required></textarea>
 
                     <div class="button-container">
-                        <button type="button" class="arrow-btn prev-btn">←</button>
-                        <button type="button" class="arrow-btn next-btn">→</button>
-                        <!-- Reusable stylized message box (Bootstrap Alert) -->
-                        <div id="messageBox" class="alert d-none" role="alert"></div>
+                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>
+                        <button type="button" class="arrow-btn next-btn">{% trans "→" %}</button>
                     </div>
                 </div>
 
                 <!-- Step 6 -->
                 <div class="step d-none" id="step6">
-                    <h5>Step 5: Settings</h5>
-                    <label for="email_reports" class="form-label">Email Reports</label>
+                    <h5>{% trans "Step 5: Settings" %}</h5>
+                    <label for="email_reports" class="form-label">{% trans "Email Reports" %}</label>
                     <select class="form-control" id="email_reports" name="email_reports" required>
-                        <option value="True" {% if not error and user_data.settings.email_reports %}selected{% endif %}>Yes</option>
-                        <option value="False" {% if not error and not user_data.settings.email_reports %}selected{% endif %}>No</option>
+                        <option value="True">{% trans "Yes" %}</option>
+                        <option value="False">{% trans "No" %}</option>
                     </select>
 
-                    <label for="timezone" class="form-label">Timezone</label>
+                    <label for="timezone" class="form-label">{% trans "Timezone" %}</label>
                     <select class="form-control" id="timezone" name="timezone">
                         {% for tz in timezones %}
-                        <option value="{{ tz }}" {% if not error and user_data.settings.timezone == tz %}selected{% endif %}>
-                            {{ tz }}
-                        </option>
+                        <option value="{{ tz }}">{{ tz }}</option>
                         {% endfor %}
                     </select>
 
                     <div class="button-container">
-                        <button type="button" class="arrow-btn prev-btn">←</button>
-                        <input type="submit" value="✔" class="arrow-btn submit-btn">
-                        <!-- Reusable stylized message box (Bootstrap Alert) -->
-                        <div id="messageBox" class="alert d-none" role="alert"></div>
+                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>
+                        <input type="submit" value="{% trans '✔' %}" class="arrow-btn submit-btn">
                     </div>
                 </div>
             </form>

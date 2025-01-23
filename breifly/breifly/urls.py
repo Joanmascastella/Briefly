@@ -3,12 +3,13 @@ from django.conf.urls.static import static
 from django.urls import path, include
 from django.conf.urls.i18n import i18n_patterns
 import breiflyplatform.views as views
+from django.conf.urls.i18n import set_language
 
 # Base URL patterns
 urlpatterns = [
-    path('i18n/', include('django.conf.urls.i18n')),  # Language switching
-
+    path('i18n/setlang/', set_language, name='set_language'),  # Language switching
 ]
+
 
 # Language-aware patterns
 urlpatterns += i18n_patterns(
@@ -22,7 +23,7 @@ urlpatterns += i18n_patterns(
     path('account/new/user/', views.finalise_new_user, name="finalise_new_user"),
     path('api/search/news/', views.get_news, name="get_news"),
     path('error/page/', views.error_page, name="error_page"),
-    path('custom-admin/dashboard/', views.admin_dashboard, name="admin_dashboard"),
+    path('custom-admin/dashboard/', views.admin_dashboard, name="custom-admin_dashboard"),
     path('custom-admin/dashboard/update/', views.admin_dashboard, name="admin_dashboard_update"),
     path('custom-admin/export/csv/', views.admin_dashboard_csv, name="admin_dashboard_csv"),
 )

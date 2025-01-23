@@ -36,23 +36,6 @@ def get_access_token(request):
 
     return user_authenticated, user_data
 
-
-def get_navbar_partial(user_authenticated, new_user, roles):
-    """
-    Return the path to the appropriate navbar partial
-    based on authentication, new_user status, and roles.
-    """
-    if not user_authenticated:
-        partial = 'partials/not_authenticated_navbar.html'
-    elif 'admin' in roles:
-        partial = 'partials/authenticated_navbar_admin.html'
-    elif new_user == 'true':
-        partial = 'partials/authenticated_navbar_new_user.html'
-    else:
-        partial = 'partials/authenticated_navbar.html'
-
-    return partial
-
 # Helper function to sanitize user input
 def sanitize(value):
     """

@@ -1,6 +1,7 @@
 import json
 import datetime
 import csv
+from django.conf import settings
 from datetime import time
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
@@ -8,9 +9,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import pytz
 from django.core.paginator import Paginator
-
 from .supabase_client import supabase
-from .helper_functions import get_access_token, get_navbar_partial, sanitize, wants_json_response, validate_csrf
+from .helper_functions import get_access_token, sanitize, wants_json_response, validate_csrf
 from .models import (
     Setting,
     SearchSetting,
@@ -45,9 +45,6 @@ def landing_page(request):
             user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
             roles = [user_role.role.name for user_role in user_roles]
 
-            new_user_status = 'true' if (not settings_exist or not account_info_exist) else 'false'
-            navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
-
             if 'user' in roles:
                 if not settings_exist or not account_info_exist:
                     context = {
@@ -56,7 +53,8 @@ def landing_page(request):
                         'user': user_data,
                         'timezones': pytz.all_timezones,
                         'new_user': 'true',
-                        'navbar_partial': navbar_partial,
+                        'navbar_partial': 'partials/authenticated_navbar_new_user.html',
+                        'LANGUAGES': settings.LANGUAGES,
                     }
                     return render(request, 'main_page_new_user.html', context)
 
@@ -65,7 +63,8 @@ def landing_page(request):
                     'user_authenticated': user_authenticated,
                     'user': user_data,
                     'roles': roles,
-                    'navbar_partial': navbar_partial,
+                    'navbar_partial': 'partials/authenticated_navbar.html',
+                    'LANGUAGES': settings.LANGUAGES,
                 }
                 return render(request, 'main_page.html', context)
 
@@ -93,8 +92,7 @@ def error_page(request):
             user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
             roles = [user_role.role.name for user_role in user_roles]
 
-        navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
-        return render(request, '404.html', {'navbar_partial': navbar_partial})
+        return render(request, '404.html')
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
 
@@ -238,7 +236,6 @@ def finalise_new_user(request):
 # Admin Views
 # --------------------------------
 
-@csrf_exempt
 def admin_dashboard(request):
     """
     Displays the admin dashboard with a list of users and their account information.
@@ -250,14 +247,11 @@ def admin_dashboard(request):
                 return JsonResponse({'error': 'Not authenticated'}, status=401)
             return redirect('/login/')
 
-        new_user_status = 'false'
         roles = []
         if user_data:
             user_id = user_data.id
             user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
             roles = [user_role.role.name for user_role in user_roles]
-
-        navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
 
         if request.method == 'GET':
             if 'admin' in roles:
@@ -304,8 +298,9 @@ def admin_dashboard(request):
                     'page_obj': page_obj,
                     'is_paginated': page_obj.has_other_pages(),
                     'paginator': paginator,
-                    'navbar_partial': navbar_partial,
+                    'navbar_partial': 'partials/authenticated_navbar_admin.html',
                     'total_users': total_users,
+                    'LANGUAGES': settings.LANGUAGES,
                 }
                 return render(request, 'admin_dashboard.html', context)
             else:
@@ -443,7 +438,6 @@ def get_settings_view(request):
         user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
         roles = [user_role.role.name for user_role in user_roles]
         new_user_status = 'false'
-        navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
 
         # 3) Handle GET
         if request.method == 'GET':
@@ -477,7 +471,7 @@ def get_settings_view(request):
                             },
                         },
                         'timezones': pytz.all_timezones,
-                        'navbar_partial': navbar_partial,
+                        'navbar_partial': 'partials/authenticated_navbar.html',
                         'error': None,
                     }
                     if wants_json_response(request):
@@ -636,7 +630,6 @@ def modify_search_settings(request):
         user_id = user_data.id
         user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
         roles = [user_role.role.name for user_role in user_roles]
-        navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
 
         if 'user' in roles:
             placeholders = {
@@ -685,7 +678,7 @@ def modify_search_settings(request):
                 return redirect('/')
             context = {
                 'placeholders': placeholders,
-                'navbar_partial': navbar_partial,
+                'navbar_partial': 'partials/authenticated_navbar.html',
             }
             return render(request, 'main_page.html', context)
         else:

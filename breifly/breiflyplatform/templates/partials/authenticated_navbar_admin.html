@@ -1,17 +1,37 @@
+{% load i18n %}
+{% load static %}
 <div class="navbar-custom d-flex align-items-center justify-content-between" style="position: fixed; top: 0; left: 0; right: 0; height: 60px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); background-color: #fff; z-index: 1050; padding: 0 1rem;">
     
-  <!-- Logo and Heading -->
   <div class="d-flex align-items-center flex-grow-1 justify-content-center text-center">
-    <img src="../../static/assets/images/logo.png" alt="Logo" style="height: 40px; margin-right: 10px;">
+    <img src="{% static 'assets/images/logo.png' %}" alt="Logo" style="height: 40px; margin-right: 10px;">
     <h1 class="mb-0" style="font-size: 1.5rem; color: black">Briefly</h1>
   </div>
+
+   <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% for lang_code, lang_name in LANGUAGES %}
+        {% if lang_code == LANGUAGE_CODE %}
+          {{ lang_name }}
+        {% endif %}
+        {% endfor %}
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="languageDropdown">
+        {% for lang_code, lang_name in LANGUAGES %}
+        <li>
+          <form action="{% url 'set_language' %}" method="POST" style="display: inline;">
+            {% csrf_token %}
+            <input type="hidden" name="language" value="{{ lang_code }}">
+            <button type="submit" class="dropdown-item">{{ lang_name }}</button>
+          </form>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
     
-  <!-- Right-aligned Logout Button -->
   <div class="d-flex align-items-center">
     <button class="btn btn-outline-danger" onclick="location.href='/logout/';" style="font-size: 1.25rem;">
       <i class="fas fa-sign-out-alt"></i>
     </button>
-  </div>  
+  </div>
 </div>
-
-
