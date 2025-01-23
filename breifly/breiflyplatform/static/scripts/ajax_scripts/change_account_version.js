@@ -1,42 +1,42 @@
+function getChangeURL() {
+    const languagePrefix = window.location.pathname.split('/')[1];
+    return `/${languagePrefix}/custom-admin/dashboard/update/`;
+}
 
-  async function updateAccountVersion(userId, newVersion) {
+async function updateAccountVersion(userId, newVersion) {
+    const changeURL = getChangeURL();
     const row = document.getElementById(`user-row-${userId}`);
+    const csrftoken = getCookie("csrftoken");
 
     try {
-      const response = await fetch('/custom-admin/dashboard/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          account_version: newVersion
-        }),
-      });
+        const response = await fetch(changeURL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                account_version: newVersion,
+            }),
+        });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        // Show an error message
-        showMessage(errorData.error || 'Something went wrong updating version.', "danger");
-        // highlight row in red
-        row.classList.add('table-danger');
-        setTimeout(() => row.classList.remove('table-danger'), 2500);
-        return;
-      }
+        if (!response.ok) {
+            const errorData = await response.json();
+            showMessage(errorData.error || 'Something went wrong updating version.', "danger");
+            row.classList.add('table-danger');
+            setTimeout(() => row.classList.remove('table-danger'), 2500);
+            return;
+        }
 
-      const data = await response.json();
-
-      // Show success message
-      showMessage(data.message || 'Account version updated!', "success");
-
-      // highlight the row in green
-      row.classList.add('table-success');
-      setTimeout(() => row.classList.remove('table-success'), 1500);
+        const data = await response.json();
+        showMessage(data.message || 'Account version updated!', "success");
+        row.classList.add('table-success');
+        setTimeout(() => row.classList.remove('table-success'), 1500);
 
     } catch (error) {
-      // any network or parse error
-      showMessage('Network error. Could not update account version.', "danger");
-      row.classList.add('table-danger');
-      setTimeout(() => row.classList.remove('table-danger'), 2500);
+        showMessage('Network error. Could not update account version.', "danger");
+        row.classList.add('table-danger');
+        setTimeout(() => row.classList.remove('table-danger'), 2500);
     }
-  }
+}

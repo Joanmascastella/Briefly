@@ -5,6 +5,7 @@ from django.conf import settings
 from datetime import time
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.middleware.csrf import CsrfViewMiddleware
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import pytz
@@ -253,85 +254,100 @@ def admin_dashboard(request):
             user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
             roles = [user_role.role.name for user_role in user_roles]
 
+        # Handle GET request
         if request.method == 'GET':
             if 'admin' in roles:
-                users = User.objects.all()
-                user_roles = UserRole.objects.filter(role_id=2)
-                user_ids_with_role_user = {ur.user_id for ur in user_roles}
-                users_with_role_user = [u for u in users if u.id in user_ids_with_role_user]
+                try:
+                    users = User.objects.all()
+                    user_roles = UserRole.objects.filter(role_id=2)
+                    user_ids_with_role_user = {ur.user_id for ur in user_roles}
+                    users_with_role_user = [u for u in users if u.id in user_ids_with_role_user]
 
-                account_info_list = AccountInformation.objects.filter(user_id__in=user_ids_with_role_user)
-                total_users = 0
-                users_with_account_info = []
-                for user in users_with_role_user:
+                    account_info_list = AccountInformation.objects.filter(user_id__in=user_ids_with_role_user)
+                    total_users = 0
+                    users_with_account_info = []
 
-                    account_info = account_info_list.filter(user_id=user.id).first()
-                    if account_info:
-                        users_with_account_info.append({
-                            'user_id': user.id,
-                            'email': user.email,
-                            'full_name': account_info.full_name,
-                            'position': account_info.position,
-                            'company': account_info.company,
-                            'report_email': account_info.report_email,
-                            'phonenr': account_info.phonenr,
-                            'target_audience': account_info.target_audience,
-                            'industry': account_info.industry,
-                            'content_sentiment': account_info.content_sentiment,
-                            'company_brief': account_info.company_brief,
-                            'recent_ventures': account_info.recent_ventures,
-                            'account_version': account_info.account_version,
-                        })
-                        total_users += 1
-                paginator = Paginator(users_with_account_info, 5)
-                page_number = request.GET.get('page')
-                page_obj = paginator.get_page(page_number)
+                    for user in users_with_role_user:
+                        account_info = account_info_list.filter(user_id=user.id).first()
+                        if account_info:
+                            users_with_account_info.append({
+                                'user_id': user.id,
+                                'email': user.email,
+                                'full_name': account_info.full_name,
+                                'position': account_info.position,
+                                'company': account_info.company,
+                                'report_email': account_info.report_email,
+                                'phonenr': account_info.phonenr,
+                                'target_audience': account_info.target_audience,
+                                'industry': account_info.industry,
+                                'content_sentiment': account_info.content_sentiment,
+                                'company_brief': account_info.company_brief,
+                                'recent_ventures': account_info.recent_ventures,
+                                'account_version': account_info.account_version,
+                            })
+                            total_users += 1
 
-                context = {
-                    'title': 'Briefly - Admin Dashboard',
-                    'user_authenticated': True,
-                    'user_data': {
-                        'id': user_data.id,
-                        'email': user_data.email,
-                    },
-                    'roles': roles,
-                    'page_obj': page_obj,
-                    'is_paginated': page_obj.has_other_pages(),
-                    'paginator': paginator,
-                    'navbar_partial': 'partials/authenticated_navbar_admin.html',
-                    'total_users': total_users,
-                    'LANGUAGES': settings.LANGUAGES,
-                }
-                return render(request, 'admin_dashboard.html', context)
-            else:
-                if wants_json_response(request):
-                    return JsonResponse({'error': 'Not authorized'}, status=403)
-                return redirect('/error/page/')
+                    paginator = Paginator(users_with_account_info, 5)
+                    page_number = request.GET.get('page')
+                    page_obj = paginator.get_page(page_number)
 
-        if request.method == 'POST':
+                    return render(request, 'admin_dashboard.html', {
+                        'title': 'Briefly - Admin Dashboard',
+                        'navbar_partial': 'partials/authenticated_navbar_admin.html',
+                        'user_authenticated': True,
+                        'user_data': {
+                            'id': user_data.id,
+                            'email': user_data.email,
+                        },
+                        'roles': roles,
+                        'page_obj': page_obj,
+                        'is_paginated': page_obj.has_other_pages(),
+                        'paginator': paginator,
+                        'total_users': total_users,
+                        'LANGUAGES': settings.LANGUAGES,
+                    })
+                except Exception as e:
+                    return JsonResponse({'error': f'Failed to load dashboard: {str(e)}'}, status=500)
+
+            return JsonResponse({'error': 'Not authorized'}, status=403)
+
+        # Handle POST request
+        elif request.method == 'POST':
             if 'admin' in roles:
                 try:
                     data = json.loads(request.body)
-                    user_id_to_update = data.get('user_id')
-                    new_account_version = sanitize(data.get('account_version'))
+                except json.JSONDecodeError:
+                    return JsonResponse({'error': 'Invalid JSON body'}, status=400)
 
+                user_id_to_update = sanitize(data.get('user_id'))
+                new_account_version = sanitize(data.get('account_version'))
+
+                if not user_id_to_update or not new_account_version:
+                    return JsonResponse({'error': 'User ID and account version are required'}, status=400)
+
+                try:
                     account_information_obj = AccountInformation.objects.get(user_id=user_id_to_update)
                     account_information_obj.account_version = new_account_version
                     account_information_obj.save()
 
                     return JsonResponse({
+                        'success': True,
                         'message': 'Account version updated successfully',
+                        'user_id': user_id_to_update,
                         'account_version': new_account_version,
-                        'user_id': user_id_to_update
                     }, status=200)
                 except AccountInformation.DoesNotExist:
                     return JsonResponse({'error': 'Account not found'}, status=404)
                 except Exception as e:
-                    return JsonResponse({'error': str(e)}, status=500)
-            else:
-                return JsonResponse({'error': 'Not authorized'}, status=403)
+                    return JsonResponse({'error': f'Failed to update account: {str(e)}'}, status=500)
+
+            return JsonResponse({'error': 'Not authorized'}, status=403)
+
+        # Invalid request method
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'error': f'Internal server error: {str(e)}'}, status=500)
 
 # Convert all client data to CSV
 @csrf_exempt

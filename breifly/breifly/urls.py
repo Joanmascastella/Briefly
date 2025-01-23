@@ -13,6 +13,7 @@ urlpatterns = [
 
 # Language-aware patterns
 urlpatterns += i18n_patterns(
+    path('', views.landing_page, name='home'),
     path('home/', views.landing_page, name='home'),
     path('login/', views.login_view, name='login'),
     path('logout/', views.logout_view, name='logout_view'),
@@ -24,8 +25,9 @@ urlpatterns += i18n_patterns(
     path('api/search/news/', views.get_news, name="get_news"),
     path('error/page/', views.error_page, name="error_page"),
     path('custom-admin/dashboard/', views.admin_dashboard, name="custom-admin_dashboard"),
-    path('custom-admin/dashboard/update/', views.admin_dashboard, name="admin_dashboard_update"),
+    path('custom-admin/dashboard/update/', views.admin_dashboard, name="custom-admin_dashboard_update"),
     path('custom-admin/export/csv/', views.admin_dashboard_csv, name="admin_dashboard_csv"),
+    prefix_default_language=True,
 )
 
 # Static file serving

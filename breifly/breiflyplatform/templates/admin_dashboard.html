@@ -54,7 +54,7 @@
               <a href="/custom-admin/export/csv" class="btn btn-primary me-2 mb-2 mb-sm-0">
                 {% trans "Download CSV" %}
               </a>
-              <input 
+              <input
                 type="text"
                 id="searchInput"
                 class="form-control w-auto"
@@ -159,3 +159,7 @@
     </div>
   </div>
 </div>
+
+<script>
+    console.log("Detected language prefix: {{ request.LANGUAGE_CODE }}");
+</script>
