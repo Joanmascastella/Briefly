@@ -6,10 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/ajax_scripts/change_account_version.js" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/ajax_scripts/change_account_version.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/ajax_scripts/finalise_new_user.js" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/ajax_scripts/finalise_new_user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/ajax_scripts/login.js" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/ajax_scripts/login.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/main_page_new_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/main_page_new_user.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breifly/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breifly/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/ajax_scripts/modify_settings_account.js" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/ajax_scripts/modify_settings_account.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/watermark.js" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/watermark.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -146,7 +145,7 @@
       <workItem from="1737449849008" duration="3435000" />
       <workItem from="1737502951367" duration="5249000" />
       <workItem from="1737508262472" duration="1010000" />
-      <workItem from="1737536217514" duration="23837000" />
+      <workItem from="1737536217514" duration="26635000" />
     </task>
     <servers />
   </component>

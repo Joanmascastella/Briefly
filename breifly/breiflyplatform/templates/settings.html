@@ -115,18 +115,8 @@
             <div class="form-section">
                 <label for="emailReports" class="form-label">Receive Email Reports</label>
                 <select id="emailReports" class="form-control" required>
-                    <option 
-                      value="True"
-                      {% if user_data.settings.email_reports == 'true' %}selected{% endif %}
-                    >
-                      Yes
-                    </option>
-                    <option 
-                      value="False"
-                      {% if user_data.settings.email_reports == 'false' %}selected{% endif %}
-                    >
-                      No
-                    </option>
+                    <option value="True" {% if user_data.settings.email_reports %}selected{% endif %}>Yes</option>
+                    <option value="False" {% if not user_data.settings.email_reports %}selected{% endif %}>No</option>
                 </select>
             </div>
             <div class="form-section">

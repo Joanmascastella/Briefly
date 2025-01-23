@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Create image element
   const logo = document.createElement('img');
-  logo.src = staticUrl + 'logo.png'; // Append the logo filename
+  logo.src = staticUrl + 'smartis-ai-logo.png'; // Append the logo filename
   logo.alt = 'Smartis AI Logo';
   logo.classList.add('me-2');
   logo.style.height = '24px';

@@ -436,7 +436,6 @@ def admin_dashboard_csv(request):
 # --------------------------------
 # User Settings Views
 # --------------------------------
-@csrf_exempt
 def get_settings_view(request):
     """
     GET: Fetch and display the user's settings + account info.
@@ -519,7 +518,7 @@ def get_settings_view(request):
         return redirect('/error/page/')
 
 
-@csrf_exempt
+@csrf_protect
 def settings_modify_view(request):
     """
     POST: Update the user's settings (email reports, timezone).
@@ -536,24 +535,27 @@ def settings_modify_view(request):
 
         if request.method == 'POST':
             if 'user' in roles:
-                data = json.loads(request.body)
-
-                email_reports = sanitize(data.get('emailReports'))
-                timezone_value = sanitize(data.get('timezone'))
-
-                # Update user settings
                 try:
-                    user_settings = Setting.objects.get(user_id=user_id)
-                    if email_reports is not None:
-                        user_settings.email_reports = email_reports
-                    if timezone_value is not None:
-                        user_settings.timezone = timezone_value
-                    user_settings.save()
+                    data = json.loads(request.body)
 
-                    return JsonResponse({'message': 'Settings updated successfully'}, status=200)
+                    email_reports = sanitize(data.get('emailReports'))
+                    timezone_value = sanitize(data.get('timezone'))
 
-                except Setting.DoesNotExist:
-                    return JsonResponse({'error': 'User settings not found'}, status=404)
+                    # Update user settings
+                    try:
+                        user_settings = Setting.objects.get(user_id=user_id)
+                        if email_reports is not None:
+                            user_settings.email_reports = email_reports
+                        if timezone_value is not None:
+                            user_settings.timezone = timezone_value
+                        user_settings.save()
+
+                        return JsonResponse({'message': 'Settings updated successfully'}, status=200)
+
+                    except Setting.DoesNotExist:
+                        return JsonResponse({'error': 'User settings not found'}, status=404)
+                except json.JSONDecodeError:
+                    return JsonResponse({'error': 'Invalid JSON payload'}, status=400)
                 except Exception as e:
                     return JsonResponse({'error': str(e)}, status=500)
             else:
@@ -565,7 +567,7 @@ def settings_modify_view(request):
         return JsonResponse({'error': 'Internal server error', 'details': str(e)}, status=500)
 
 
-@csrf_exempt
+@csrf_protect
 def account_modify_view(request):
     """
     POST: Update the user's account information (full name, phone, etc.).
@@ -582,38 +584,41 @@ def account_modify_view(request):
 
         if request.method == 'POST':
             if 'user' in roles:
-                data = json.loads(request.body)
-
                 try:
-                    account_info = AccountInformation.objects.get(user_id=user_id)
+                    data = json.loads(request.body)
 
-                    if 'fullName' in data:
-                        account_info.full_name = sanitize(data['fullName'])
-                    if 'position' in data:
-                        account_info.position = sanitize(data['position'])
-                    if 'reportEmail' in data:
-                        account_info.report_email = sanitize(data['reportEmail'])
-                    if 'phonenr' in data:
-                        account_info.phonenr = sanitize(data['phonenr'])
-                    if 'targetAudience' in data:
-                        account_info.target_audience = sanitize(data['targetAudience'])
-                    if 'contentSentiment' in data:
-                        account_info.content_sentiment = sanitize(data['contentSentiment'])
-                    if 'company' in data:
-                        account_info.company = sanitize(data['company'])
-                    if 'industry' in data:
-                        account_info.industry = sanitize(data['industry'])
-                    if 'companyBrief' in data:
-                        account_info.company_brief = sanitize(data['companyBrief'])
-                    if 'recentVentures' in data:
-                        account_info.recent_ventures = sanitize(data['recentVentures'])
+                    try:
+                        account_info = AccountInformation.objects.get(user_id=user_id)
 
-                    account_info.save()
+                        if 'fullName' in data:
+                            account_info.full_name = sanitize(data['fullName'])
+                        if 'position' in data:
+                            account_info.position = sanitize(data['position'])
+                        if 'reportEmail' in data:
+                            account_info.report_email = sanitize(data['reportEmail'])
+                        if 'phonenr' in data:
+                            account_info.phonenr = sanitize(data['phonenr'])
+                        if 'targetAudience' in data:
+                            account_info.target_audience = sanitize(data['targetAudience'])
+                        if 'contentSentiment' in data:
+                            account_info.content_sentiment = sanitize(data['contentSentiment'])
+                        if 'company' in data:
+                            account_info.company = sanitize(data['company'])
+                        if 'industry' in data:
+                            account_info.industry = sanitize(data['industry'])
+                        if 'companyBrief' in data:
+                            account_info.company_brief = sanitize(data['companyBrief'])
+                        if 'recentVentures' in data:
+                            account_info.recent_ventures = sanitize(data['recentVentures'])
 
-                    return JsonResponse({'message': 'Account information updated successfully'}, status=200)
+                        account_info.save()
 
-                except AccountInformation.DoesNotExist:
-                    return JsonResponse({'error': 'Account information not found'}, status=404)
+                        return JsonResponse({'message': 'Account information updated successfully'}, status=200)
+
+                    except AccountInformation.DoesNotExist:
+                        return JsonResponse({'error': 'Account information not found'}, status=404)
+                except json.JSONDecodeError:
+                    return JsonResponse({'error': 'Invalid JSON payload'}, status=400)
                 except Exception as e:
                     return JsonResponse({'error': str(e)}, status=500)
             else:
@@ -623,7 +628,6 @@ def account_modify_view(request):
 
     except Exception as e:
         return JsonResponse({'error': 'Internal server error', 'details': str(e)}, status=500)
-
 
 # --------------------------------
 # Search Settings / News Views
