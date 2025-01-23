@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-23 06:38+0000\n"
+"POT-Creation-Date: 2025-01-23 17:43+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,21 +47,25 @@ msgstr ""
 
 #: breiflyplatform/templates/admin_dashboard.html:76
 #: breiflyplatform/templates/main_page_new_user.html:157
+#: breiflyplatform/templates/settings.html:140
 msgid "Full Name"
 msgstr ""
 
 #: breiflyplatform/templates/admin_dashboard.html:77
 #: breiflyplatform/templates/main_page_new_user.html:160
+#: breiflyplatform/templates/settings.html:144
 msgid "Position"
 msgstr ""
 
 #: breiflyplatform/templates/admin_dashboard.html:78
 #: breiflyplatform/templates/main_page_new_user.html:202
+#: breiflyplatform/templates/settings.html:164
 msgid "Company"
 msgstr ""
 
 #: breiflyplatform/templates/admin_dashboard.html:79
 #: breiflyplatform/templates/main_page_new_user.html:172
+#: breiflyplatform/templates/settings.html:148
 msgid "Report Email"
 msgstr ""
 
@@ -71,26 +75,31 @@ msgstr ""
 
 #: breiflyplatform/templates/admin_dashboard.html:81
 #: breiflyplatform/templates/main_page_new_user.html:187
+#: breiflyplatform/templates/settings.html:156
 msgid "Target Audience"
 msgstr ""
 
 #: breiflyplatform/templates/admin_dashboard.html:82
 #: breiflyplatform/templates/main_page_new_user.html:205
+#: breiflyplatform/templates/settings.html:168
 msgid "Industry"
 msgstr ""
 
 #: breiflyplatform/templates/admin_dashboard.html:83
 #: breiflyplatform/templates/main_page_new_user.html:190
+#: breiflyplatform/templates/settings.html:160
 msgid "Content Sentiment"
 msgstr ""
 
 #: breiflyplatform/templates/admin_dashboard.html:84
 #: breiflyplatform/templates/main_page_new_user.html:208
+#: breiflyplatform/templates/settings.html:172
 msgid "Company Brief"
 msgstr ""
 
 #: breiflyplatform/templates/admin_dashboard.html:85
 #: breiflyplatform/templates/main_page_new_user.html:211
+#: breiflyplatform/templates/settings.html:176
 msgid "Recent Ventures"
 msgstr ""
 
@@ -194,7 +203,7 @@ msgstr ""
 #: breiflyplatform/templates/main_page_new_user.html:179
 #: breiflyplatform/templates/main_page_new_user.html:194
 #: breiflyplatform/templates/main_page_new_user.html:215
-#: breiflyplatform/templates/main_page_new_user.html:237
+#: breiflyplatform/templates/main_page_new_user.html:239
 msgid "←"
 msgstr ""
 
@@ -207,6 +216,7 @@ msgid "Enter your report email"
 msgstr ""
 
 #: breiflyplatform/templates/main_page_new_user.html:175
+#: breiflyplatform/templates/settings.html:152
 msgid "Phone Number"
 msgstr ""
 
@@ -255,21 +265,40 @@ msgid "Email Reports"
 msgstr ""
 
 #: breiflyplatform/templates/main_page_new_user.html:225
+#: breiflyplatform/templates/settings.html:117
 msgid "Yes"
 msgstr ""
 
 #: breiflyplatform/templates/main_page_new_user.html:226
+#: breiflyplatform/templates/settings.html:118
 msgid "No"
 msgstr ""
 
 #: breiflyplatform/templates/main_page_new_user.html:229
+#: breiflyplatform/templates/settings.html:122
 msgid "Timezone"
 msgstr ""
 
-#: breiflyplatform/templates/main_page_new_user.html:238
+#: breiflyplatform/templates/main_page_new_user.html:240
 msgid "✔"
 msgstr ""
 
-#: breiflyplatform/templates/partials/authenticated_navbar_new_user.html:42
-msgid "Logout"
+#: breiflyplatform/templates/settings.html:112
+msgid "User Settings"
+msgstr ""
+
+#: breiflyplatform/templates/settings.html:115
+msgid "Receive Email Reports"
+msgstr ""
+
+#: breiflyplatform/templates/settings.html:131
+msgid "Save Settings"
+msgstr ""
+
+#: breiflyplatform/templates/settings.html:137
+msgid "Account Information"
+msgstr ""
+
+#: breiflyplatform/templates/settings.html:181
+msgid "Save Account Information"
 msgstr ""

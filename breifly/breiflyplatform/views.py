@@ -5,13 +5,12 @@ from django.conf import settings
 from datetime import time
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.middleware.csrf import CsrfViewMiddleware
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import pytz
 from django.core.paginator import Paginator
 from .supabase_client import supabase
-from .helper_functions import get_access_token, sanitize, wants_json_response, validate_csrf
+from .helper_functions import get_access_token, sanitize, wants_json_response
 from .models import (
     Setting,
     SearchSetting,
@@ -22,7 +21,6 @@ from .models import (
     ScheduledSearch,
     User
 )
-from .get_news import search_news, get_period_param
 
 
 # --------------------------------
@@ -488,6 +486,7 @@ def get_settings_view(request):
                         'timezones': pytz.all_timezones,
                         'navbar_partial': 'partials/authenticated_navbar.html',
                         'error': None,
+                        'LANGUAGES': settings.LANGUAGES,
                     }
                     if wants_json_response(request):
                         return JsonResponse(context, status=200)
@@ -629,120 +628,3 @@ def account_modify_view(request):
     except Exception as e:
         return JsonResponse({'error': 'Internal server error', 'details': str(e)}, status=500)
 
-# --------------------------------
-# Search Settings / News Views
-# --------------------------------
-
-@csrf_exempt
-def modify_search_settings(request):
-    """
-    Handles creating or updating search settings and saving a PreviousSearch record.
-    """
-    try:
-        user_authenticated, user_data = get_access_token(request)
-        if not user_authenticated or not user_data:
-            if wants_json_response(request):
-                return JsonResponse({'error': 'Not authenticated'}, status=401)
-            return redirect('/login/')
-
-        roles = []
-        new_user_status = 'false'
-        user_id = user_data.id
-        user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
-        roles = [user_role.role.name for user_role in user_roles]
-
-        if 'user' in roles:
-            placeholders = {
-                'keywords': '',
-                'publishers': '',
-                'date_range': 'anytime',
-                'description': '',
-            }
-            try:
-                search_settings = SearchSetting.objects.get(user_id=user_id)
-                placeholders.update({
-                    'keywords': search_settings.keywords or '',
-                    'publishers': search_settings.publishers or '',
-                    'date_range': search_settings.frequency or 'anytime',
-                    'description': search_settings.search_description or '',
-                })
-            except SearchSetting.DoesNotExist:
-                search_settings = None
-
-            if request.method == 'POST':
-                keywords = sanitize(request.POST.get('keywords'))
-                publishers = sanitize(request.POST.get('publishers'))
-                date_range = sanitize(request.POST.get('date-range'))
-                description = sanitize(request.POST.get('description'))
-
-                try:
-                    search_settings, created = SearchSetting.objects.update_or_create(
-                        user_id=user_id,
-                        defaults={
-                            'keywords': keywords,
-                            'publishers': publishers,
-                            'frequency': date_range,
-                            'search_description': description
-                        }
-                    )
-
-                    PreviousSearch.objects.create(
-                        user_id=user_id,
-                        search_setting=search_settings,
-                        keyword=keywords,
-                        search_description=description,
-                    )
-                except Exception as e:
-                    return JsonResponse({'error': str(e)}, status=500)
-
-                return redirect('/')
-            context = {
-                'placeholders': placeholders,
-                'navbar_partial': 'partials/authenticated_navbar.html',
-            }
-            return render(request, 'main_page.html', context)
-        else:
-            if wants_json_response(request):
-                return JsonResponse({'error': 'Not authorized'}, status=403)
-            return redirect('/error/page/')
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
-
-
-async def get_news(request):
-    """
-    Asynchronously fetches news articles based on keywords, time period, and publishers.
-    Returns JSON only, so no navbar context needed.
-    """
-    try:
-        user_data = get_access_token(request)
-        user_id = user_data.id
-        user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
-        roles = [user_role.role.name for user_role in user_roles]
-
-        if 'api' in roles:
-            if request.method == "GET":
-                print("Request GET parameters:", request.GET)  # Debugging
-                keywords = sanitize(request.GET.get('keywords', '')).strip()
-                period = sanitize(request.GET.get('period', '1'))
-                publishers = [sanitize(pub) for pub in request.GET.getlist('publishers', [])]
-
-                print(f"Extracted keywords: {keywords}, period: {period}, publishers: {publishers}")
-
-                if not keywords:
-                    return JsonResponse({'error': 'Keywords are required'}, status=400)
-
-                if period not in ["1", "2", "3", "4", "5"]:
-                    return JsonResponse({'error': 'Invalid time period selected'}, status=400)
-
-                try:
-                    articles = await search_news(keywords, get_period_param(period), publishers)
-                    return JsonResponse({'articles': articles}, safe=False)
-                except Exception as e:
-                    return JsonResponse({'error': str(e)}, status=500)
-
-            return JsonResponse({'error': 'Invalid request method'}, status=400)
-
-        return JsonResponse({'error': 'Not authorized'}, status=403)
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)

@@ -1,4 +1,5 @@
 {% include 'header.html' %}
+{% load i18n static %}
 
 <style>
     body {
@@ -105,90 +106,79 @@
     }
 </style>
 
-
 <div class="main-container">
     <!-- Left Container: User Settings -->
-
     <div class="form-container">
-        <h2 class="form-header">User Settings</h2>
+        <h2 class="form-header">{% trans "User Settings" %}</h2>
         <form id="settingsForm">
             <div class="form-section">
-                <label for="emailReports" class="form-label">Receive Email Reports</label>
+                <label for="emailReports" class="form-label">{% trans "Receive Email Reports" %}</label>
                 <select id="emailReports" class="form-control" required>
-                    <option value="True" {% if user_data.settings.email_reports %}selected{% endif %}>Yes</option>
-                    <option value="False" {% if not user_data.settings.email_reports %}selected{% endif %}>No</option>
+                    <option value="True" {% if user_data.settings.email_reports %}selected{% endif %}>{% trans "Yes" %}</option>
+                    <option value="False" {% if not user_data.settings.email_reports %}selected{% endif %}>{% trans "No" %}</option>
                 </select>
             </div>
             <div class="form-section">
-                <label for="timezone" class="form-label">Timezone</label>
+                <label for="timezone" class="form-label">{% trans "Timezone" %}</label>
                 <select id="timezone" class="form-control" required>
                     {% for tz in timezones %}
-                    <option 
-                      value="{{ tz }}" 
-                      {% if tz == user_data.settings.timezone %}selected{% endif %}
-                    >
-                      {{ tz }}
-                    </option>
+                    <option value="{{ tz }}" {% if tz == user_data.settings.timezone %}selected{% endif %}>{{ tz }}</option>
                     {% endfor %}
                 </select>
             </div>
             <!-- Reusable stylized message box (Bootstrap Alert) -->
             <div id="messageBox" class="alert d-none" role="alert"></div>
-            <button type="button" class="btn-primary" onclick="saveSettings()">Save Settings</button>
+            <button type="button" class="btn-primary" onclick="saveSettings()">{% trans "Save Settings" %}</button>
         </form>
     </div>
 
     <!-- Right Container: Account Information -->
     <div class="form-container">
-        <h2 class="form-header">Account Information</h2>
-        
-        <!-- Reusable stylized message box (Bootstrap Alert) -->
-        <div id="messageBox" class="alert d-none" role="alert"></div>
-        
+        <h2 class="form-header">{% trans "Account Information" %}</h2>
         <form id="accountInfoForm">
             <div class="form-section">
-                <label for="fullName" class="form-label">Full Name</label>
+                <label for="fullName" class="form-label">{% trans "Full Name" %}</label>
                 <input type="text" id="fullName" class="form-control" value="{{ user_data.account_info.full_name }}" required>
             </div>
             <div class="form-section">
-                <label for="position" class="form-label">Position</label>
+                <label for="position" class="form-label">{% trans "Position" %}</label>
                 <input type="text" id="position" class="form-control" value="{{ user_data.account_info.position }}" required>
             </div>
             <div class="form-section">
-                <label for="reportEmail" class="form-label">Report Email</label>
+                <label for="reportEmail" class="form-label">{% trans "Report Email" %}</label>
                 <input type="email" id="reportEmail" class="form-control" value="{{ user_data.account_info.report_email }}" required>
             </div>
             <div class="form-section">
-                <label for="phonenr" class="form-label">Phone Number</label>
+                <label for="phonenr" class="form-label">{% trans "Phone Number" %}</label>
                 <input type="text" id="phonenr" class="form-control" value="{{ user_data.account_info.phonenr }}" required>
             </div>
             <div class="form-section">
-                <label for="targetAudience" class="form-label">Target Audience</label>
+                <label for="targetAudience" class="form-label">{% trans "Target Audience" %}</label>
                 <input type="text" id="targetAudience" class="form-control" value="{{ user_data.account_info.target_audience }}" required>
             </div>
             <div class="form-section">
-                <label for="contentSentiment" class="form-label">Content Sentiment</label>
+                <label for="contentSentiment" class="form-label">{% trans "Content Sentiment" %}</label>
                 <input type="text" id="contentSentiment" class="form-control" value="{{ user_data.account_info.content_sentiment }}" required>
             </div>
             <div class="form-section">
-                <label for="company" class="form-label">Company</label>
+                <label for="company" class="form-label">{% trans "Company" %}</label>
                 <input type="text" id="company" class="form-control" value="{{ user_data.account_info.company }}" required>
             </div>
             <div class="form-section">
-                <label for="industry" class="form-label">Industry</label>
+                <label for="industry" class="form-label">{% trans "Industry" %}</label>
                 <input type="text" id="industry" class="form-control" value="{{ user_data.account_info.industry }}" required>
             </div>
             <div class="form-section">
-                <label for="companyBrief" class="form-label">Company Brief</label>
+                <label for="companyBrief" class="form-label">{% trans "Company Brief" %}</label>
                 <textarea id="companyBrief" class="form-control textarea" required>{{ user_data.account_info.company_brief }}</textarea>
             </div>
             <div class="form-section">
-                <label for="recentVentures" class="form-label">Recent Ventures</label>
+                <label for="recentVentures" class="form-label">{% trans "Recent Ventures" %}</label>
                 <textarea id="recentVentures" class="form-control textarea" required>{{ user_data.account_info.recent_ventures }}</textarea>
             </div>
             <!-- Reusable stylized message box (Bootstrap Alert) -->
             <div id="messageBox" class="alert d-none" role="alert"></div>
-            <button type="button" class="btn-primary" onclick="saveAccountInfo()">Save Account Information</button>
+            <button type="button" class="btn-primary" onclick="saveAccountInfo()">{% trans "Save Account Information" %}</button>
         </form>
     </div>
 </div>

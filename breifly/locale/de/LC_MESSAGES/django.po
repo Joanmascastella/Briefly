@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-23 06:38+0000\n"
+"POT-Creation-Date: 2025-01-23 17:45+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German <de@li.org>\n"
@@ -47,21 +47,25 @@ msgstr "Alle registrierten Benutzer"
 
 #: breiflyplatform/templates/admin_dashboard.html:76
 #: breiflyplatform/templates/main_page_new_user.html:157
+#: breiflyplatform/templates/settings.html:140
 msgid "Full Name"
 msgstr "Vollständiger Name"
 
 #: breiflyplatform/templates/admin_dashboard.html:77
 #: breiflyplatform/templates/main_page_new_user.html:160
+#: breiflyplatform/templates/settings.html:144
 msgid "Position"
 msgstr "Position"
 
 #: breiflyplatform/templates/admin_dashboard.html:78
 #: breiflyplatform/templates/main_page_new_user.html:202
+#: breiflyplatform/templates/settings.html:164
 msgid "Company"
 msgstr "Firma"
 
 #: breiflyplatform/templates/admin_dashboard.html:79
 #: breiflyplatform/templates/main_page_new_user.html:172
+#: breiflyplatform/templates/settings.html:148
 msgid "Report Email"
 msgstr "Bericht-E-Mail"
 
@@ -71,26 +75,31 @@ msgstr "Telefon"
 
 #: breiflyplatform/templates/admin_dashboard.html:81
 #: breiflyplatform/templates/main_page_new_user.html:187
+#: breiflyplatform/templates/settings.html:156
 msgid "Target Audience"
 msgstr "Zielgruppe"
 
 #: breiflyplatform/templates/admin_dashboard.html:82
 #: breiflyplatform/templates/main_page_new_user.html:205
+#: breiflyplatform/templates/settings.html:168
 msgid "Industry"
 msgstr "Industrie"
 
 #: breiflyplatform/templates/admin_dashboard.html:83
 #: breiflyplatform/templates/main_page_new_user.html:190
+#: breiflyplatform/templates/settings.html:160
 msgid "Content Sentiment"
 msgstr "Inhaltsstimmung"
 
 #: breiflyplatform/templates/admin_dashboard.html:84
 #: breiflyplatform/templates/main_page_new_user.html:208
+#: breiflyplatform/templates/settings.html:172
 msgid "Company Brief"
 msgstr "Unternehmensbeschreibung"
 
 #: breiflyplatform/templates/admin_dashboard.html:85
 #: breiflyplatform/templates/main_page_new_user.html:211
+#: breiflyplatform/templates/settings.html:176
 msgid "Recent Ventures"
 msgstr "Kürzliche Unternehmungen"
 
@@ -183,7 +192,7 @@ msgstr ""
 #: breiflyplatform/templates/main_page_new_user.html:195
 #: breiflyplatform/templates/main_page_new_user.html:216
 msgid "→"
-msgstr ""
+msgstr "→"
 
 #: breiflyplatform/templates/main_page_new_user.html:156
 msgid "Step 1: Basic Information"
@@ -205,9 +214,9 @@ msgstr "Geben Sie Ihr Passwort ein"
 #: breiflyplatform/templates/main_page_new_user.html:179
 #: breiflyplatform/templates/main_page_new_user.html:194
 #: breiflyplatform/templates/main_page_new_user.html:215
-#: breiflyplatform/templates/main_page_new_user.html:237
+#: breiflyplatform/templates/main_page_new_user.html:239
 msgid "←"
-msgstr ""
+msgstr "←"
 
 #: breiflyplatform/templates/main_page_new_user.html:171
 msgid "Step 2: Contact Information"
@@ -220,8 +229,9 @@ msgid "Enter your report email"
 msgstr "Geben Sie Ihre E-Mail-Adresse ein"
 
 #: breiflyplatform/templates/main_page_new_user.html:175
+#: breiflyplatform/templates/settings.html:152
 msgid "Phone Number"
-msgstr ""
+msgstr "Telefonnummer"
 
 #: breiflyplatform/templates/main_page_new_user.html:176
 #, fuzzy
@@ -235,11 +245,11 @@ msgstr "Schritt 3: Inhaltsdetails"
 
 #: breiflyplatform/templates/main_page_new_user.html:188
 msgid "Describe your target audience"
-msgstr ""
+msgstr "Beschreiben Sie Ihre Zielgruppe"
 
 #: breiflyplatform/templates/main_page_new_user.html:191
 msgid "What voice & feel do you want the content to have"
-msgstr ""
+msgstr "Welche Stimme und welches Gefühl soll der Inhalt haben?"
 
 #: breiflyplatform/templates/main_page_new_user.html:201
 msgid "Step 4: Company Details"
@@ -252,16 +262,18 @@ msgid "Enter your company"
 msgstr "Geben Sie Ihre E-Mail-Adresse ein"
 
 #: breiflyplatform/templates/main_page_new_user.html:206
+#, fuzzy
+#| msgid "Enter your email"
 msgid "Enter the company\\"
-msgstr ""
+msgstr "Geben Sie Ihre E-Mail-Adresse ein"
 
 #: breiflyplatform/templates/main_page_new_user.html:209
 msgid "Write a brief about your company"
-msgstr ""
+msgstr "Schreiben Sie eine kurze Beschreibung Ihres Unternehmens"
 
 #: breiflyplatform/templates/main_page_new_user.html:212
 msgid "Write a brief about recent ventures"
-msgstr ""
+msgstr "Schreiben Sie einen kurzen Bericht über aktuelle Unternehmungen"
 
 #: breiflyplatform/templates/main_page_new_user.html:222
 msgid "Step 5: Settings"
@@ -272,21 +284,50 @@ msgid "Email Reports"
 msgstr "E-Mail-Berichte"
 
 #: breiflyplatform/templates/main_page_new_user.html:225
+#: breiflyplatform/templates/settings.html:117
 msgid "Yes"
 msgstr "Ja"
 
 #: breiflyplatform/templates/main_page_new_user.html:226
+#: breiflyplatform/templates/settings.html:118
 msgid "No"
 msgstr "Nein"
 
 #: breiflyplatform/templates/main_page_new_user.html:229
+#: breiflyplatform/templates/settings.html:122
 msgid "Timezone"
 msgstr "Zeitzone"
 
-#: breiflyplatform/templates/main_page_new_user.html:238
+#: breiflyplatform/templates/main_page_new_user.html:240
 msgid "✔"
 msgstr "✔"
 
-#: breiflyplatform/templates/partials/authenticated_navbar_new_user.html:42
-msgid "Logout"
-msgstr ""
+#: breiflyplatform/templates/settings.html:112
+#, fuzzy
+#| msgid "Step 5: Settings"
+msgid "User Settings"
+msgstr "Schritt 5: Einstellungen"
+
+#: breiflyplatform/templates/settings.html:115
+#, fuzzy
+#| msgid "Email Reports"
+msgid "Receive Email Reports"
+msgstr "E-Mail-Berichte"
+
+#: breiflyplatform/templates/settings.html:131
+#, fuzzy
+#| msgid "Step 5: Settings"
+msgid "Save Settings"
+msgstr "Schritt 5: Einstellungen"
+
+#: breiflyplatform/templates/settings.html:137
+#, fuzzy
+#| msgid "Account Version"
+msgid "Account Information"
+msgstr "Konto-Version"
+
+#: breiflyplatform/templates/settings.html:181
+#, fuzzy
+#| msgid "Step 2: Contact Information"
+msgid "Save Account Information"
+msgstr "Schritt 2: Kontaktinformationen"
