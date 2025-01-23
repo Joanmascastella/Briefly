@@ -232,11 +232,14 @@
                         <option value="{{ tz }}">{{ tz }}</option>
                         {% endfor %}
                     </select>
-
+                
+                    <div id="messageBox" class="alert d-none" role="alert"></div>
+                
                     <div class="button-container">
                         <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>
                         <input type="submit" value="{% trans '✔' %}" class="arrow-btn submit-btn">
                     </div>
+                  
                 </div>
             </form>
         </div>

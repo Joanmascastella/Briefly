@@ -13,14 +13,10 @@
     <h1 class="mb-0" style="font-size: 1.5rem; color: black">Briefly</h1>
   </div>
     
-  <!-- Right-aligned Logout Button and Language Selector -->
+  <!-- Right-aligned Language Selector and Logout Button -->
   <div class="d-flex align-items-center">
-    <!-- Logout Button -->
-    <button class="btn btn-outline-danger me-3" onclick="location.href='/logout/';" style="font-size: 1.25rem;">
-      <i class="fas fa-sign-out-alt"></i>
-    </button>
-  
-   <div class="dropdown">
+    <!-- Language Selector -->
+    <div class="dropdown me-3">
       <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
         {% get_current_language as LANGUAGE_CODE %}
         {% for lang_code, lang_name in LANGUAGES %}
@@ -41,8 +37,11 @@
         {% endfor %}
       </ul>
     </div>
-    
-    
+
+    <!-- Logout Button -->
+    <button class="btn btn-outline-danger" onclick="location.href='/logout/';" style="font-size: 1.25rem;">
+      <i class="fas fa-sign-out-alt"></i>
+    </button>
   </div>
 </div>
 

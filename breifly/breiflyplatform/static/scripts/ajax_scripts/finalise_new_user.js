@@ -6,12 +6,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentStep = 0;
 
-    function showStep(index) {
-        steps.forEach((step, i) => {
-            step.classList.toggle("d-none", i !== index);
-        });
+    // Function to get the language prefix dynamically from the URL
+    function getLanguagePrefix() {
+        const pathSegments = window.location.pathname.split("/");
+        return pathSegments[1]; // Assumes the language prefix is the first segment after the domain
     }
 
+    // Function to show/hide steps based on the current step index
+    function showStep(index) {
+        steps.forEach((step, i) => {
+            step.classList.toggle("d-none", i !== index); // Show the current step and hide others
+        });
+
+        // Enable/disable navigation buttons based on the step
+        if (index === 0) {
+            prevButtons.forEach((btn) => btn.classList.add("d-none"));
+        } else {
+            prevButtons.forEach((btn) => btn.classList.remove("d-none"));
+        }
+
+        if (index === steps.length - 1) {
+            submitButton.classList.remove("d-none");
+            nextButtons.forEach((btn) => btn.classList.add("d-none"));
+        } else {
+            submitButton.classList.add("d-none");
+            nextButtons.forEach((btn) => btn.classList.remove("d-none"));
+        }
+    }
+
+    // Event listeners for the "Next" buttons
     nextButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
             if (currentStep < steps.length - 1) {
@@ -21,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Event listeners for the "Previous" buttons
     prevButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
             if (currentStep > 0) {
@@ -30,10 +54,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Function to submit the form data via an AJAX POST request
     async function submitForm() {
         const formData = {};
+        const languagePrefix = getLanguagePrefix();
 
-        // Collect all form data
+        // Collect all form data from input fields
         steps.forEach((step) => {
             const inputs = step.querySelectorAll(".form-control");
             inputs.forEach((input) => {
@@ -42,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         try {
-            const response = await fetch("/account/new/user/", {
+            const response = await fetch(`/${languagePrefix}/account/new/user/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -66,14 +92,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // Event listener for the "Submit" button
     submitButton.addEventListener("click", (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent form submission
         submitForm();
     });
 
+    // Initialize the form by showing the first step
     showStep(currentStep);
 });
 
+// Function to show a temporary message (success or error)
 function showMessage(message, type = "success") {
     const messageBox = document.getElementById("messageBox") || document.createElement("div");
     if (!messageBox.id) {

@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.middleware.csrf import CsrfViewMiddleware
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import pytz
 from django.core.paginator import Paginator
 from .supabase_client import supabase
@@ -101,7 +101,7 @@ def error_page(request):
 # --------------------------------
 # Authentication Views
 # --------------------------------
-
+@csrf_protect
 def login_view(request):
     try:
         if request.method == 'GET':
@@ -157,7 +157,7 @@ def logout_view(request):
 
 
 
-@csrf_exempt
+@csrf_protect
 def finalise_new_user(request):
     """
     Finalizes registration details for a new user (e.g., personal and account info).
@@ -236,7 +236,7 @@ def finalise_new_user(request):
 # --------------------------------
 # Admin Views
 # --------------------------------
-
+@csrf_protect
 def admin_dashboard(request):
     """
     Displays the admin dashboard with a list of users and their account information.

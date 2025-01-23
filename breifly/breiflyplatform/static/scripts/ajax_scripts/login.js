@@ -1,7 +1,6 @@
 async function loginViaJSON() {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
-    const csrftoken = getCookie("csrftoken");
 
     const languagePrefix = window.location.pathname.split('/')[1];
     const loginURL = `/${languagePrefix}/login/`;
@@ -11,7 +10,7 @@ async function loginViaJSON() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-CSRFToken": csrftoken,
+                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
             },
             body: JSON.stringify({ email, password }),
         });

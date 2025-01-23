@@ -6,14 +6,13 @@ function getChangeURL() {
 async function updateAccountVersion(userId, newVersion) {
     const changeURL = getChangeURL();
     const row = document.getElementById(`user-row-${userId}`);
-    const csrftoken = getCookie("csrftoken");
 
     try {
         const response = await fetch(changeURL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
+                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
             },
             body: JSON.stringify({
                 user_id: userId,
