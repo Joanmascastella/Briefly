@@ -10,7 +10,7 @@ import pytz
 from django.core.paginator import Paginator
 
 from .supabase_client import supabase
-from .helper_functions import get_access_token, get_navbar_partial, sanitize, wants_json_response
+from .helper_functions import get_access_token, get_navbar_partial, sanitize, wants_json_response, validate_csrf
 from .models import (
     Setting,
     SearchSetting,
@@ -29,14 +29,10 @@ from .get_news import search_news, get_period_param
 # --------------------------------
 
 def landing_page(request):
-    """
-    Displays the landing/home page for authenticated users or redirects to login if not authenticated.
-    """
     try:
         if request.method == 'GET':
             user_authenticated, user_data = get_access_token(request)
 
-            # Redirect or JSON error if user not authenticated
             if not user_authenticated:
                 if wants_json_response(request):
                     return JsonResponse({'error': 'Not authenticated'}, status=401)
@@ -80,7 +76,6 @@ def landing_page(request):
                     return JsonResponse({'error': 'Role not allowed'}, status=403)
                 return redirect('/error/page/')
     except Exception as e:
-        # In case there's a higher-level error
         return JsonResponse({'error': str(e)}, status=500)
 
 
@@ -108,38 +103,19 @@ def error_page(request):
 # Authentication Views
 # --------------------------------
 
-@csrf_exempt
 def login_view(request):
-    """
-    Handles user login using Supabase authentication.
-    Expects JSON data on POST (email, password) and returns JSON responses for errors or success.
-    """
     try:
-        user_authenticated, user_data = get_access_token(request)
-        new_user_status = 'false'
-        roles = []
-
-        if user_data:
-            user_id = user_data.id
-            user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
-            roles = [user_role.role.name for user_role in user_roles]
-
-        navbar_partial = get_navbar_partial(user_authenticated, new_user_status, roles)
-
-        context = {
-            'title': 'Briefly - Login',
-            'navbar_partial': navbar_partial,
-        }
-        # If GET, just render the login form (no error context).
         if request.method == 'GET':
-            return render(request, 'loginForm.html', context)
+            return render(request, 'loginForm.html', {
+                'title': 'Briefly - Login',
+                'navbar_partial': 'partials/not_authenticated_navbar.html'
+            })
 
-        # If POST, parse JSON from request.body instead of request.POST
-        if request.method == 'POST':
+        elif request.method == 'POST':
+            # Handle POST login
             try:
                 data = json.loads(request.body)
             except json.JSONDecodeError:
-                # If the body isn't valid JSON
                 return JsonResponse({'error': 'Invalid JSON body'}, status=400)
 
             email = sanitize(data.get('email'))
@@ -148,41 +124,25 @@ def login_view(request):
             if not email or not password:
                 return JsonResponse({'error': 'Email and password are required'}, status=400)
 
-            # Attempt Supabase authentication
+            # Attempt authentication with Supabase
             try:
                 response = supabase.auth.sign_in_with_password({"email": email, "password": password})
-
                 if response.user:
-                    # If successful, store session info
+                    # Save session
                     request.session['access_token'] = response.session.access_token
                     request.session['user'] = {
                         "id": response.user.id,
                         "email": response.user.email
                     }
+                    return JsonResponse({'success': True, 'redirect_url': '/home/'}, status=200)
 
-                    # Check roles to know where to redirect
-                    user_id = response.user.id
-                    user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
-                    roles = [user_role.role.name for user_role in user_roles]
-
-                    # Return JSON success, plus a recommended redirect
-                    if 'admin' in roles:
-                        return JsonResponse({'success': True, 'redirect_url': '/custom-admin/dashboard/'}, status=200)
-                    else:
-                        return JsonResponse({'success': True, 'redirect_url': '/'}, status=200)
-
-                else:
-                    # Invalid credentials
-                    return JsonResponse({'error': 'Invalid email or password'}, status=400)
-
+                return JsonResponse({'error': 'Invalid email or password'}, status=400)
             except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
+                return JsonResponse({'error': f'Authentication failed: {str(e)}'}, status=500)
 
-        # If neither GET nor POST, return an error
-        return JsonResponse({'error': 'Invalid request method'}, status=400)
-
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'error': f'Internal server error: {str(e)}'}, status=500)
 
 
 def logout_view(request):

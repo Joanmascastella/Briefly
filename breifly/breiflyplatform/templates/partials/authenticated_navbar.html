@@ -20,6 +20,21 @@
   </div>  
 </div>
 
+{#  <!-- Language Selector -->#}
+{#  <div class="dropdown">#}
+{#    <button class="btn btn-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#      Language#}
+{#    </button>#}
+{#    <ul class="dropdown-menu" aria-labelledby="languageDropdown">#}
+{#      {% get_current_language as LANGUAGE_CODE %}#}
+{#      {% for lang_code, lang_name in LANGUAGES %}#}
+{#      <li>#}
+{#        <a class="dropdown-item" href="/i18n/setlang/?language={{ lang_code }}">{{ lang_name }}</a>#}
+{#      </li>#}
+{#      {% endfor %}#}
+{#    </ul>#}
+{#  </div>#}
+
 <!-- Sidebar Offcanvas -->
 <div class="offcanvas offcanvas-start bg-light" tabindex="-1" id="sidebar" aria-labelledby="sidebarLabel" style="width: 250px; z-index: 1060;">
   <div class="offcanvas-header">

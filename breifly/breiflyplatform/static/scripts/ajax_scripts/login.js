@@ -1,35 +1,48 @@
- function showMessage(message, type = "success") {
-    const messageBox = document.getElementById("messageBox");
-    messageBox.className = "alert alert-" + type;
-    messageBox.textContent = message;
-    messageBox.classList.remove("d-none");
-    setTimeout(() => {
-      messageBox.classList.add("d-none");
-    }, 3000);
-  }
-
-  async function loginViaJSON() {
+async function loginViaJSON() {
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
+    const csrftoken = getCookie("csrftoken");
+
+    const languagePrefix = window.location.pathname.split('/')[1];
+    const loginURL = `/${languagePrefix}/login/`;
 
     try {
-      const response = await fetch("/login/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+        const response = await fetch(loginURL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrftoken,
+            },
+            body: JSON.stringify({ email, password }),
+        });
 
-      const data = await response.json();
-      if (response.ok && data.success) {
-        showMessage("Login successful!", "success");
-        setTimeout(() => {
-          window.location.href = data.redirect_url || "/";
-        }, 1000);
-      } else {
-        const err = data.error || "Invalid credentials.";
-        showMessage(err, "danger");
-      }
+        console.log("Status Code:", response.status);
+        console.log("Redirected:", response.redirected);
+        console.log("Response URL:", response.url);
+
+        const contentType = response.headers.get("Content-Type");
+        console.log("Content-Type:", contentType);
+
+        if (contentType && contentType.includes("application/json")) {
+            const data = await response.json();
+            console.log("Response JSON:", data);
+
+            if (response.ok && data.success) {
+                showMessage("Login successful!", "success");
+                setTimeout(() => {
+                    window.location.href = data.redirect_url || "/home/";
+                }, 1000);
+            } else {
+                const err = data.error || "Invalid credentials.";
+                showMessage(err, "danger");
+            }
+        } else {
+            const rawText = await response.text();
+            console.error("Raw Response:", rawText);
+            showMessage("Unexpected response format. Not JSON.", "danger");
+        }
     } catch (error) {
-      showMessage("Network error: " + error, "danger");
+        console.error("Fetch Error:", error);
+        showMessage("Network error: " + error.message, "danger");
     }
-  }
+}

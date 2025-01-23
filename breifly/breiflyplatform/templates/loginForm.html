@@ -1,18 +1,17 @@
 {% include 'header.html' %}
+{% load i18n static %}
 
 <style>
-
     @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
     }
 
     body {
         margin: 0;
         padding: 0;
         font-family: Arial, sans-serif;
-        {#background-color: #f8f9fa;#}
         display: flex;
         justify-content: center;
         align-items: center;
@@ -122,7 +121,7 @@
 
     .image-container {
         flex: 1;
-        background-image: url('../static/assets/images/campaign-creators-yktK2qaiVHI-unsplash.jpg');
+        background-image: url("{% static 'assets/images/campaign-creators-yktK2qaiVHI-unsplash.jpg' %}");
         background-size: cover;
         background-position: center;
         display: flex;
@@ -148,22 +147,22 @@
     <!-- Left Container: Login Form -->
     <div class="form-container">
         <div class="login-form">
-            <h2>Welcome back</h2>
-            <p>Please enter your details.</p>
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+            <h2>{% trans "Welcome back" %}</h2>
+            <p>{% trans "Please enter your details." %}</p>
+            <label for="email" class="form-label">{% trans "Email" %}</label>
+            <input type="email" class="form-control" id="email" placeholder="{% trans 'Enter your email' %}" required>
             
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+            <label for="password" class="form-label">{% trans "Password" %}</label>
+            <input type="password" class="form-control" id="password" placeholder="{% trans 'Enter your password' %}" required>
             
-            <button class="btn-primary" type="button" onclick="loginViaJSON()">Sign In</button>
+            <button class="btn-primary" type="button" onclick="loginViaJSON()">{% trans "Sign In" %}</button>
             
             <!-- Reusable stylized message box (Bootstrap Alert) -->
             <div id="messageBox" class="alert d-none" role="alert"></div>
 
             <div class="form-footer">
-                <a href="#">Forgot Password?</a>
-                <a href="#">Register here</a>
+                <a href="#">{% trans "Forgot Password?" %}</a>
+                <a href="#">{% trans "Register here" %}</a>
             </div>
         </div>
     </div>

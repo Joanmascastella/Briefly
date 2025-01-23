@@ -1,38 +1,32 @@
-"""
-URL configuration for breifly project.
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import path, include
+from django.conf.urls.i18n import i18n_patterns
+import breiflyplatform.views as views
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-
-from django.contrib import admin
-from django.urls import path
-
-
-from breiflyplatform.views import *
+# Base URL patterns
 urlpatterns = [
-    path("", landing_page),
-    path("admin/", admin.site.urls),
-    path('login/', login_view, name='login'),
-    path('logout/', logout_view, name='logout'),
-    path('settings/', get_settings_view, name='settings'),
-    path('settings/modify/', settings_modify_view, name='settings'),
-    path('settings/modify/account', account_modify_view, name='account'),
-    path('search/settings/modify/', modify_search_settings, name="search"),
-    path('account/new/user/', finalise_new_user, name="user"),
-    path('api/search/news/', get_news, name="news"),
-    path('error/page/', error_page, name="error"),
-    path('custom-admin/dashboard/', admin_dashboard, name="custom-admin"),
-    path('custom-admin/dashboard/update/', admin_dashboard, name="custom-admin-users"),
-    path('custom-admin/export/csv/', admin_dashboard_csv, name="custom-admin-csv"),
+    path('i18n/', include('django.conf.urls.i18n')),  # Language switching
+
 ]
+
+# Language-aware patterns
+urlpatterns += i18n_patterns(
+    path('home/', views.landing_page, name='home'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout_view'),
+    path('settings/', views.get_settings_view, name='get_settings_view'),
+    path('settings/modify/', views.settings_modify_view, name='settings_modify_view'),
+    path('settings/modify/account', views.account_modify_view, name='account_modify_view'),
+    path('search/settings/modify/', views.modify_search_settings, name="modify_search_settings"),
+    path('account/new/user/', views.finalise_new_user, name="finalise_new_user"),
+    path('api/search/news/', views.get_news, name="get_news"),
+    path('error/page/', views.error_page, name="error_page"),
+    path('custom-admin/dashboard/', views.admin_dashboard, name="admin_dashboard"),
+    path('custom-admin/dashboard/update/', views.admin_dashboard, name="admin_dashboard_update"),
+    path('custom-admin/export/csv/', views.admin_dashboard_csv, name="admin_dashboard_csv"),
+)
+
+# Static file serving
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

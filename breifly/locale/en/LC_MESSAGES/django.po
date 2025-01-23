@@ -1,0 +1,54 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-23 03:39+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: breiflyplatform/templates/loginForm.html:150
+msgid "Welcome back"
+msgstr ""
+
+#: breiflyplatform/templates/loginForm.html:151
+msgid "Please enter your details."
+msgstr ""
+
+#: breiflyplatform/templates/loginForm.html:152
+msgid "Email"
+msgstr ""
+
+#: breiflyplatform/templates/loginForm.html:153
+msgid "Enter your email"
+msgstr ""
+
+#: breiflyplatform/templates/loginForm.html:155
+msgid "Password"
+msgstr ""
+
+#: breiflyplatform/templates/loginForm.html:156
+msgid "Enter your password"
+msgstr ""
+
+#: breiflyplatform/templates/loginForm.html:158
+msgid "Sign In"
+msgstr ""
+
+#: breiflyplatform/templates/loginForm.html:164
+msgid "Forgot Password?"
+msgstr ""
+
+#: breiflyplatform/templates/loginForm.html:165
+msgid "Register here"
+msgstr ""
