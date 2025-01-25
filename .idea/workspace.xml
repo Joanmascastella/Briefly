@@ -5,10 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/search_page.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breifly/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breifly/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/admin_dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/admin_dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/loginForm.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/loginForm.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/main_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/main_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/authenticated_navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/authenticated_navbar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,8 +26,8 @@
       <list>
         <option value="CSS File" />
         <option value="JavaScript File" />
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -146,7 +149,7 @@
       <workItem from="1737508262472" duration="1010000" />
       <workItem from="1737536217514" duration="27860000" />
       <workItem from="1737636377140" duration="351000" />
-      <workItem from="1737770952235" duration="3954000" />
+      <workItem from="1737770952235" duration="6378000" />
     </task>
     <servers />
   </component>

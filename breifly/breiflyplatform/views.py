@@ -40,7 +40,7 @@ def landing_page(request):
             user_id = user_data.id
             # settings_exist = Setting.objects.filter(user_id=user_id).exists()
             account_info_exist = AccountInformation.objects.filter(user_id=user_id).exists()
-
+            account_info = AccountInformation.objects.filter(user_id=user_id).first()
             user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
             roles = [user_role.role.name for user_role in user_roles]
 
@@ -54,6 +54,7 @@ def landing_page(request):
                         'new_user': 'true',
                         'navbar_partial': 'partials/authenticated_navbar_new_user.html',
                         'LANGUAGES': settings.LANGUAGES,
+
                     }
                     return render(request, 'main_page_new_user.html', context)
 
@@ -64,6 +65,10 @@ def landing_page(request):
                     'roles': roles,
                     'navbar_partial': 'partials/authenticated_navbar.html',
                     'LANGUAGES': settings.LANGUAGES,
+                    'account_info': {
+                        'full_name': account_info.full_name,
+
+                    }
                 }
                 return render(request, 'main_page.html', context)
 
@@ -628,3 +633,38 @@ def account_modify_view(request):
     except Exception as e:
         return JsonResponse({'error': 'Internal server error', 'details': str(e)}, status=500)
 
+
+# --------------------------------
+# Search Views
+# --------------------------------
+def search_view(request):
+    try:
+        if request.method == 'GET':
+            user_authenticated, user_data = get_access_token(request)
+
+            if not user_authenticated:
+                if wants_json_response(request):
+                    return JsonResponse({'error': 'Not authenticated'}, status=401)
+                return redirect('/login')
+
+            user_id = user_data.id
+
+            user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+            roles = [user_role.role.name for user_role in user_roles]
+
+            if 'user' in roles:
+                context = {
+                    'title': 'Briefly - Search',
+                    'user_authenticated': user_authenticated,
+                    'user': user_data,
+                    'roles': roles,
+                    'navbar_partial': 'partials/authenticated_navbar.html',
+                    'LANGUAGES': settings.LANGUAGES,
+                }
+                return render(request, 'search_page.html', context)
+            else:
+                if wants_json_response(request):
+                    return JsonResponse({'error': 'Role not allowed'}, status=403)
+                return redirect('/error/page/')
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

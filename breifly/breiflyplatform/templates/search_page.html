@@ -1,0 +1,39 @@
+{% include 'header.html' %}
+{% load i18n static %}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Left Column: Search Form -->
+        <div class="col-md-6">
+            <div class="p-4 bg-light border rounded">
+                <h4 class="mb-4">Search News</h4>
+                <form>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title Of Search:</label>
+                        <input type="text" class="form-control" id="title" name="title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="keywords" class="form-label">Keywords To Search By:</label>
+                        <input type="text" class="form-control" id="keywords" name="keywords">
+                    </div>
+                    <div class="mb-3">
+                        <label for="publishers" class="form-label">Specific Publishers:</label>
+                        <input type="text" class="form-control" id="publishers" name="publishers">
+                    </div>
+                    <div class="mb-3">
+                        <label for="date-range" class="form-label">Date Range:</label>
+                        <input type="text" class="form-control" id="date-range" name="date-range">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right Column: Placeholder for Results or Other Content -->
+        <div class="col-md-6">
+            <div class="p-4 bg-light border rounded" style="height: 100%;">
+                <!-- Placeholder Content -->
+            </div>
+        </div>
+    </div>
+</div>
