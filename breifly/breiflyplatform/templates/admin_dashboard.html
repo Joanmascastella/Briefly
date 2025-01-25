@@ -76,14 +76,14 @@
                   <th scope="col">{% trans "Full Name" %}</th>
                   <th scope="col">{% trans "Position" %}</th>
                   <th scope="col">{% trans "Company" %}</th>
-                  <th scope="col">{% trans "Report Email" %}</th>
-                  <th scope="col">{% trans "Phone" %}</th>
-                  <th scope="col">{% trans "Target Audience" %}</th>
+{#                  <th scope="col">{% trans "Report Email" %}</th>#}
+{#                  <th scope="col">{% trans "Phone" %}</th>#}
+{#                  <th scope="col">{% trans "Target Audience" %}</th>#}
                   <th scope="col">{% trans "Industry" %}</th>
-                  <th scope="col">{% trans "Content Sentiment" %}</th>
+{#                  <th scope="col">{% trans "Content Sentiment" %}</th>#}
                   <th scope="col">{% trans "Company Brief" %}</th>
-                  <th scope="col">{% trans "Recent Ventures" %}</th>
-                  <th scope="col">{% trans "Account Version" %}</th>
+{#                  <th scope="col">{% trans "Recent Ventures" %}</th>#}
+{#                  <th scope="col">{% trans "Account Version" %}</th>#}
                 </tr>
               </thead>
               <tbody>
@@ -92,26 +92,26 @@
                     <td>{{ user.full_name }}</td>
                     <td>{{ user.position }}</td>
                     <td>{{ user.company }}</td>
-                    <td>{{ user.report_email }}</td>
-                    <td>{{ user.phonenr }}</td>
-                    <td>{{ user.target_audience }}</td>
+{#                    <td>{{ user.report_email }}</td>#}
+{#                    <td>{{ user.phonenr }}</td>#}
+{#                    <td>{{ user.target_audience }}</td>#}
                     <td>{{ user.industry }}</td>
-                    <td>{{ user.content_sentiment }}</td>
+{#                    <td>{{ user.content_sentiment }}</td>#}
                     <td>{{ user.company_brief }}</td>
-                    <td>{{ user.recent_ventures }}</td>
-                    <td>
-                      <select class="form-select form-select-sm"
-                              onchange="updateAccountVersion('{{ user.user_id }}', this.value)">
-                        <option value="standard"
-                                {% if user.account_version == 'standard' %}selected{% endif %}>
-                          {% trans "Standard" %}
-                        </option>
-                        <option value="pro"
-                                {% if user.account_version == 'pro' %}selected{% endif %}>
-                          {% trans "Pro" %}
-                        </option>
-                      </select>
-                    </td>
+{#                    <td>{{ user.recent_ventures }}</td>#}
+{#                    <td>#}
+{#                      <select class="form-select form-select-sm"#}
+{#                              onchange="updateAccountVersion('{{ user.user_id }}', this.value)">#}
+{#                        <option value="standard"#}
+{#                                {% if user.account_version == 'standard' %}selected{% endif %}>#}
+{#                          {% trans "Standard" %}#}
+{#                        </option>#}
+{#                        <option value="pro"#}
+{#                                {% if user.account_version == 'pro' %}selected{% endif %}>#}
+{#                          {% trans "Pro" %}#}
+{#                        </option>#}
+{#                      </select>#}
+{#                    </td>#}
                   </tr>
                 {% endfor %}
               </tbody>

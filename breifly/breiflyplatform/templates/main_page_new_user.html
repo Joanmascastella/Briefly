@@ -166,39 +166,39 @@
                     </div>
                 </div>
 
-                <!-- Step 3 -->
-                <div class="step d-none" id="step3">
-                    <h5>{% trans "Step 2: Contact Information" %}</h5>
-                    <label for="report_email" class="form-label">{% trans "Report Email" %}</label>
-                    <input type="email" class="form-control" id="report_email" name="report_email" placeholder="{% trans 'Enter your report email' %}" required>
+{#                <!-- Step 3 -->#}
+{#                <div class="step d-none" id="step3">#}
+{#                    <h5>{% trans "Step 2: Contact Information" %}</h5>#}
+{#                    <label for="report_email" class="form-label">{% trans "Report Email" %}</label>#}
+{#                    <input type="email" class="form-control" id="report_email" name="report_email" placeholder="{% trans 'Enter your report email' %}" required>#}
+{##}
+{#                    <label for="phonenr" class="form-label">{% trans "Phone Number" %}</label>#}
+{#                    <input type="text" class="form-control" id="phonenr" name="phonenr" placeholder="{% trans 'Enter your phone number' %}" required>#}
+{##}
+{#                    <div class="button-container">#}
+{#                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>#}
+{#                        <button type="button" class="arrow-btn next-btn">{% trans "→" %}</button>#}
+{#                    </div>#}
+{#                </div>#}
 
-                    <label for="phonenr" class="form-label">{% trans "Phone Number" %}</label>
-                    <input type="text" class="form-control" id="phonenr" name="phonenr" placeholder="{% trans 'Enter your phone number' %}" required>
-
-                    <div class="button-container">
-                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>
-                        <button type="button" class="arrow-btn next-btn">{% trans "→" %}</button>
-                    </div>
-                </div>
-
-                <!-- Step 4 -->
-                <div class="step d-none" id="step4">
-                    <h5>{% trans "Step 3: Content Details" %}</h5>
-                    <label for="target_audience" class="form-label">{% trans "Target Audience" %}</label>
-                    <input type="text" class="form-control" id="target_audience" name="target_audience" placeholder="{% trans 'Describe your target audience' %}" required>
-
-                    <label for="content_sentiment" class="form-label">{% trans "Content Sentiment" %}</label>
-                    <input type="text" class="form-control" id="content_sentiment" name="content_sentiment" placeholder="{% trans 'What voice & feel do you want the content to have' %}" required>
-
-                    <div class="button-container">
-                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>
-                        <button type="button" class="arrow-btn next-btn">{% trans "→" %}</button>
-                    </div>
-                </div>
+{#                <!-- Step 4 -->#}
+{#                <div class="step d-none" id="step4">#}
+{#                    <h5>{% trans "Step 3: Content Details" %}</h5>#}
+{#                    <label for="target_audience" class="form-label">{% trans "Target Audience" %}</label>#}
+{#                    <input type="text" class="form-control" id="target_audience" name="target_audience" placeholder="{% trans 'Describe your target audience' %}" required>#}
+{##}
+{#                    <label for="content_sentiment" class="form-label">{% trans "Content Sentiment" %}</label>#}
+{#                    <input type="text" class="form-control" id="content_sentiment" name="content_sentiment" placeholder="{% trans 'What voice & feel do you want the content to have' %}" required>#}
+{##}
+{#                    <div class="button-container">#}
+{#                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>#}
+{#                        <button type="button" class="arrow-btn next-btn">{% trans "→" %}</button>#}
+{#                    </div>#}
+{#                </div>#}
 
                 <!-- Step 5 -->
-                <div class="step d-none" id="step5">
-                    <h5>{% trans "Step 4: Company Details" %}</h5>
+                <div class="step d-none" id="step2">
+                    <h5>{% trans "Step 2: Company Details" %}</h5>
                     <label for="company" class="form-label">{% trans "Company" %}</label>
                     <input type="text" class="form-control" id="company" name="company" placeholder="{% trans 'Enter your company' %}" required>
 
@@ -208,39 +208,43 @@
                     <label for="company_brief" class="form-label">{% trans "Company Brief" %}</label>
                     <textarea class="form-control" id="company_brief" name="company_brief" rows="3" placeholder="{% trans 'Write a brief about your company' %}" required></textarea>
 
-                    <label for="recent_ventures" class="form-label">{% trans "Recent Ventures" %}</label>
-                    <textarea class="form-control" id="recent_ventures" name="recent_ventures" rows="3" placeholder="{% trans 'Write a brief about recent ventures' %}" required></textarea>
+{#                    <label for="recent_ventures" class="form-label">{% trans "Recent Ventures" %}</label>#}
+{#                    <textarea class="form-control" id="recent_ventures" name="recent_ventures" rows="3" placeholder="{% trans 'Write a brief about recent ventures' %}" required></textarea>#}
 
-                    <div class="button-container">
-                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>
-                        <button type="button" class="arrow-btn next-btn">{% trans "→" %}</button>
-                    </div>
-                </div>
-
-                <!-- Step 6 -->
-                <div class="step d-none" id="step6">
-                    <h5>{% trans "Step 5: Settings" %}</h5>
-                    <label for="email_reports" class="form-label">{% trans "Email Reports" %}</label>
-                    <select class="form-control" id="email_reports" name="email_reports" required>
-                        <option value="True">{% trans "Yes" %}</option>
-                        <option value="False">{% trans "No" %}</option>
-                    </select>
-
-                    <label for="timezone" class="form-label">{% trans "Timezone" %}</label>
-                    <select class="form-control" id="timezone" name="timezone">
-                        {% for tz in timezones %}
-                        <option value="{{ tz }}">{{ tz }}</option>
-                        {% endfor %}
-                    </select>
-                
-                    <div id="messageBox" class="alert d-none" role="alert"></div>
-                
-                    <div class="button-container">
+                  <div class="button-container">
                         <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>
                         <input type="submit" value="{% trans '✔' %}" class="arrow-btn submit-btn">
-                    </div>
-                  
+                  </div>
+                  <br>
+                  <div id="messageBox" class="alert d-none" role="alert"></div>
+
+
                 </div>
+
+{#                <!-- Step 6 -->#}
+{#                <div class="step d-none" id="step6">#}
+{#                    <h5>{% trans "Step 5: Settings" %}</h5>#}
+{#                    <label for="email_reports" class="form-label">{% trans "Email Reports" %}</label>#}
+{#                    <select class="form-control" id="email_reports" name="email_reports" required>#}
+{#                        <option value="True">{% trans "Yes" %}</option>#}
+{#                        <option value="False">{% trans "No" %}</option>#}
+{#                    </select>#}
+{##}
+{#                    <label for="timezone" class="form-label">{% trans "Timezone" %}</label>#}
+{#                    <select class="form-control" id="timezone" name="timezone">#}
+{#                        {% for tz in timezones %}#}
+{#                        <option value="{{ tz }}">{{ tz }}</option>#}
+{#                        {% endfor %}#}
+{#                    </select>#}
+{#                #}
+{#                    <div id="messageBox" class="alert d-none" role="alert"></div>#}
+{#                #}
+{#                    <div class="button-container">#}
+{#                        <button type="button" class="arrow-btn prev-btn">{% trans "←" %}</button>#}
+{#                        <input type="submit" value="{% trans '✔' %}" class="arrow-btn submit-btn">#}
+{#                    </div>#}
+{#                  #}
+{#                </div>#}
             </form>
         </div>
     </div>

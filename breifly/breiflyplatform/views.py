@@ -38,14 +38,14 @@ def landing_page(request):
                 return redirect('/login')
 
             user_id = user_data.id
-            settings_exist = Setting.objects.filter(user_id=user_id).exists()
+            # settings_exist = Setting.objects.filter(user_id=user_id).exists()
             account_info_exist = AccountInformation.objects.filter(user_id=user_id).exists()
 
             user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
             roles = [user_role.role.name for user_role in user_roles]
 
             if 'user' in roles:
-                if not settings_exist or not account_info_exist:
+                if not account_info_exist:
                     context = {
                         'title': 'Briefly - Home',
                         'user_authenticated': user_authenticated,
@@ -180,41 +180,41 @@ def finalise_new_user(request):
                     # Extract and sanitize JSON fields
                     full_name = sanitize(payload.get('full_name'))
                     position = sanitize(payload.get('position'))
-                    report_email = sanitize(payload.get('report_email'))
-                    phonenr = sanitize(payload.get('phonenr'))
-                    target_audience = sanitize(payload.get('target_audience'))
-                    content_sentiment = sanitize(payload.get('content_sentiment'))
+                    # report_email = sanitize(payload.get('report_email'))
+                    # phonenr = sanitize(payload.get('phonenr'))
+                    # target_audience = sanitize(payload.get('target_audience'))
+                    # content_sentiment = sanitize(payload.get('content_sentiment'))
                     company = sanitize(payload.get('company'))
                     industry = sanitize(payload.get('industry'))
                     company_brief = sanitize(payload.get('company_brief'))
-                    recent_ventures = sanitize(payload.get('recent_ventures'))
+                    # recent_ventures = sanitize(payload.get('recent_ventures'))
                     account_version = "standard"
-                    email_reports = sanitize(payload.get('email_reports'))
-                    timezone = sanitize(payload.get('timezone'))
+                    # email_reports = sanitize(payload.get('email_reports'))
+                    # timezone = sanitize(payload.get('timezone'))
 
                     try:
-                        # Update or create user settings and account information
-                        Setting.objects.update_or_create(
-                            user_id=user_id,
-                            defaults={
-                                'email_reports': email_reports,
-                                'timezone': timezone,
-                            }
-                        )
+                        # # Update or create user settings and account information
+                        # Setting.objects.update_or_create(
+                        #     user_id=user_id,
+                        #     defaults={
+                        #         'email_reports': email_reports,
+                        #         'timezone': timezone,
+                        #     }
+                        # )
 
                         AccountInformation.objects.update_or_create(
                             user_id=user_id,
                             defaults={
                                 "full_name": full_name,
                                 "position": position,
-                                "phonenr": phonenr,
-                                "target_audience": target_audience,
-                                "content_sentiment": content_sentiment,
+                                # "phonenr": phonenr,
+                                # "target_audience": target_audience,
+                                # "content_sentiment": content_sentiment,
                                 "company": company,
-                                "report_email": report_email,
+                                # "report_email": report_email,
                                 "industry": industry,
                                 "company_brief": company_brief,
-                                "recent_ventures": recent_ventures,
+                                # "recent_ventures": recent_ventures,
                                 "account_version": account_version,
                             }
                         )
@@ -274,14 +274,14 @@ def admin_dashboard(request):
                                 'full_name': account_info.full_name,
                                 'position': account_info.position,
                                 'company': account_info.company,
-                                'report_email': account_info.report_email,
-                                'phonenr': account_info.phonenr,
-                                'target_audience': account_info.target_audience,
+                                # 'report_email': account_info.report_email,
+                                # 'phonenr': account_info.phonenr,
+                                # 'target_audience': account_info.target_audience,
                                 'industry': account_info.industry,
-                                'content_sentiment': account_info.content_sentiment,
+                                # 'content_sentiment': account_info.content_sentiment,
                                 'company_brief': account_info.company_brief,
-                                'recent_ventures': account_info.recent_ventures,
-                                'account_version': account_info.account_version,
+                                # 'recent_ventures': account_info.recent_ventures,
+                                # 'account_version': account_info.account_version,
                             })
                             total_users += 1
 
@@ -392,14 +392,14 @@ def admin_dashboard_csv(request):
                     "Full Name",
                     "Position",
                     "Company",
-                    "Report Email",
-                    "Phone Number",
-                    "Target Audience",
+                    # "Report Email",
+                    # "Phone Number",
+                    # "Target Audience",
                     "Industry",
-                    "Content Sentiment",
+                    # "Content Sentiment",
                     "Company Brief",
-                    "Recent Ventures",
-                    "Account Version"
+                    # "Recent Ventures",
+                    # "Account Version"
                 ])
 
                 # Write one row per user
@@ -410,14 +410,14 @@ def admin_dashboard_csv(request):
                             info.full_name,
                             info.position,
                             info.company,
-                            info.report_email,
-                            info.phonenr,
-                            info.target_audience,
+                            # info.report_email,
+                            # info.phonenr,
+                            # info.target_audience,
                             info.industry,
-                            info.content_sentiment,
+                            # info.content_sentiment,
                             info.company_brief,
-                            info.recent_ventures,
-                            info.account_version
+                            # info.recent_ventures,
+                            # info.account_version
                         ])
 
                 return response
@@ -457,7 +457,7 @@ def get_settings_view(request):
             if 'user' in roles:
                 try:
                     # Fetch user settings & account information
-                    user_settings = Setting.objects.get(user_id=user_id)
+                    # user_settings = Setting.objects.get(user_id=user_id)
                     account_information = AccountInformation.objects.get(user_id=user_id)
 
                     context = {
@@ -466,21 +466,21 @@ def get_settings_view(request):
                         'user_data': {
                             'id': user_data.id,
                             'email': user_data.email,
-                            'settings': {
-                                'email_reports': user_settings.email_reports,
-                                'timezone': user_settings.timezone,
-                            },
+                            # 'settings': {
+                            #     'email_reports': user_settings.email_reports,
+                            #     'timezone': user_settings.timezone,
+                            # },
                             'account_info': {
                                 'full_name': account_information.full_name,
                                 'position': account_information.position,
-                                'report_email': account_information.report_email,
-                                'phonenr': account_information.phonenr,
-                                'target_audience': account_information.target_audience,
-                                'content_sentiment': account_information.content_sentiment,
+                                # 'report_email': account_information.report_email,
+                                # 'phonenr': account_information.phonenr,
+                                # 'target_audience': account_information.target_audience,
+                                # 'content_sentiment': account_information.content_sentiment,
                                 'company': account_information.company,
                                 'industry': account_information.industry,
                                 'company_brief': account_information.company_brief,
-                                'recent_ventures': account_information.recent_ventures,
+                                # 'recent_ventures': account_information.recent_ventures,
                             },
                         },
                         'timezones': pytz.all_timezones,
@@ -517,53 +517,53 @@ def get_settings_view(request):
         return redirect('/error/page/')
 
 
-@csrf_protect
-def settings_modify_view(request):
-    """
-    POST: Update the user's settings (email reports, timezone).
-    """
-    try:
-        # 1) Authenticate user
-        user_authenticated, user_data = get_access_token(request)
-        if not user_authenticated or not user_data:
-            return JsonResponse({'error': 'Not authenticated'}, status=401)
-
-        user_id = user_data.id
-        user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
-        roles = [user_role.role.name for user_role in user_roles]
-
-        if request.method == 'POST':
-            if 'user' in roles:
-                try:
-                    data = json.loads(request.body)
-
-                    email_reports = sanitize(data.get('emailReports'))
-                    timezone_value = sanitize(data.get('timezone'))
-
-                    # Update user settings
-                    try:
-                        user_settings = Setting.objects.get(user_id=user_id)
-                        if email_reports is not None:
-                            user_settings.email_reports = email_reports
-                        if timezone_value is not None:
-                            user_settings.timezone = timezone_value
-                        user_settings.save()
-
-                        return JsonResponse({'message': 'Settings updated successfully'}, status=200)
-
-                    except Setting.DoesNotExist:
-                        return JsonResponse({'error': 'User settings not found'}, status=404)
-                except json.JSONDecodeError:
-                    return JsonResponse({'error': 'Invalid JSON payload'}, status=400)
-                except Exception as e:
-                    return JsonResponse({'error': str(e)}, status=500)
-            else:
-                return JsonResponse({'error': 'Not authorized'}, status=403)
-        else:
-            return JsonResponse({'error': 'Method not allowed'}, status=405)
-
-    except Exception as e:
-        return JsonResponse({'error': 'Internal server error', 'details': str(e)}, status=500)
+# @csrf_protect
+# def settings_modify_view(request):
+#     """
+#     POST: Update the user's settings (email reports, timezone).
+#     """
+#     try:
+#         # 1) Authenticate user
+#         user_authenticated, user_data = get_access_token(request)
+#         if not user_authenticated or not user_data:
+#             return JsonResponse({'error': 'Not authenticated'}, status=401)
+#
+#         user_id = user_data.id
+#         user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+#         roles = [user_role.role.name for user_role in user_roles]
+#
+#         if request.method == 'POST':
+#             if 'user' in roles:
+#                 try:
+#                     data = json.loads(request.body)
+#
+#                     email_reports = sanitize(data.get('emailReports'))
+#                     timezone_value = sanitize(data.get('timezone'))
+#
+#                     # Update user settings
+#                     try:
+#                         user_settings = Setting.objects.get(user_id=user_id)
+#                         if email_reports is not None:
+#                             user_settings.email_reports = email_reports
+#                         if timezone_value is not None:
+#                             user_settings.timezone = timezone_value
+#                         user_settings.save()
+#
+#                         return JsonResponse({'message': 'Settings updated successfully'}, status=200)
+#
+#                     except Setting.DoesNotExist:
+#                         return JsonResponse({'error': 'User settings not found'}, status=404)
+#                 except json.JSONDecodeError:
+#                     return JsonResponse({'error': 'Invalid JSON payload'}, status=400)
+#                 except Exception as e:
+#                     return JsonResponse({'error': str(e)}, status=500)
+#             else:
+#                 return JsonResponse({'error': 'Not authorized'}, status=403)
+#         else:
+#             return JsonResponse({'error': 'Method not allowed'}, status=405)
+#
+#     except Exception as e:
+#         return JsonResponse({'error': 'Internal server error', 'details': str(e)}, status=500)
 
 
 @csrf_protect
@@ -593,22 +593,22 @@ def account_modify_view(request):
                             account_info.full_name = sanitize(data['fullName'])
                         if 'position' in data:
                             account_info.position = sanitize(data['position'])
-                        if 'reportEmail' in data:
-                            account_info.report_email = sanitize(data['reportEmail'])
-                        if 'phonenr' in data:
-                            account_info.phonenr = sanitize(data['phonenr'])
-                        if 'targetAudience' in data:
-                            account_info.target_audience = sanitize(data['targetAudience'])
-                        if 'contentSentiment' in data:
-                            account_info.content_sentiment = sanitize(data['contentSentiment'])
+                        # if 'reportEmail' in data:
+                        #     account_info.report_email = sanitize(data['reportEmail'])
+                        # if 'phonenr' in data:
+                        #     account_info.phonenr = sanitize(data['phonenr'])
+                        # if 'targetAudience' in data:
+                        #     account_info.target_audience = sanitize(data['targetAudience'])
+                        # if 'contentSentiment' in data:
+                        #     account_info.content_sentiment = sanitize(data['contentSentiment'])
                         if 'company' in data:
                             account_info.company = sanitize(data['company'])
                         if 'industry' in data:
                             account_info.industry = sanitize(data['industry'])
                         if 'companyBrief' in data:
                             account_info.company_brief = sanitize(data['companyBrief'])
-                        if 'recentVentures' in data:
-                            account_info.recent_ventures = sanitize(data['recentVentures'])
+                        # if 'recentVentures' in data:
+                        #     account_info.recent_ventures = sanitize(data['recentVentures'])
 
                         account_info.save()
 

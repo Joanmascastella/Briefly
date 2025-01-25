@@ -37,44 +37,44 @@ function getLanguagePrefix() {
 }
 
 // Async function to save user settings
-async function saveSettings() {
-  try {
-    const emailReports = document.getElementById("emailReports")?.value;
-    const timezone = document.getElementById("timezone")?.value;
-    const csrfToken = getCSRFToken();
-    const languagePrefix = getLanguagePrefix();
-
-    // Check if the required fields and CSRF token exist
-    if (!csrfToken || !emailReports || !timezone) {
-      console.error("Error: Missing required fields or CSRF token");
-      showMessage("Error: Missing required fields or CSRF token", "danger");
-      return;
-    }
-
-    // POST to /settings/modify/ with dynamic language prefix
-    const response = await fetch(`/${languagePrefix}/settings/modify/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrfToken,
-      },
-      body: JSON.stringify({
-        emailReports,
-        timezone,
-      }),
-    });
-
-    const data = await response.json();
-    if (response.ok) {
-      showMessage(data.message || "Settings updated successfully", "success");
-    } else {
-      showMessage(data.error || "Something went wrong updating settings", "danger");
-    }
-  } catch (error) {
-    console.error("Error saving settings:", error);
-    showMessage("Error saving settings", "danger");
-  }
-}
+// async function saveSettings() {
+//   try {
+//     const emailReports = document.getElementById("emailReports")?.value;
+//     const timezone = document.getElementById("timezone")?.value;
+//     const csrfToken = getCSRFToken();
+//     const languagePrefix = getLanguagePrefix();
+//
+//     // Check if the required fields and CSRF token exist
+//     if (!csrfToken || !emailReports || !timezone) {
+//       console.error("Error: Missing required fields or CSRF token");
+//       showMessage("Error: Missing required fields or CSRF token", "danger");
+//       return;
+//     }
+//
+//     // POST to /settings/modify/ with dynamic language prefix
+//     const response = await fetch(`/${languagePrefix}/settings/modify/`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//         "X-CSRFToken": csrfToken,
+//       },
+//       body: JSON.stringify({
+//         emailReports,
+//         timezone,
+//       }),
+//     });
+//
+//     const data = await response.json();
+//     if (response.ok) {
+//       showMessage(data.message || "Settings updated successfully", "success");
+//     } else {
+//       showMessage(data.error || "Something went wrong updating settings", "danger");
+//     }
+//   } catch (error) {
+//     console.error("Error saving settings:", error);
+//     showMessage("Error saving settings", "danger");
+//   }
+// }
 
 // Async function to save account information
 async function saveAccountInfo() {
@@ -83,14 +83,14 @@ async function saveAccountInfo() {
     const accountData = {
       fullName: document.getElementById("fullName")?.value,
       position: document.getElementById("position")?.value,
-      reportEmail: document.getElementById("reportEmail")?.value,
-      phonenr: document.getElementById("phonenr")?.value,
-      targetAudience: document.getElementById("targetAudience")?.value,
-      contentSentiment: document.getElementById("contentSentiment")?.value,
+      // reportEmail: document.getElementById("reportEmail")?.value,
+      // phonenr: document.getElementById("phonenr")?.value,
+      // targetAudience: document.getElementById("targetAudience")?.value,
+      // contentSentiment: document.getElementById("contentSentiment")?.value,
       company: document.getElementById("company")?.value,
       industry: document.getElementById("industry")?.value,
       companyBrief: document.getElementById("companyBrief")?.value,
-      recentVentures: document.getElementById("recentVentures")?.value,
+      // recentVentures: document.getElementById("recentVentures")?.value,
     };
     const languagePrefix = getLanguagePrefix();
 
@@ -125,15 +125,15 @@ async function saveAccountInfo() {
 
 // Add event listeners for the Save Settings and Save Account Info buttons
 document.addEventListener("DOMContentLoaded", () => {
-  const saveSettingsBtn = document.getElementById("saveSettingsBtn");
+  // const saveSettingsBtn = document.getElementById("saveSettingsBtn");
   const saveAccountInfoBtn = document.getElementById("saveAccountInfoBtn");
 
-  if (saveSettingsBtn) {
-    saveSettingsBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      saveSettings();
-    });
-  }
+  // if (saveSettingsBtn) {
+  //   saveSettingsBtn.addEventListener("click", (e) => {
+  //     e.preventDefault();
+  //     saveSettings();
+  //   });
+  // }
 
   if (saveAccountInfoBtn) {
     saveAccountInfoBtn.addEventListener("click", (e) => {
