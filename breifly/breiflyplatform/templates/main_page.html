@@ -22,23 +22,62 @@
             <table class="table table-bordered mt-2">
                 <thead>
                     <tr>
-                        <th>#</th>
                         <th>Search Query</th>
                         <th>Date</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Table Rows Placeholder -->
-                    <tr>
-                        <td>1</td>
-                        <td>Example Search</td>
-                        <td>2025-01-25</td>
-                        <td><button class="btn btn-sm btn-danger">Delete</button></td>
-                    </tr>
+                    {% if previous_searches %}
+                        {% for search in previous_searches %}
+                            <tr>
+                                <td>{{ search.search_description }}</td>
+                                <td>{{ search.created_at }}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary" onclick="location.href='{{ search.csv_file_path }}'">View Search</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="3" class="text-center">No previous searches found.</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
-            </table>
-        </div>
+                </table>
+
+                <!-- Pagination Controls -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                        Page {{ current_page }} of {{ paginator.num_pages }}
+                    </div>
+                    <nav>
+                        <ul class="pagination">
+                            {% if paginator.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ paginator.previous_page_number }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for page_num in paginator.page_range %}
+                                <li class="page-item {% if page_num == current_page %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+                                </li>
+                            {% endfor %}
+
+                            {% if paginator.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ paginator.next_page_number }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
 
         <!-- Advertisement Section -->
         <div class="mt-5 p-3 bg-light border rounded">

@@ -29,7 +29,6 @@ import os
 # --------------------------------
 # Public / Landing Views
 # --------------------------------
-
 def landing_page(request):
     try:
         if request.method == 'GET':
@@ -41,11 +40,33 @@ def landing_page(request):
                 return redirect('/login')
 
             user_id = user_data.id
-            # settings_exist = Setting.objects.filter(user_id=user_id).exists()
             account_info_exist = AccountInformation.objects.filter(user_id=user_id).exists()
             account_info = AccountInformation.objects.filter(user_id=user_id).first()
             user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
             roles = [user_role.role.name for user_role in user_roles]
+
+            # Fetch previous searches for the user
+            previous_searches = PreviousSearch.objects.filter(user_id=user_id).order_by('-created_at')
+
+            # Pagination logic
+            page = request.GET.get('page', 1)
+            paginator = Paginator(previous_searches, 5)  # Show 5 searches per page
+
+            try:
+                paginated_searches = paginator.page(page)
+            except PageNotAnInteger:
+                paginated_searches = paginator.page(1)
+            except EmptyPage:
+                paginated_searches = paginator.page(paginator.num_pages)
+
+            previous_searches_data = [
+                {
+                    'search_description': search.search_description,
+                    'created_at': search.created_at.strftime('%Y-%m-%d %H:%M:%S'),
+                    'csv_file_path': search.csv_file_path
+                }
+                for search in paginated_searches
+            ]
 
             if 'user' in roles:
                 if not account_info_exist:
@@ -57,7 +78,6 @@ def landing_page(request):
                         'new_user': 'true',
                         'navbar_partial': 'partials/authenticated_navbar_new_user.html',
                         'LANGUAGES': settings.LANGUAGES,
-
                     }
                     return render(request, 'main_page_new_user.html', context)
 
@@ -70,8 +90,10 @@ def landing_page(request):
                     'LANGUAGES': settings.LANGUAGES,
                     'account_info': {
                         'full_name': account_info.full_name,
-
-                    }
+                    },
+                    'previous_searches': previous_searches_data,
+                    'paginator': paginator,
+                    'current_page': paginated_searches.number,
                 }
                 return render(request, 'main_page.html', context)
 
