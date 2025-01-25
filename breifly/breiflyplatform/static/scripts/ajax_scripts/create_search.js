@@ -15,15 +15,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-async function searchNews(formData) {
-    const searchURL = `/${window.location.pathname.split('/')[1]}/search/`;
+const language = window.location.pathname.split('/')[1]; // Extract the language prefix
+const searchURL = `/${language}/search/results/`;
 
+async function searchNews(formData) {
     try {
         const response = await fetch(searchURL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
             },
             body: JSON.stringify(formData),
         });

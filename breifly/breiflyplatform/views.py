@@ -640,8 +640,19 @@ def account_modify_view(request):
 # --------------------------------
 # Search Views
 # --------------------------------
+from django.utils.translation import gettext as _  # For language handling
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+import json
+import os
+import datetime
+import asyncio
+
+# For CSRF handling
+from django.views.decorators.csrf import csrf_exempt
+
 @csrf_exempt
-def search_view(request):
+def search_view(request, language=None):
     try:
         user_authenticated, user_data = get_access_token(request)
         user_id = user_data.id
@@ -651,76 +662,67 @@ def search_view(request):
         if request.method == 'GET':
             if not user_authenticated:
                 if wants_json_response(request):
-                    return JsonResponse({'error': 'Not authenticated'}, status=401)
+                    return JsonResponse({'error': _('Not authenticated')}, status=401)
                 return redirect('/login')
 
             if 'user' in roles:
-                # # Extract query parameters
-                # title_of_search = request.GET.get('title', '')
-                # keywords = request.GET.get('keywords', '')
-                # specific_publishers = request.GET.get('publishers', '')
-                # date_range = request.GET.get('date-range', '')
-
                 context = {
-                    'title': 'Briefly - Search',
+                    'title': _('Briefly - Search'),
                     'user_authenticated': user_authenticated,
                     'user': user_data,
                     'roles': roles,
                     'navbar_partial': 'partials/authenticated_navbar.html',
                     'LANGUAGES': settings.LANGUAGES,
-                    # 'title_of_search': title_of_search,
-                    # 'keywords': keywords,
-                    # 'specific_publishers': specific_publishers,
-                    # 'date_range': date_range,
                 }
                 return render(request, 'search_page.html', context)
             else:
                 if wants_json_response(request):
-                    return JsonResponse({'error': 'Role not allowed'}, status=403)
+                    return JsonResponse({'error': _('Role not allowed')}, status=403)
                 return redirect('/error/page/')
 
-        if request.method == 'POST':
-            try:
-                data = json.loads(request.body)
-            except json.JSONDecodeError:
-                return JsonResponse({'error': 'Invalid JSON body'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@csrf_exempt
+def search_results(request, language=None):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_authenticated, user_data = get_access_token(request)
+            user_id = user_data.id
 
             title_of_search = sanitize(data.get('title'))
             keywords = sanitize(data.get('keywords'))
             specific_publishers = sanitize(data.get('specificPublishers'))
             date_range = validate_date_range(sanitize(data.get('date_range', 'anytime')))
 
+            # Save search settings
             search_settings = SearchSetting.objects.create(
                 user_id=user_id,
                 publishers=specific_publishers,
                 frequency=date_range,
                 search_description=title_of_search,
                 keywords=keywords,
-                type_of_search = "on_demand"
+                type_of_search="on_demand"
             )
 
             # Call the search_news function asynchronously
             period_param = get_period_param(date_range)
-            try:
-                articles = asyncio.run(search_news(keywords, period_param, specific_publishers))
-            except Exception as e:
-                return JsonResponse({'error': str(e)}, status=500)
+            articles = asyncio.run(search_news(keywords, period_param, specific_publishers))
 
             # Generate CSV file
             csv_file_name = f"search_results_{user_id}_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
             csv_file_path = os.path.join(settings.MEDIA_ROOT, 'search_results', csv_file_name)
             os.makedirs(os.path.dirname(csv_file_path), exist_ok=True)
 
-            try:
-                with open(csv_file_path, mode='w', newline='', encoding='utf-8') as csv_file:
-                    writer = csv.DictWriter(csv_file, fieldnames=['title', 'link', 'date', 'publisher', 'image'])
-                    writer.writeheader()
-                    writer.writerows(articles)
-            except Exception as csv_error:
-                return JsonResponse({'error': f"CSV generation failed: {str(csv_error)}"}, status=500)
+            with open(csv_file_path, mode='w', newline='', encoding='utf-8') as csv_file:
+                writer = csv.DictWriter(csv_file, fieldnames=['title', 'link', 'date', 'publisher', 'image'])
+                writer.writeheader()
+                writer.writerows(articles)
 
-            # Save search results to the database (optional)
-            previous_search = PreviousSearch.objects.create(
+            # Save search results (optional)
+            PreviousSearch.objects.create(
                 user_id=user_id,
                 search_setting_id=search_settings.id,
                 keyword=keywords,
@@ -729,8 +731,11 @@ def search_view(request):
                 search_description=title_of_search
             )
 
-            # Return the search results
-            return JsonResponse({'articles': articles, 'csv_file': csv_file_path}, status=200)
+            # Return search results
+            return JsonResponse({'articles': articles}, status=200)
 
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': _('Invalid JSON body')}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': _('Invalid request method')}, status=405)
