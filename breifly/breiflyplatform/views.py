@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import pytz
 from django.core.paginator import Paginator
 from .supabase_client import supabase
-from .helper_functions import get_access_token, sanitize, wants_json_response
+from .helper_functions import get_access_token, sanitize, wants_json_response, validate_date_range
 from .models import (
     Setting,
     SearchSetting,
@@ -21,7 +21,10 @@ from .models import (
     ScheduledSearch,
     User
 )
-
+from .fetch_news import search_news, get_period_param
+import asyncio
+import csv
+import os
 
 # --------------------------------
 # Public / Landing Views
@@ -637,22 +640,27 @@ def account_modify_view(request):
 # --------------------------------
 # Search Views
 # --------------------------------
+@csrf_exempt
 def search_view(request):
     try:
-        if request.method == 'GET':
-            user_authenticated, user_data = get_access_token(request)
+        user_authenticated, user_data = get_access_token(request)
+        user_id = user_data.id
+        user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+        roles = [user_role.role.name for user_role in user_roles]
 
+        if request.method == 'GET':
             if not user_authenticated:
                 if wants_json_response(request):
                     return JsonResponse({'error': 'Not authenticated'}, status=401)
                 return redirect('/login')
 
-            user_id = user_data.id
-
-            user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
-            roles = [user_role.role.name for user_role in user_roles]
-
             if 'user' in roles:
+                # # Extract query parameters
+                # title_of_search = request.GET.get('title', '')
+                # keywords = request.GET.get('keywords', '')
+                # specific_publishers = request.GET.get('publishers', '')
+                # date_range = request.GET.get('date-range', '')
+
                 context = {
                     'title': 'Briefly - Search',
                     'user_authenticated': user_authenticated,
@@ -660,11 +668,69 @@ def search_view(request):
                     'roles': roles,
                     'navbar_partial': 'partials/authenticated_navbar.html',
                     'LANGUAGES': settings.LANGUAGES,
+                    # 'title_of_search': title_of_search,
+                    # 'keywords': keywords,
+                    # 'specific_publishers': specific_publishers,
+                    # 'date_range': date_range,
                 }
                 return render(request, 'search_page.html', context)
             else:
                 if wants_json_response(request):
                     return JsonResponse({'error': 'Role not allowed'}, status=403)
                 return redirect('/error/page/')
+
+        if request.method == 'POST':
+            try:
+                data = json.loads(request.body)
+            except json.JSONDecodeError:
+                return JsonResponse({'error': 'Invalid JSON body'}, status=400)
+
+            title_of_search = sanitize(data.get('title'))
+            keywords = sanitize(data.get('keywords'))
+            specific_publishers = sanitize(data.get('specificPublishers'))
+            date_range = validate_date_range(sanitize(data.get('date_range', 'anytime')))
+
+            search_settings = SearchSetting.objects.create(
+                user_id=user_id,
+                publishers=specific_publishers,
+                frequency=date_range,
+                search_description=title_of_search,
+                keywords=keywords,
+                type_of_search = "on_demand"
+            )
+
+            # Call the search_news function asynchronously
+            period_param = get_period_param(date_range)
+            try:
+                articles = asyncio.run(search_news(keywords, period_param, specific_publishers))
+            except Exception as e:
+                return JsonResponse({'error': str(e)}, status=500)
+
+            # Generate CSV file
+            csv_file_name = f"search_results_{user_id}_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
+            csv_file_path = os.path.join(settings.MEDIA_ROOT, 'search_results', csv_file_name)
+            os.makedirs(os.path.dirname(csv_file_path), exist_ok=True)
+
+            try:
+                with open(csv_file_path, mode='w', newline='', encoding='utf-8') as csv_file:
+                    writer = csv.DictWriter(csv_file, fieldnames=['title', 'link', 'date', 'publisher', 'image'])
+                    writer.writeheader()
+                    writer.writerows(articles)
+            except Exception as csv_error:
+                return JsonResponse({'error': f"CSV generation failed: {str(csv_error)}"}, status=500)
+
+            # Save search results to the database (optional)
+            previous_search = PreviousSearch.objects.create(
+                user_id=user_id,
+                search_setting_id=search_settings.id,
+                keyword=keywords,
+                created_at=datetime.datetime.now(),
+                csv_file_path=csv_file_path,
+                search_description=title_of_search
+            )
+
+            # Return the search results
+            return JsonResponse({'articles': articles, 'csv_file': csv_file_path}, status=200)
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)

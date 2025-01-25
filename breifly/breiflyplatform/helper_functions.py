@@ -55,3 +55,9 @@ def wants_json_response(request):
     accept_header = request.headers.get('Accept', '')
     return 'application/json' in accept_header
 
+def validate_date_range(date_range):
+    """
+    Ensures date_range matches the valid database enum values.
+    """
+    valid_ranges = {"anytime", "past_hour", "past_twenty_four_hours", "past_week", "past_year"}
+    return date_range if date_range in valid_ranges else "anytime"

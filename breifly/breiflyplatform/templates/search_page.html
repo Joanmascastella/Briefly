@@ -7,14 +7,14 @@
         <div class="col-md-6">
             <div class="p-4 bg-light border rounded">
                 <h4 class="mb-4">Search News</h4>
-                <form>
+                <form id="news-search-form" method="post" onsubmit="return false;">
                     <div class="mb-3">
                         <label for="title" class="form-label">Title Of Search:</label>
-                        <input type="text" class="form-control" id="title" name="title">
+                        <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="mb-3">
                         <label for="keywords" class="form-label">Keywords To Search By:</label>
-                        <input type="text" class="form-control" id="keywords" name="keywords">
+                        <input type="text" class="form-control" id="keywords" name="keywords" required>
                     </div>
                     <div class="mb-3">
                         <label for="publishers" class="form-label">Specific Publishers:</label>
@@ -22,8 +22,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="date-range" class="form-label">Date Range:</label>
-                        <input type="text" class="form-control" id="date-range" name="date-range">
+                        <select class="form-select" id="date-range" name="date-range" required>
+                            <option value="anytime">Anytime</option>
+                            <option value="past_hour">Past Hour</option>
+                            <option value="past_twenty_four_hours">Past 24 Hours</option>
+                            <option value="past_week">Past Week</option>
+                            <option value="past_year">Past Year</option>
+                        </select>
                     </div>
+                    <div id="messageBox" class="alert d-none" role="alert"></div>
                     <button type="submit" class="btn btn-primary">Search</button>
                 </form>
             </div>
