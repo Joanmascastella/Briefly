@@ -27,6 +27,7 @@ urlpatterns += i18n_patterns(
     path('custom-admin/export/csv/', views.admin_dashboard_csv, name="admin_dashboard_csv"),
     path('search/', views.search_view, name="search_view"),
     path('search/results/', views.search_results, name="search_results"),
+    path('previous/searches/', views.previous_searches, name="previous_searches"),
 
     prefix_default_language=True,
 )

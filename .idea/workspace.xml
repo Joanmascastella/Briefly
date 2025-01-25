@@ -5,17 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/previous_searches.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breifly/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breifly/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/main_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/main_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/locale/de/LC_MESSAGES/django.mo" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/de/LC_MESSAGES/django.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/locale/de/LC_MESSAGES/django.po" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/de/LC_MESSAGES/django.po" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/locale/en_US/LC_MESSAGES/django.po" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/en_US/LC_MESSAGES/django.po" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/locale/es/LC_MESSAGES/django.mo" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/es/LC_MESSAGES/django.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/locale/es/LC_MESSAGES/django.po" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/es/LC_MESSAGES/django.po" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/locale/fr/LC_MESSAGES/django.mo" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/fr/LC_MESSAGES/django.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/locale/fr/LC_MESSAGES/django.po" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/fr/LC_MESSAGES/django.po" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/locale/it/LC_MESSAGES/django.mo" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/it/LC_MESSAGES/django.mo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/locale/it/LC_MESSAGES/django.po" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/locale/it/LC_MESSAGES/django.po" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,9 +23,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="CSS File" />
-        <option value="HTML File" />
         <option value="JavaScript File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -89,8 +83,8 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/breifly/breiflyplatform/static/assets/images" />
       <recent name="$PROJECT_DIR$/breifly/breiflyplatform/templates" />
+      <recent name="$PROJECT_DIR$/breifly/breiflyplatform/static/assets/images" />
       <recent name="$PROJECT_DIR$/breifly/breiflyplatform" />
       <recent name="$PROJECT_DIR$/breifly/breiflyplatform/static" />
       <recent name="$PROJECT_DIR$/breifly/breiflyplatform/assets/images" />
@@ -153,7 +147,7 @@
       <workItem from="1737508262472" duration="1010000" />
       <workItem from="1737536217514" duration="27860000" />
       <workItem from="1737636377140" duration="351000" />
-      <workItem from="1737770952235" duration="12346000" />
+      <workItem from="1737770952235" duration="13621000" />
     </task>
     <servers />
   </component>

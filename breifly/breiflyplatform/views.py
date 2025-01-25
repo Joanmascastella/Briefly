@@ -2,13 +2,14 @@ import json
 import datetime
 import csv
 from django.conf import settings
+from django.utils.translation import gettext as _  # For language handling
 from datetime import time
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import pytz
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from .supabase_client import supabase
 from .helper_functions import get_access_token, sanitize, wants_json_response, validate_date_range
 from .models import (
@@ -662,17 +663,6 @@ def account_modify_view(request):
 # --------------------------------
 # Search Views
 # --------------------------------
-from django.utils.translation import gettext as _  # For language handling
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-import json
-import os
-import datetime
-import asyncio
-
-# For CSRF handling
-from django.views.decorators.csrf import csrf_exempt
-
 @csrf_exempt
 def search_view(request, language=None):
     try:
@@ -761,3 +751,60 @@ def search_results(request, language=None):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
     return JsonResponse({'error': _('Invalid request method')}, status=405)
+
+
+def previous_searches(request):
+    try:
+        user_authenticated, user_data = get_access_token(request)
+        user_id = user_data.id
+        user_roles = UserRole.objects.filter(user_id=user_id).select_related('role')
+        roles = [user_role.role.name for user_role in user_roles]
+
+        if not user_authenticated:
+            if wants_json_response(request):
+                return JsonResponse({'error': _('Not authenticated')}, status=401)
+            return redirect('/login')
+
+        if 'user' in roles:
+            # Fetch all previous searches for the user
+            searches = PreviousSearch.objects.filter(user_id=user_id).order_by('-created_at')
+
+            # Check if a specific CSV file is requested
+            csv_file_path = request.GET.get('csv_file_path')
+            rows = None
+            if csv_file_path:
+                if os.path.exists(csv_file_path):
+                    with open(csv_file_path, mode='r', encoding='utf-8') as csv_file:
+                        reader = csv.DictReader(csv_file)
+                        rows = list(reader)
+                else:
+                    return JsonResponse({'error': _('Invalid or missing CSV file path')}, status=400)
+
+            # Paginate the search details if they exist
+            if rows:
+                paginator = Paginator(rows, 5)  # Show 5 search details per page
+                page_number = request.GET.get('page', 1)
+                page_obj = paginator.get_page(page_number)
+            else:
+                page_obj = None
+
+            context = {
+                'title': _('Briefly - Previous Searches'),
+                'user_authenticated': user_authenticated,
+                'user': user_data,
+                'roles': roles,
+                'navbar_partial': 'partials/authenticated_navbar.html',
+                'LANGUAGES': settings.LANGUAGES,
+                'previous_searches': searches,
+                'search_details': page_obj,  # Pass paginated search details
+                'paginator': page_obj.paginator if page_obj else None,
+                'current_page': page_obj.number if page_obj else None,
+            }
+            return render(request, 'previous_searches.html', context)
+        else:
+            if wants_json_response(request):
+                return JsonResponse({'error': _('Role not allowed')}, status=403)
+            return redirect('/error/page/')
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

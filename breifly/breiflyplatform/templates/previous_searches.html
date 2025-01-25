@@ -1,0 +1,56 @@
+{% include 'header.html' %}
+{% load i18n static %}
+
+<div class="container mt-5">
+    <!-- Search Details Section -->
+    {% if search_details %}
+        <div class="mt-5">
+            <h3>{% trans "Search Details" %}</h3>
+            <div id="search-results" class="bg-light p-4 rounded">
+                {% for row in search_details %}
+                    <div class="d-flex align-items-start mb-3">
+                        <img src="{{ row.image }}" alt="{{ row.title }}" class="me-3" style="width: 100px; height: 100px; object-fit: cover;">
+                        <div>
+                            <h5>{{ row.title }}</h5>
+                            <p>{{ row.publisher }} - {{ row.date }}</p>
+                            <a href="{{ row.link }}" target="_blank" class="btn btn-primary btn-sm">{% trans "Read More" %}</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination Controls -->
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if paginator.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?csv_file_path={{ csv_file_path }}&page={{ paginator.previous_page_number }}"
+                               aria-label="{% trans 'Previous' %}">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for page_num in paginator.page_range %}
+                        <li class="page-item {% if page_num == current_page %}active{% endif %}">
+                            <a class="page-link" href="?csv_file_path={{ csv_file_path }}&page={{ page_num }}">
+                                {{ page_num }}
+                            </a>
+                        </li>
+                    {% endfor %}
+
+                    {% if paginator.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?csv_file_path={{ csv_file_path }}&page={{ paginator.next_page_number }}"
+                               aria-label="{% trans 'Next' %}">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    {% else %}
+        <p class="text-center mt-4">{% trans "Select a previous search to view its details." %}</p>
+    {% endif %}
+</div>
