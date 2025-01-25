@@ -1,68 +1,99 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('news-search-form');
+        const form = document.getElementById('news-search-form');
+        const resultsContainer = document.getElementById('search-results');
+        const prevPageButton = document.getElementById('prev-page');
+        const nextPageButton = document.getElementById('next-page');
 
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Prevent the form's default behavior
+        let articles = [];
+        let currentPage = 1;
+        const articlesPerPage = 5;
 
-        const formData = {
-            title: document.getElementById('title').value,
-            keywords: document.getElementById('keywords').value,
-            publishers: document.getElementById('publishers').value,
-            date_range: document.getElementById('date-range').value,
-        };
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
 
-        await searchNews(formData);
-    });
-});
+            const formData = {
+                title: document.getElementById('title').value,
+                keywords: document.getElementById('keywords').value,
+                publishers: document.getElementById('publishers').value,
+                date_range: document.getElementById('date-range').value,
+            };
 
-const language = window.location.pathname.split('/')[1]; // Extract the language prefix
-const searchURL = `/${language}/search/results/`;
-
-async function searchNews(formData) {
-    try {
-        const response = await fetch(searchURL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-            },
-            body: JSON.stringify(formData),
+            await searchNews(formData);
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            showMessage(errorData.error || 'An error occurred while fetching news.', 'danger');
-            return;
+        async function searchNews(formData) {
+            const searchURL = `/${window.location.pathname.split('/')[1]}/search/results/`;
+
+            try {
+                const response = await fetch(searchURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    showMessage(errorData.error || 'An error occurred while fetching news.', 'danger');
+                    return;
+                }
+
+                const data = await response.json();
+                articles = data.articles || [];
+                currentPage = 1;
+                renderArticles();
+                showMessage('Search completed successfully!', 'success');
+            } catch (error) {
+                showMessage('A network error occurred. Please try again.', 'danger');
+            }
         }
 
-        const data = await response.json();
-        showMessage('Search completed successfully!', 'success');
+        function renderArticles() {
+            const startIndex = (currentPage - 1) * articlesPerPage;
+            const endIndex = startIndex + articlesPerPage;
+            const articlesToShow = articles.slice(startIndex, endIndex);
 
-        const resultsContainer = document.getElementById('search-results');
-        resultsContainer.innerHTML = data.articles
-            .map(article => `
-                <div class="card mb-3">
-                    <img src="${article.image}" class="card-img-top" alt="${article.title}">
-                    <div class="card-body">
-                        <h5 class="card-title">${article.title}</h5>
-                        <p class="card-text">${article.publisher} - ${article.date}</p>
-                        <a href="${article.link}" target="_blank" class="btn btn-primary">Read More</a>
+            resultsContainer.innerHTML = articlesToShow
+                .map(article => `
+                    <div class="d-flex align-items-start mb-3">
+                        <img src="${article.image}" alt="${article.title}" class="me-3">
+                        <div>
+                            <h5>${article.title}</h5>
+                            <p>${article.publisher} - ${article.date}</p>
+                            <a href="${article.link}" target="_blank" class="btn btn-primary btn-sm">Read More</a>
+                        </div>
                     </div>
-                </div>
-            `)
-            .join('');
-    } catch (error) {
-        showMessage('A network error occurred. Please try again.', 'danger');
-    }
-}
+                `)
+                .join('');
 
-function showMessage(message, type) {
-    const messageBox = document.getElementById('messageBox');
-    messageBox.textContent = message;
-    messageBox.className = `alert alert-${type}`;
-    messageBox.classList.remove('d-none');
+            prevPageButton.disabled = currentPage === 1;
+            nextPageButton.disabled = endIndex >= articles.length;
+        }
 
-    setTimeout(() => {
-        messageBox.classList.add('d-none');
-    }, 3000);
-}
+        prevPageButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderArticles();
+            }
+        });
+
+        nextPageButton.addEventListener('click', () => {
+            if (currentPage * articlesPerPage < articles.length) {
+                currentPage++;
+                renderArticles();
+            }
+        });
+
+        function showMessage(message, type) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = `alert alert-${type}`;
+            messageBox.classList.remove('d-none');
+
+            setTimeout(() => {
+                messageBox.classList.add('d-none');
+            }, 3000);
+        }
+    });

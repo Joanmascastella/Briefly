@@ -1,48 +1,96 @@
 {% include 'header.html' %}
 {% load i18n static %}
-
 <div class="container mt-5">
-    <div class="row">
+    <div class="row align-items-stretch">
         <!-- Left Column: Search Form -->
-        <div class="col-md-6">
-            <div class="p-4 bg-light border rounded">
+        <div class="col-md-6 d-flex">
+            <div class="p-4 bg-light border rounded w-100">
                 <h4 class="mb-4">Search News</h4>
                 <form id="news-search-form" method="post" onsubmit="return false;">
                     <div class="mb-3">
-                        <label for="title" class="form-label">Title Of Search:</label>
+                        <label for="title" class="form-label">{% trans "Title Of Search" %}:</label>
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
                     <div class="mb-3">
-                        <label for="keywords" class="form-label">Keywords To Search By:</label>
+                        <label for="keywords" class="form-label">{% trans "Keywords To Search By" %}:</label>
                         <input type="text" class="form-control" id="keywords" name="keywords" required>
                     </div>
                     <div class="mb-3">
-                        <label for="publishers" class="form-label">Specific Publishers:</label>
+                        <label for="publishers" class="form-label">{% trans "Specific Publishers" %}:</label>
                         <input type="text" class="form-control" id="publishers" name="publishers">
                     </div>
                     <div class="mb-3">
-                        <label for="date-range" class="form-label">Date Range:</label>
+                        <label for="date-range" class="form-label">{% trans "Date Range" %}:</label>
                         <select class="form-select" id="date-range" name="date-range" required>
-                            <option value="anytime">Anytime</option>
-                            <option value="past_hour">Past Hour</option>
-                            <option value="past_twenty_four_hours">Past 24 Hours</option>
-                            <option value="past_week">Past Week</option>
-                            <option value="past_year">Past Year</option>
+                            <option value="anytime">{% trans "Anytime" %}</option>
+                            <option value="past_hour">{% trans "Past Hour" %}</option>
+                            <option value="past_twenty_four_hours">{% trans "Past 24 Hours" %}</option>
+                            <option value="past_week">{% trans "Past Week" %}</option>
+                            <option value="past_year">{% trans "Past Year" %}</option>
                         </select>
                     </div>
                     <div id="messageBox" class="alert d-none" role="alert"></div>
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
                 </form>
             </div>
         </div>
 
-        <!-- Right Column: Placeholder for Results or Other Content -->
-        <div class="col-md-6">
-            <div class="p-4 bg-light border rounded" style="height: 100%;">
-                <!-- Add a container for the search results -->
-                <h4 class="mb-4">Search Results</h4>
-                <div id="search-results"></div>
+        <!-- Right Column: Search Results -->
+        <div class="col-md-6 d-flex">
+            <div class="p-4 bg-light border rounded w-100">
+                <h4 class="mb-4">{% trans "Search Results" %}</h4>
+                <div id="search-results" class="scrollable-container"></div>
+                <div class="pagination-controls">
+                    <button id="prev-page" class="btn btn-secondary btn-sm" disabled>{% trans "Previous" %}</button>
+                    <button id="next-page" class="btn btn-secondary btn-sm">{% trans "Next" %}</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .scrollable-container {
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .scrollable-container .d-flex {
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .scrollable-container img {
+        max-width: 100px;
+        max-height: 100px;
+        object-fit: cover;
+        margin-right: 10px;
+    }
+
+    .scrollable-container .btn {
+        margin-left: auto;
+    }
+
+    .pagination-controls {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .row.align-items-stretch {
+        display: flex;
+    }
+
+    .col-md-6 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .col-md-6 .bg-light {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+</style>
