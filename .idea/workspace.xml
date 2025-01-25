@@ -5,8 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/static/assets/images/alexander-shatov-mr4JG4SYOF8-unsplash.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/authenticated_navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/partials/authenticated_navbar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/search_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/search_page.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,7 +144,7 @@
       <workItem from="1737508262472" duration="1010000" />
       <workItem from="1737536217514" duration="27860000" />
       <workItem from="1737636377140" duration="351000" />
-      <workItem from="1737770952235" duration="13936000" />
+      <workItem from="1737770952235" duration="14718000" />
     </task>
     <servers />
   </component>
