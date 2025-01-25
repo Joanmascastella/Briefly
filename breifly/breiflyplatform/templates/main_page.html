@@ -1,2 +1,48 @@
 {% include 'header.html' %}
+{% load i18n static %}
 
+<div class="container mt-5">
+        <!-- Header Section -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5>Hello, <span id="full_name">full_name</span></h5>
+            <div>
+                <button class="btn btn-outline-secondary me-2" onclick="location.href='/settings/'">Settings</button>
+                <button class="btn btn-outline-secondary">Previous Searches</button>
+            </div>
+        </div>
+
+        <!-- Create Search Button -->
+        <div class="mb-4">
+            <button class="btn btn-primary">Create Search</button>
+        </div>
+
+        <!-- Previous Searches Section -->
+        <div class="mt-4 p-4 bg-light border rounded">
+            <h6>Previous Searches</h6>
+            <table class="table table-bordered mt-2">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Search Query</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Table Rows Placeholder -->
+                    <tr>
+                        <td>1</td>
+                        <td>Example Search</td>
+                        <td>2025-01-25</td>
+                        <td><button class="btn btn-sm btn-danger">Delete</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Advertisement Section -->
+        <div class="mt-5 p-3 bg-light border rounded">
+            <p class="mb-1">Elevate your social media campaigns with our AI-powered atomized workflows. Increase Engagements and Save time.</p>
+            <a href="#" class="btn btn-link">Learn more &rarr;</a>
+        </div>
+    </div>
