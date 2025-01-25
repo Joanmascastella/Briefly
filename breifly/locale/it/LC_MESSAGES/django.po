@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-25 17:48+0900\n"
+"POT-Creation-Date: 2025-01-25 18:07+0900\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Italian <it@li.org>\n"
@@ -17,101 +17,167 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: breiflyplatform/templates/admin_dashboard.html:33
+#: breifly/breiflyplatform/templates/admin_dashboard.html:33
 msgid "Total Registered Users"
 msgstr "Utenti totali registrati"
 
-#: breiflyplatform/templates/admin_dashboard.html:55
+#: breifly/breiflyplatform/templates/admin_dashboard.html:55
 msgid "Download CSV"
 msgstr "Scarica CSV"
 
-#: breiflyplatform/templates/admin_dashboard.html:61
+#: breifly/breiflyplatform/templates/admin_dashboard.html:61
 msgid "Search user"
 msgstr "Cerca utente"
 
-#: breiflyplatform/templates/admin_dashboard.html:67
+#: breifly/breiflyplatform/templates/admin_dashboard.html:67
 msgid "All Registered Users"
 msgstr "Tutti gli utenti registrati"
 
-#: breiflyplatform/templates/admin_dashboard.html:76
-#: breiflyplatform/templates/main_page_new_user.html:157
-#: breiflyplatform/templates/settings.html:140
+#: breifly/breiflyplatform/templates/admin_dashboard.html:76
+#: breifly/breiflyplatform/templates/main_page_new_user.html:157
+#: breifly/breiflyplatform/templates/settings.html:140
 msgid "Full Name"
 msgstr "Nome completo"
 
-#: breiflyplatform/templates/admin_dashboard.html:77
-#: breiflyplatform/templates/main_page_new_user.html:160
-#: breiflyplatform/templates/settings.html:144
+#: breifly/breiflyplatform/templates/admin_dashboard.html:77
+#: breifly/breiflyplatform/templates/main_page_new_user.html:160
+#: breifly/breiflyplatform/templates/settings.html:144
 msgid "Position"
 msgstr "Posizione"
 
-#: breiflyplatform/templates/admin_dashboard.html:78
-#: breiflyplatform/templates/main_page_new_user.html:202
-#: breiflyplatform/templates/settings.html:164
+#: breifly/breiflyplatform/templates/admin_dashboard.html:78
+#: breifly/breiflyplatform/templates/main_page_new_user.html:202
+#: breifly/breiflyplatform/templates/settings.html:164
 msgid "Company"
 msgstr "Azienda"
 
-#: breiflyplatform/templates/admin_dashboard.html:82
-#: breiflyplatform/templates/main_page_new_user.html:205
-#: breiflyplatform/templates/settings.html:168
+#: breifly/breiflyplatform/templates/admin_dashboard.html:82
+#: breifly/breiflyplatform/templates/main_page_new_user.html:205
+#: breifly/breiflyplatform/templates/settings.html:168
 msgid "Industry"
 msgstr "Settore"
 
-#: breiflyplatform/templates/admin_dashboard.html:84
-#: breiflyplatform/templates/main_page_new_user.html:208
-#: breiflyplatform/templates/settings.html:172
+#: breifly/breiflyplatform/templates/admin_dashboard.html:84
+#: breifly/breiflyplatform/templates/main_page_new_user.html:208
+#: breifly/breiflyplatform/templates/settings.html:172
 msgid "Company Brief"
 msgstr "Profilo aziendale"
 
-#: breiflyplatform/templates/admin_dashboard.html:127
-#: breiflyplatform/templates/search_page.html:44
+#: breifly/breiflyplatform/templates/admin_dashboard.html:127
+#: breifly/breiflyplatform/templates/main_page.html:58
+#: breifly/breiflyplatform/templates/search_page.html:44
 msgid "Previous"
 msgstr "Precedente"
 
-#: breiflyplatform/templates/admin_dashboard.html:149
-#: breiflyplatform/templates/search_page.html:45
+#: breifly/breiflyplatform/templates/admin_dashboard.html:149
+#: breifly/breiflyplatform/templates/main_page.html:72
+#: breifly/breiflyplatform/templates/search_page.html:45
 msgid "Next"
 msgstr "Successivo"
 
-#: breiflyplatform/templates/loginForm.html:150
+#: breifly/breiflyplatform/templates/loginForm.html:150
 msgid "Welcome back"
 msgstr "Bentornato"
 
-#: breiflyplatform/templates/loginForm.html:151
+#: breifly/breiflyplatform/templates/loginForm.html:151
 msgid "Please enter your details."
 msgstr "Inserisci i tuoi dati."
 
-#: breiflyplatform/templates/loginForm.html:152
+#: breifly/breiflyplatform/templates/loginForm.html:152
 msgid "Email"
 msgstr "Email"
 
-#: breiflyplatform/templates/loginForm.html:153
+#: breifly/breiflyplatform/templates/loginForm.html:153
 msgid "Enter your email"
 msgstr "Inserisci la tua email"
 
-#: breiflyplatform/templates/loginForm.html:155
+#: breifly/breiflyplatform/templates/loginForm.html:155
 msgid "Password"
 msgstr "Password"
 
-#: breiflyplatform/templates/loginForm.html:156
+#: breifly/breiflyplatform/templates/loginForm.html:156
 msgid "Enter your password"
 msgstr "Inserisci la tua password"
 
-#: breiflyplatform/templates/loginForm.html:158
+#: breifly/breiflyplatform/templates/loginForm.html:158
 msgid "Sign In"
 msgstr "Accedi"
 
-#: breiflyplatform/templates/main_page_new_user.html:147
+#: breifly/breiflyplatform/templates/main_page.html:7
+msgid "Hello"
+msgstr "Ciao"
+
+#: breifly/breiflyplatform/templates/main_page.html:9
+#, fuzzy
+#| msgid "Step 5: Settings"
+msgid "Settings"
+msgstr "Fase 5: Impostazioni"
+
+#: breifly/breiflyplatform/templates/main_page.html:10
+#: breifly/breiflyplatform/templates/main_page.html:21
+#, fuzzy
+#| msgid "Trending Searches"
+msgid "Previous Searches"
+msgstr "Ricerche di tendenza"
+
+#: breifly/breiflyplatform/templates/main_page.html:16
+#, fuzzy
+#| msgid "Title Of Search"
+msgid "Create Search"
+msgstr "Titolo della ricerca"
+
+#: breifly/breiflyplatform/templates/main_page.html:25
+#, fuzzy
+#| msgid "Search user"
+msgid "Search Query"
+msgstr "Cerca utente"
+
+#: breifly/breiflyplatform/templates/main_page.html:26
+msgid "Date"
+msgstr "Data"
+
+#: breifly/breiflyplatform/templates/main_page.html:27
+msgid "Actions"
+msgstr "Azioni"
+
+#: breifly/breiflyplatform/templates/main_page.html:37
+#, fuzzy
+#| msgid "Search user"
+msgid "View Search"
+msgstr "Cerca utente"
+
+#: breifly/breiflyplatform/templates/main_page.html:43
+msgid "No previous searches found."
+msgstr "Nessuna ricerca precedente trovata."
+
+#: breifly/breiflyplatform/templates/main_page.html:52
+#, python-format
+msgid "Page %(current_page)s of %(paginator.num_pages)s"
+msgstr ""
+
+#: breifly/breiflyplatform/templates/main_page.html:84
+msgid ""
+"Elevate your social media campaigns with our AI-powered atomized workflows. "
+"Increase Engagements and Save time."
+msgstr ""
+"Migliora le tue campagne sui social media con i nostri flussi di lavoro atomizzati basati sull'intelligenza artificiale. "
+"Aumenta il coinvolgimento e risparmia tempo."
+
+#: breifly/breiflyplatform/templates/main_page.html:85
+msgid "Learn more"
+msgstr "Saperne di più"
+
+#: breifly/breiflyplatform/templates/main_page_new_user.html:147
 msgid "Complete Your Account Information & Define Settings"
 msgstr "Completa le informazioni del tuo account e definisci le impostazioni"
 
-#: breiflyplatform/templates/main_page_new_user.html:148
+#: breifly/breiflyplatform/templates/main_page_new_user.html:148
 msgid "Please fill in the details below to complete your account setup."
 msgstr ""
 "Compila i dettagli qui sotto per completare la configurazione del tuo "
 "account."
 
-#: breiflyplatform/templates/main_page_new_user.html:149
+#: breifly/breiflyplatform/templates/main_page_new_user.html:149
 msgid ""
 "Welcome to Briefly! Before using this service, you need to complete setting "
 "up your account."
@@ -119,7 +185,7 @@ msgstr ""
 "Benvenuto su Briefly! Prima di utilizzare questo servizio, devi completare "
 "la configurazione del tuo account."
 
-#: breiflyplatform/templates/main_page_new_user.html:150
+#: breifly/breiflyplatform/templates/main_page_new_user.html:150
 msgid ""
 "The information you provide will help us create better content tailored to "
 "your company and target audience."
@@ -127,138 +193,135 @@ msgstr ""
 "Le informazioni che fornisci ci aiuteranno a creare contenuti migliori "
 "adattati alla tua azienda e al tuo pubblico di riferimento."
 
-#: breiflyplatform/templates/main_page_new_user.html:151
-#: breiflyplatform/templates/main_page_new_user.html:165
+#: breifly/breiflyplatform/templates/main_page_new_user.html:151
+#: breifly/breiflyplatform/templates/main_page_new_user.html:165
 msgid "→"
 msgstr "→"
 
-#: breiflyplatform/templates/main_page_new_user.html:156
+#: breifly/breiflyplatform/templates/main_page_new_user.html:156
 msgid "Step 1: Basic Information"
 msgstr "Fase 1: Informazioni di base"
 
-#: breiflyplatform/templates/main_page_new_user.html:158
+#: breifly/breiflyplatform/templates/main_page_new_user.html:158
 #, fuzzy
 #| msgid "Enter your email"
 msgid "Enter your full name"
 msgstr "Inserisci la tua email"
 
-#: breiflyplatform/templates/main_page_new_user.html:161
+#: breifly/breiflyplatform/templates/main_page_new_user.html:161
 #, fuzzy
 #| msgid "Enter your password"
 msgid "Enter your position"
 msgstr "Inserisci la tua password"
 
-#: breiflyplatform/templates/main_page_new_user.html:164
-#: breiflyplatform/templates/main_page_new_user.html:215
+#: breifly/breiflyplatform/templates/main_page_new_user.html:164
+#: breifly/breiflyplatform/templates/main_page_new_user.html:215
 msgid "←"
 msgstr "←"
 
-#: breiflyplatform/templates/main_page_new_user.html:201
+#: breifly/breiflyplatform/templates/main_page_new_user.html:201
 #, fuzzy
 #| msgid "Step 4: Company Details"
 msgid "Step 2: Company Details"
 msgstr "Fase 4: Dettagli aziendali"
 
-#: breiflyplatform/templates/main_page_new_user.html:203
+#: breifly/breiflyplatform/templates/main_page_new_user.html:203
 #, fuzzy
 #| msgid "Enter your email"
 msgid "Enter your company"
 msgstr "Inserisci la tua email"
 
-#: breiflyplatform/templates/main_page_new_user.html:206
+#: breifly/breiflyplatform/templates/main_page_new_user.html:206
 msgid "Enter the company\\"
 msgstr "Entra nell'azienda"
 
-#: breiflyplatform/templates/main_page_new_user.html:209
+#: breifly/breiflyplatform/templates/main_page_new_user.html:209
 msgid "Write a brief about your company"
 msgstr "Scrivi un brief sulla tua azienda"
 
-#: breiflyplatform/templates/main_page_new_user.html:216
+#: breifly/breiflyplatform/templates/main_page_new_user.html:216
 msgid "✔"
 msgstr "✔"
 
-#: breiflyplatform/templates/search_page.html:11
+#: breifly/breiflyplatform/templates/search_page.html:11
 msgid "Title Of Search"
 msgstr "Titolo della ricerca"
 
-#: breiflyplatform/templates/search_page.html:15
+#: breifly/breiflyplatform/templates/search_page.html:15
 msgid "Keywords To Search By"
 msgstr ""
 
-#: breiflyplatform/templates/search_page.html:19
+#: breifly/breiflyplatform/templates/search_page.html:19
 msgid "Specific Publishers"
 msgstr "Parole chiave per la ricerca"
 
-#: breiflyplatform/templates/search_page.html:23
+#: breifly/breiflyplatform/templates/search_page.html:23
 msgid "Date Range"
 msgstr "Intervallo di date"
 
-#: breiflyplatform/templates/search_page.html:25
+#: breifly/breiflyplatform/templates/search_page.html:25
 msgid "Anytime"
 msgstr "In qualsiasi momento"
 
-#: breiflyplatform/templates/search_page.html:26
+#: breifly/breiflyplatform/templates/search_page.html:26
 msgid "Past Hour"
 msgstr "Ultima ora"
 
-#: breiflyplatform/templates/search_page.html:27
+#: breifly/breiflyplatform/templates/search_page.html:27
 msgid "Past 24 Hours"
 msgstr "Ultime 24 ore"
 
-#: breiflyplatform/templates/search_page.html:28
+#: breifly/breiflyplatform/templates/search_page.html:28
 msgid "Past Week"
 msgstr "Settimana scorsa"
 
-#: breiflyplatform/templates/search_page.html:29
+#: breifly/breiflyplatform/templates/search_page.html:29
 msgid "Past Year"
 msgstr "L'anno scorso"
 
-#: breiflyplatform/templates/search_page.html:33
+#: breifly/breiflyplatform/templates/search_page.html:33
 #, fuzzy
 #| msgid "Search user"
 msgid "Search"
 msgstr "Cerca utente"
 
-#: breiflyplatform/templates/search_page.html:41
+#: breifly/breiflyplatform/templates/search_page.html:41
 #, fuzzy
 #| msgid "Search user"
 msgid "Search Results"
 msgstr "Cerca utente"
 
-#: breiflyplatform/templates/settings.html:137
+#: breifly/breiflyplatform/templates/settings.html:137
 #, fuzzy
 #| msgid "Account Version"
 msgid "Account Information"
 msgstr "Versione account"
 
-#: breiflyplatform/templates/settings.html:181
+#: breifly/breiflyplatform/templates/settings.html:181
 #, fuzzy
 #| msgid "Step 2: Contact Information"
 msgid "Save Account Information"
 msgstr "Fase 2: Informazioni di contatto"
 
-#: breiflyplatform/views.py:665
+#: breifly/breiflyplatform/views.py:687
 msgid "Not authenticated"
 msgstr ""
 
-#: breiflyplatform/views.py:670
+#: breifly/breiflyplatform/views.py:692
 msgid "Briefly - Search"
 msgstr ""
 
-#: breiflyplatform/views.py:680
+#: breifly/breiflyplatform/views.py:702
 msgid "Role not allowed"
 msgstr "Ruolo non consentito"
 
-#: breiflyplatform/views.py:738
+#: breifly/breiflyplatform/views.py:760
 msgid "Invalid JSON body"
 msgstr "Corpo JSON non valido"
 
-#: breiflyplatform/views.py:741
+#: breifly/breiflyplatform/views.py:763
 msgid "Invalid request method"
 msgstr "Metodo di richiesta non valido"
-
-#~ msgid "Trending Searches"
-#~ msgstr "Ricerche di tendenza"
 
 #~ msgid "Lorem ipsum dolor sit amet..."
 #~ msgstr "Lorem ipsum dolor sit amet..."
@@ -338,11 +401,6 @@ msgstr "Metodo di richiesta non valido"
 
 #~ msgid "Timezone"
 #~ msgstr "Fuso orario"
-
-#, fuzzy
-#~| msgid "Step 5: Settings"
-#~ msgid "User Settings"
-#~ msgstr "Fase 5: Impostazioni"
 
 #, fuzzy
 #~| msgid "Email Reports"

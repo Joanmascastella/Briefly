@@ -4,27 +4,27 @@
 <div class="container mt-5">
         <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5>Hello, <span id="full_name">{{ account_info.full_name }}</span></h5>
+            <h5>{% trans "Hello" %}, <span id="full_name">{{ account_info.full_name }}</span></h5>
             <div>
-                <button class="btn btn-outline-secondary me-2" onclick="location.href='/settings/'">Settings</button>
-                <button class="btn btn-outline-secondary">Previous Searches</button>
+                <button class="btn btn-outline-secondary me-2" onclick="location.href='/settings/'">{% trans "Settings" %}</button>
+                <button class="btn btn-outline-secondary">{% trans "Previous Searches" %}</button>
             </div>
         </div>
 
         <!-- Create Search Button -->
         <div class="mb-4">
-            <button class="btn btn-primary" onclick="location.href='/search/'">Create Search</button>
+            <button class="btn btn-primary" onclick="location.href='/search/'">{% trans "Create Search" %}</button>
         </div>
 
         <!-- Previous Searches Section -->
         <div class="mt-4 p-4 bg-light border rounded">
-            <h6>Previous Searches</h6>
+            <h6>{% trans "Previous Searches" %}</h6>
             <table class="table table-bordered mt-2">
                 <thead>
                     <tr>
-                        <th>Search Query</th>
-                        <th>Date</th>
-                        <th>Actions</th>
+                        <th>{% trans "Search Query" %}</th>
+                        <th>{% trans "Date" %}</th>
+                        <th>{% trans "Actions" %}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,13 +34,13 @@
                                 <td>{{ search.search_description }}</td>
                                 <td>{{ search.created_at }}</td>
                                 <td>
-                                    <button class="btn btn-sm btn-primary" onclick="location.href='{{ search.csv_file_path }}'">View Search</button>
+                                    <button class="btn btn-sm btn-primary" onclick="location.href='{{ search.csv_file_path }}'">{% trans "View Search" %}</button>
                                 </td>
                             </tr>
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="3" class="text-center">No previous searches found.</td>
+                            <td colspan="3" class="text-center">{% trans "No previous searches found." %}</td>
                         </tr>
                     {% endif %}
                 </tbody>
@@ -49,13 +49,13 @@
                 <!-- Pagination Controls -->
                 <div class="d-flex justify-content-between align-items-center mt-3">
                     <div>
-                        Page {{ current_page }} of {{ paginator.num_pages }}
+                        {% blocktrans %}Page {{ current_page }} of {{ paginator.num_pages }}{% endblocktrans %}
                     </div>
                     <nav>
                         <ul class="pagination">
                             {% if paginator.has_previous %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ paginator.previous_page_number }}" aria-label="Previous">
+                                    <a class="page-link" href="?page={{ paginator.previous_page_number }}" aria-label="{% trans 'Previous' %}">
                                         <span aria-hidden="true">&laquo;</span>
                                     </a>
                                 </li>
@@ -69,7 +69,7 @@
 
                             {% if paginator.has_next %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ paginator.next_page_number }}" aria-label="Next">
+                                    <a class="page-link" href="?page={{ paginator.next_page_number }}" aria-label="{% trans 'Next' %}">
                                         <span aria-hidden="true">&raquo;</span>
                                     </a>
                                 </li>
@@ -81,7 +81,7 @@
 
         <!-- Advertisement Section -->
         <div class="mt-5 p-3 bg-light border rounded">
-            <p class="mb-1">Elevate your social media campaigns with our AI-powered atomized workflows. Increase Engagements and Save time.</p>
-            <a href="#" class="btn btn-link">Learn more &rarr;</a>
+            <p class="mb-1">{% trans "Elevate your social media campaigns with our AI-powered atomized workflows. Increase Engagements and Save time." %}</p>
+            <a href="#" class="btn btn-link">{% trans "Learn more" %} &rarr;</a>
         </div>
     </div>
