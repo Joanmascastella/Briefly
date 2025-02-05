@@ -1,4 +1,4 @@
-# Use Playwright's official image (includes required dependencies)
+# Use Playwright's official Docker image (includes required dependencies)
 FROM mcr.microsoft.com/playwright/python:v1.40.0
 
 # Set working directory
@@ -6,6 +6,9 @@ WORKDIR /app
 
 # Copy project files
 COPY . /app
+
+# Change into 'breifly' directory since requirements.txt is there
+WORKDIR /app/breifly
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
