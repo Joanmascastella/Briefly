@@ -15,20 +15,20 @@
                         <label for="keywords" class="form-label">{% trans "Keywords To Search By" %}:</label>
                         <input type="text" class="form-control" id="keywords" name="keywords" required>
                     </div>
-                    <div class="mb-3">
-                        <label for="publishers" class="form-label">{% trans "Specific Publishers" %}:</label>
-                        <input type="text" class="form-control" id="publishers" name="publishers">
-                    </div>
-                    <div class="mb-3">
-                        <label for="date-range" class="form-label">{% trans "Date Range" %}:</label>
-                        <select class="form-select" id="date-range" name="date-range" required>
-                            <option value="anytime">{% trans "Anytime" %}</option>
-                            <option value="past_hour">{% trans "Past Hour" %}</option>
-                            <option value="past_twenty_four_hours">{% trans "Past 24 Hours" %}</option>
-                            <option value="past_week">{% trans "Past Week" %}</option>
-                            <option value="past_year">{% trans "Past Year" %}</option>
-                        </select>
-                    </div>
+{#                    <div class="mb-3">#}
+{#                        <label for="publishers" class="form-label">{% trans "Specific Publishers" %}:</label>#}
+{#                        <input type="text" class="form-control" id="publishers" name="publishers">#}
+{#                    </div>#}
+{#                    <div class="mb-3">#}
+{#                        <label for="date-range" class="form-label">{% trans "Date Range" %}:</label>#}
+{#                        <select class="form-select" id="date-range" name="date-range" required>#}
+{#                            <option value="anytime">{% trans "Anytime" %}</option>#}
+{#                            <option value="past_hour">{% trans "Past Hour" %}</option>#}
+{#                            <option value="past_twenty_four_hours">{% trans "Past 24 Hours" %}</option>#}
+{#                            <option value="past_week">{% trans "Past Week" %}</option>#}
+{#                            <option value="past_year">{% trans "Past Year" %}</option>#}
+{#                        </select>#}
+{#                    </div>#}
                     <div id="messageBox" class="alert d-none" role="alert"></div>
                     <button type="submit" class="btn btn-primary">{% trans "Search" %}</button>
                 </form>

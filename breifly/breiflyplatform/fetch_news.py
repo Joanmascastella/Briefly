@@ -1,51 +1,24 @@
-import asyncio
-from crawl4ai import AsyncWebCrawler
-from .news_filter import filter_news
+import feedparser
+import urllib.parse
 
-# Map period to corresponding URL parameter
-def get_period_param(period):
-    period_map = {
-        "1": "",               # Anytime (no parameter needed)
-        "2": "when%3A1h",      # Past hour
-        "3": "when%3A1d",      # Past 24 hours
-        "4": "when%3A7d",      # Past week
-        "5": "when%3A1y",      # Past year
-    }
-    return period_map.get(period, None)
+def search_news(keywords, period_param=None, publishers=None):
+    """
+    Fetch Google News results using RSS instead of Playwright.
+    This method is compliant with Render's restrictions on headless browsing.
+    """
+    formatted_keywords = urllib.parse.quote_plus(keywords) if keywords else ""
+    rss_url = f"https://news.google.com/rss/search?q={formatted_keywords}"
 
-# Search news
-async def search_news(keywords, period_param, publishers):
-    # Split keywords and join with '%20' for URL formatting
-    formatted_keywords = "%20".join(keywords.split()) if keywords else ""
+    feed = feedparser.parse(rss_url)
+    articles = []
 
-    # Format publishers for the URL if provided
-    formatted_publishers = f"site%3A{publishers}" if publishers else ""
+    for entry in feed.entries:
+        articles.append({
+            "title": entry.title,
+            "link": entry.link,
+            "date": entry.published,
+            "publisher": entry.source.title if "source" in entry else "Unknown",
+            "image": "",  # Google News RSS does not provide images
+        })
 
-    # Combine keywords and publishers if both are provided
-    query = " ".join(filter(None, [formatted_keywords, formatted_publishers]))
-
-    # Build the URL
-    if period_param:
-        url = f"https://news.google.com/search?q={query}%20{period_param}&hl=en-US&gl=US&ceid=US%3Aen"
-    else:
-        url = f"https://news.google.com/search?q={query}&hl=en-US&gl=US&ceid=US%3Aen"
-
-    print(f"Generated URL: {url}")  # For debugging purposes
-
-    async with AsyncWebCrawler() as crawler:
-        result = await crawler.arun(url=url)
-
-        # Parse and filter articles
-        articles = filter_news(result.markdown)
-
-        # Return the extracted articles
-        return [
-            {
-                "title": item.get("title", "(No Title)"),
-                "link": item.get("link", ""),
-                "date": item.get("date", ""),
-                "publisher": item.get("publisher", "(No Publisher)"),
-                "image": item.get("image", "")  # Extract image URL if available
-            }
-            for item in articles
-        ]
+    return articles

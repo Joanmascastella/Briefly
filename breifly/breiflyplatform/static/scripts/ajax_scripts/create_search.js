@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = {
                 title: document.getElementById('title').value,
                 keywords: document.getElementById('keywords').value,
-                publishers: document.getElementById('publishers').value,
-                date_range: document.getElementById('date-range').value,
             };
 
             await searchNews(formData);

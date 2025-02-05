@@ -22,8 +22,7 @@ from .models import (
     ScheduledSearch,
     User
 )
-from .fetch_news import search_news, get_period_param
-import asyncio
+from .fetch_news import search_news
 import csv
 import os
 import logging
@@ -709,8 +708,8 @@ def search_results(request, language=None):
 
             title_of_search = sanitize(data.get('title'))
             keywords = sanitize(data.get('keywords'))
-            specific_publishers = sanitize(data.get('specificPublishers'))
-            date_range = validate_date_range(sanitize(data.get('date_range', 'anytime')))
+            specific_publishers = "",
+            date_range = ""
 
             # Save search settings
             search_settings = SearchSetting.objects.create(
@@ -722,9 +721,8 @@ def search_results(request, language=None):
                 type_of_search="on_demand"
             )
 
-            # Call the search_news function asynchronously
-            period_param = get_period_param(date_range)
-            articles = asyncio.run(search_news(keywords, period_param, specific_publishers))
+            # Call the new search_news function (without Playwright)
+            articles = search_news(keywords)
 
             # Log the articles for debugging
             logger.info(f"🔍 Articles fetched: {articles}")
