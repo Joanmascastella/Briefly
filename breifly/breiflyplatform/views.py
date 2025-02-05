@@ -723,28 +723,34 @@ def search_results(request, language=None):
             period_param = get_period_param(date_range)
             articles = asyncio.run(search_news(keywords, period_param, specific_publishers))
 
-            # Generate CSV file
+            # Define the correct path under MEDIA_ROOT
             csv_file_name = f"search_results_{user_id}_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
-            csv_file_path = os.path.abspath(os.path.join(settings.BASE_DIR, 'search_results', csv_file_name))
+            csv_file_path = os.path.join(settings.MEDIA_ROOT, "search_results", csv_file_name)
+
+            # Ensure directory exists
             os.makedirs(os.path.dirname(csv_file_path), exist_ok=True)
 
+            # Write CSV file
             with open(csv_file_path, mode='w', newline='', encoding='utf-8') as csv_file:
                 writer = csv.DictWriter(csv_file, fieldnames=['title', 'link', 'date', 'publisher', 'image'])
                 writer.writeheader()
                 writer.writerows(articles)
 
-            # Save search results (optional)
+            # Save relative path to the database (so it works with MEDIA_URL)
+            relative_csv_path = os.path.relpath(csv_file_path, settings.MEDIA_ROOT)
+
+            # Save search results in the database
             PreviousSearch.objects.create(
                 user_id=user_id,
                 search_setting_id=search_settings.id,
                 keyword=keywords,
                 created_at=datetime.datetime.now(),
-                csv_file_path=csv_file_path,
+                csv_file_path=relative_csv_path,  # Save relative path
                 search_description=title_of_search
             )
 
             # Return search results
-            return JsonResponse({'articles': articles}, status=200)
+            return JsonResponse({'articles': articles, 'csv_file_path': f"{settings.MEDIA_URL}{relative_csv_path}"}, status=200)
 
         except json.JSONDecodeError:
             return JsonResponse({'error': _('Invalid JSON body')}, status=400)
@@ -773,11 +779,15 @@ def previous_searches(request):
             csv_file_path = request.GET.get('csv_file_path')
             rows = None
             if csv_file_path:
-                if os.path.exists(csv_file_path):
-                    with open(csv_file_path, mode='r', encoding='utf-8') as csv_file:
+                absolute_csv_path = os.path.join(settings.MEDIA_ROOT, csv_file_path)
+                print(f"🔍 Checking CSV file at: {absolute_csv_path}")  # Debugging
+
+                if os.path.exists(absolute_csv_path):
+                    with open(absolute_csv_path, mode='r', encoding='utf-8') as csv_file:
                         reader = csv.DictReader(csv_file)
                         rows = list(reader)
                 else:
+                    print(f"❌ File not found: {absolute_csv_path}")  # Debugging
                     return JsonResponse({'error': _('Invalid or missing CSV file path')}, status=400)
 
             # Paginate the search details if they exist

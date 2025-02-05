@@ -94,12 +94,19 @@ LOCALE_PATHS = [
     BASE_DIR / "locale",
 ]
 
+# Media files settings (for CSV storage)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = os.environ.get(
     "STATICFILES_STORAGE", "whitenoise.storage.CompressedManifestStaticFilesStorage"
 )
+
+
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

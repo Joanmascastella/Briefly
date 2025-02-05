@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breifly/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breifly/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -148,7 +150,7 @@
       <workItem from="1737945935364" duration="10000" />
       <workItem from="1738723369781" duration="3549000" />
       <workItem from="1738726993840" duration="1509000" />
-      <workItem from="1738729294197" duration="328000" />
+      <workItem from="1738729294197" duration="1132000" />
     </task>
     <servers />
   </component>

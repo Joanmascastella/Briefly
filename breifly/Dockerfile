@@ -16,6 +16,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Install Playwright browsers (Fix missing dependencies issue)
 RUN playwright install --with-deps
 
+# Ensure the media directory exists
+RUN mkdir -p /app/media && chmod -R 777 /app/media
+
 # Expose port for Render (default Django port is 8000)
 EXPOSE 8000
 
