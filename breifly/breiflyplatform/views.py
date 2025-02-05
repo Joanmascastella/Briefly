@@ -26,6 +26,9 @@ from .fetch_news import search_news, get_period_param
 import asyncio
 import csv
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 # --------------------------------
 # Public / Landing Views
@@ -723,6 +726,17 @@ def search_results(request, language=None):
             period_param = get_period_param(date_range)
             articles = asyncio.run(search_news(keywords, period_param, specific_publishers))
 
+            # Log the articles for debugging
+            logger.info(f"🔍 Articles fetched: {articles}")
+
+            # If no articles are found, return an empty response
+            if not articles:
+                return JsonResponse({
+                    'articles': [],
+                    'csv_file_path': '',
+                    'error': 'No articles found for the given search parameters.'
+                }, status=200)
+
             # Define the correct path under MEDIA_ROOT
             csv_file_name = f"search_results_{user_id}_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
             csv_file_path = os.path.join(settings.MEDIA_ROOT, "search_results", csv_file_name)
@@ -736,7 +750,7 @@ def search_results(request, language=None):
                 writer.writeheader()
                 writer.writerows(articles)
 
-            # Save relative path to the database (so it works with MEDIA_URL)
+            # Save relative path to the database
             relative_csv_path = os.path.relpath(csv_file_path, settings.MEDIA_ROOT)
 
             # Save search results in the database
@@ -745,17 +759,22 @@ def search_results(request, language=None):
                 search_setting_id=search_settings.id,
                 keyword=keywords,
                 created_at=datetime.datetime.now(),
-                csv_file_path=relative_csv_path,  # Save relative path
+                csv_file_path=relative_csv_path,
                 search_description=title_of_search
             )
 
             # Return search results
-            return JsonResponse({'articles': articles, 'csv_file_path': f"{settings.MEDIA_URL}{relative_csv_path}"}, status=200)
+            return JsonResponse({
+                'articles': articles,
+                'csv_file_path': f"{settings.MEDIA_URL}{relative_csv_path}"
+            }, status=200)
 
         except json.JSONDecodeError:
             return JsonResponse({'error': _('Invalid JSON body')}, status=400)
         except Exception as e:
+            logger.error(f"⚠️ Error in search_results: {str(e)}")
             return JsonResponse({'error': str(e)}, status=500)
+
     return JsonResponse({'error': _('Invalid request method')}, status=405)
 
 

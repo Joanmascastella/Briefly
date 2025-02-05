@@ -16,11 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Install Playwright browsers (Fix missing dependencies issue)
 RUN playwright install --with-deps
 
-# Ensure the media directory exists
-RUN mkdir -p /app/media && chmod -R 777 /app/media
-
 # Expose port for Render (default Django port is 8000)
 EXPOSE 8000
 
-# Start Gunicorn server & run migrations at runtime instead of build time
-CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn breifly.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["sh", "-c", "mkdir -p /app/media/search_results && chmod -R 777 /app/media && python manage.py migrate && python manage.py collectstatic --noinput && gunicorn breifly.wsgi:application --bind 0.0.0.0:8000"]
