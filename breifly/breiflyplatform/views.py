@@ -725,7 +725,7 @@ def search_results(request, language=None):
 
             # Generate CSV file
             csv_file_name = f"search_results_{user_id}_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
-            csv_file_path = os.path.join(settings.MEDIA_ROOT, 'search_results', csv_file_name)
+            csv_file_path = os.path.abspath(os.path.join(settings.BASE_DIR, 'search_results', csv_file_name))
             os.makedirs(os.path.dirname(csv_file_path), exist_ok=True)
 
             with open(csv_file_path, mode='w', newline='', encoding='utf-8') as csv_file:
