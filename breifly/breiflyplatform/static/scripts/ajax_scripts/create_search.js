@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsContainer.innerHTML = articlesToShow
                 .map(article => `
                     <div class="d-flex align-items-start mb-3">
-                        <img src="${article.image}" alt="${article.title}" class="me-3">
                         <div>
                             <h5>${article.title}</h5>
                             <p>${article.publisher} - ${article.date}</p>

@@ -6,10 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/fetch_news.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/fetch_news.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/ajax_scripts/create_search.js" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/static/scripts/ajax_scripts/create_search.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/templates/search_page.html" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/templates/search_page.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breiflyplatform/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,6 +76,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -152,7 +150,8 @@
       <workItem from="1737945935364" duration="10000" />
       <workItem from="1738723369781" duration="3549000" />
       <workItem from="1738726993840" duration="1509000" />
-      <workItem from="1738729294197" duration="4164000" />
+      <workItem from="1738729294197" duration="4463000" />
+      <workItem from="1738733815998" duration="260000" />
     </task>
     <servers />
   </component>
