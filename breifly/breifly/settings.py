@@ -1,14 +1,20 @@
 from pathlib import Path
+import os
+import dj_database_url  # Install this if not already installed
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 # Security settings
-SECRET_KEY = "django-insecure-tu63@27gsdu*za=8qj0oz-!(hvo_+or279u4a8dh38$!9(o#n1"
-DEBUG = True
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']  # Update this for production
+SECRET_KEY = os.environ.get("SECRET_KEY", "your-default-secret-key")  # Load from env variable
+DEBUG = os.environ.get("DEBUG", "False") == "True"  # Load from environment variables
+
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:8000',
-    'http://localhost:8000',
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    f"https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME', '')}"  # Dynamically add Render domain
 ]
 
 # Installed apps
@@ -25,6 +31,7 @@ INSTALLED_APPS = [
 # Middleware
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -33,7 +40,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
 
 # Root URL configuration
 ROOT_URLCONF = "breifly.urls"
@@ -58,20 +64,14 @@ TEMPLATES = [
 # WSGI application
 WSGI_APPLICATION = "breifly.wsgi.application"
 
-# Database
+# Database (Use Render Environment Variables)
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "postgres.ssdifijjtgxigykokxyp",
-        "PASSWORD": "5UBi82hDUSk4NPW5",
-        "HOST": "aws-0-us-west-1.pooler.supabase.com",
-        "PORT": "6543",
-    }
+    "default": dj_database_url.config(default=os.environ.get("DATABASE_URL"))
 }
 
-SUPABASE_URL = "https://ssdifijjtgxigykokxyp.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzZGlmaWpqdGd4aWd5a29reHlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY4MzYwMjMsImV4cCI6MjA1MjQxMjAyM30.t4P34Fwh_sn_6w905dZUx5wTxFE-mPVCPOkL-YRpuhQ"
+# Supabase Configuration (Use Environment Variables)
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://your-default-url.supabase.co")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "your-default-api-key")
 
 # Internationalization
 LANGUAGE_CODE = "en-us"
@@ -96,9 +96,10 @@ LOCALE_PATHS = [
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = os.environ.get(
+    "STATICFILES_STORAGE", "whitenoise.storage.CompressedManifestStaticFilesStorage"
+)
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+

@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="" />
+    <list default="true" id="8e4c2d75-9c61-49a1-b02c-21e3182562a9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/breifly/breiflyplatform/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/breifly/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/breifly/breifly/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/breifly/db.sqlite3" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -143,6 +148,7 @@
       <workItem from="1737636377140" duration="351000" />
       <workItem from="1737770952235" duration="14902000" />
       <workItem from="1737945935364" duration="10000" />
+      <workItem from="1738723369781" duration="994000" />
     </task>
     <servers />
   </component>
